@@ -20,9 +20,33 @@ namespace SG.Checkouts_Overview
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+
 		public MainWindow()
 		{
 			InitializeComponent();
+
+			List<Entry> entries = new List<Entry>();
+			entries.Add(new Entry()
+			{
+				Name = "Checkouts-Overview",
+				Path = @"C:\dev\Checkouts-Overview",
+				Type = "git"
+			});
+			entries.Add(new Entry()
+			{
+				Name = "GetGallery",
+				Path = @"C:\dev\GetGallery",
+				Type = "git"
+			});
+			entries.Add(new Entry()
+			{
+				Name = "$livil",
+				Path = @"C:\dev\livil",
+				Type = "git"
+			});
+
+			DataContext = entries;
 		}
+
 	}
 }

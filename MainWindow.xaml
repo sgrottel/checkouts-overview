@@ -5,8 +5,52 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:SG.Checkouts_Overview"
 		mc:Ignorable="d"
-		Title="Checkouts Overview" Height="450" Width="800">
-	<Grid>
+		Title="Checkouts Overview" Height="720" Width="1280">
+	<Grid Margin="4">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"></RowDefinition>
+			<RowDefinition Height="*"></RowDefinition>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="3*"></ColumnDefinition>
+			<ColumnDefinition Width="4"></ColumnDefinition>
+			<ColumnDefinition Width="*"></ColumnDefinition>
+		</Grid.ColumnDefinitions>
+
+		<!-- Tool bar -->
+		<WrapPanel DockPanel.Dock="Top" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 0 0 4">
+			<Button>Test</Button>
+		</WrapPanel>
+
+		<!-- https://www.wpf-tutorial.com/listview-control/listview-sorting/ -->
+		<ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding}" Name="Entries" HorizontalAlignment="Stretch" MinWidth="50" >
+			<ListView.ItemsPanel>
+				<ItemsPanelTemplate>
+					<WrapPanel></WrapPanel>
+				</ItemsPanelTemplate>
+			</ListView.ItemsPanel>
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<DockPanel Margin="2">
+						<TextBlock Text="{Binding Name}" DockPanel.Dock="Bottom" MinWidth="32" TextAlignment="Center" />
+						<Rectangle Height="32" Width="32" Fill="Bisque" />
+					</DockPanel>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+
+		<GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"></GridSplitter>
+
+		<ListView Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" MinWidth="50" ItemsSource="{Binding ElementName=Entries,Path=SelectedItems}">
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<WrapPanel>
+						<TextBlock Text="Name: " />
+						<TextBlock Text="{Binding Name}" FontWeight="Bold" />
+					</WrapPanel>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
 
 	</Grid>
 </Window>

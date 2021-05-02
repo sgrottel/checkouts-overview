@@ -64,7 +64,7 @@
 		<GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Background="#FF404040"></GridSplitter>
 
 		<ListView Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" MinWidth="50" ItemsSource="{Binding ElementName=Entries,Path=SelectedItems}"
-				  Grid.IsSharedSizeScope="True">
+				  Grid.IsSharedSizeScope="True" SelectionMode="Single">
 			<ListView.ItemsPanel>
 				<ItemsPanelTemplate>
 					<StackPanel />
@@ -77,8 +77,9 @@
 			</ListView.ItemContainerStyle>
 			<ListView.ItemTemplate>
 				<DataTemplate>
-					<Grid HorizontalAlignment="Stretch">
+					<Grid HorizontalAlignment="Stretch" Margin="0,4">
 						<Grid.RowDefinitions>
+							<RowDefinition></RowDefinition>
 							<RowDefinition></RowDefinition>
 							<RowDefinition></RowDefinition>
 							<RowDefinition></RowDefinition>
@@ -106,6 +107,19 @@
 						<TextBlock Grid.Row="3" Text="Type" Margin="0,0,4,0" HorizontalAlignment="Stretch" />
 						<TextBox Grid.Row="3" Grid.Column="2" Text="{Binding Type}" HorizontalAlignment="Stretch" Margin="0,0,0,4" />
 						<Button Grid.Row="3" Grid.Column="3" Margin="4,0,0,4">*</Button>
+
+						<TextBlock Grid.Row="4" Grid.ColumnSpan="4" Text="{Binding LastMessage}" HorizontalAlignment="Stretch">
+							<TextBlock.Style>
+								<Style TargetType="TextBlock">
+									<Setter Property="Visibility" Value="Visible" />
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding HasLastMessage}" Value="false">
+											<Setter Property="Visibility" Value="Collapsed" />
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</TextBlock.Style>
+						</TextBlock>
 
 					</Grid>
 				</DataTemplate>

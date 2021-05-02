@@ -42,7 +42,8 @@ namespace SG.Checkouts_Overview
 			{
 				Name = "$livil",
 				Path = @"C:\dev\livil",
-				Type = "git"
+				Type = "git",
+				LastMessage = "Just as a test."
 			});
 
 			DataContext = entries;

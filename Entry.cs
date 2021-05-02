@@ -17,10 +17,12 @@ namespace SG.Checkouts_Overview
 		private string path;
 		private string type;
 		private bool available;
+		private bool evaluating;
 		private bool statusKnown;
 		private bool localChanges;
 		private bool incomingChanges;
 		private bool outgoingChanges;
+		private string lastMessage = null;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -84,6 +86,23 @@ namespace SG.Checkouts_Overview
 				{
 					available = value;
 					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Available)));
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StatusText)));
+				}
+			}
+		}
+
+		/// <summary>
+		/// True indicates that the status of the entry is currently being evaluated
+		/// </summary>
+		public bool Evaluating {
+			get {
+				return evaluating;
+			}
+			set {
+				if (evaluating != value)
+				{
+					evaluating = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Evaluating)));
 					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StatusText)));
 				}
 			}
@@ -157,9 +176,38 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
+		/// <summary>
+		/// gets a status text message, which summarizes the above flags
+		/// </summary>
 		public string StatusText {
 			get {
 				return ">> Not Impelemented <<";
+			}
+		}
+
+		/// <summary>
+		/// The (error/warning) messages of the last operation.
+		/// </summary>
+		public string LastMessage {
+			get {
+				return lastMessage;
+			}
+			set {
+				if (!string.Equals(lastMessage, value))
+				{
+					lastMessage = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LastMessage)));
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasLastMessage)));
+				}
+			}
+		}
+
+		/// <summary>
+		/// True indicates that there is a last message
+		/// </summary>
+		public bool HasLastMessage {
+			get {
+				return !string.IsNullOrWhiteSpace(lastMessage);
 			}
 		}
 

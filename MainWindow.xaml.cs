@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -176,9 +177,50 @@ namespace SG.Checkouts_Overview
 
 		private void ScanDisksButton_Click(object sender, RoutedEventArgs e)
 		{
+			var entries = (ObservableCollection<Entry>)DataContext;
 			try
 			{
-				//IEverything everything = new Everything();
+				string everythingSearch = 
+					System.IO.Path.Combine(
+						System.IO.Path.GetDirectoryName(
+							System.Reflection.Assembly.GetExecutingAssembly().Location),
+						"es.exe");
+				if (!System.IO.File.Exists(everythingSearch))
+				{
+					throw new InvalidOperationException("Unable to find `es.exe` search utility.");
+				}
+
+				Process p = new Process();
+
+				p.StartInfo.UseShellExecute = false;
+				p.StartInfo.RedirectStandardOutput = true;
+				p.StartInfo.FileName = everythingSearch;
+				p.StartInfo.ArgumentList.Clear();
+				// -r "^.git$" -ww /ad
+				p.StartInfo.ArgumentList.Add("-r");
+				p.StartInfo.ArgumentList.Add("^.git$");
+				p.StartInfo.ArgumentList.Add("-ww");
+				p.StartInfo.ArgumentList.Add("/ad");
+
+				p.Start();
+
+				var result = p.StandardOutput.ReadToEnd().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+				p.WaitForExit();
+
+				if (result == null || result.Length <= 0) return;
+
+				foreach (string dgit in result)
+				{
+					string d = System.IO.Path.GetDirectoryName(dgit);
+					if (entries.FirstOrDefault((Entry e) => { return string.Equals(e.Path, d, StringComparison.CurrentCultureIgnoreCase); }) != null) continue; // entry known
+
+					entries.Add(new Entry()
+					{
+						Name = System.IO.Path.GetFileName(d),
+						Path = d,
+						Type = "git"
+					});
+				}
 
 			}
 			catch (Exception ex)

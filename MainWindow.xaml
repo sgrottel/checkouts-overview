@@ -56,15 +56,16 @@
 		</WrapPanel>
 
 		<!-- https://www.wpf-tutorial.com/listview-control/listview-sorting/ -->
-		<ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding}" Name="Entries" HorizontalAlignment="Stretch" MinWidth="50" MouseDown="Entries_MouseDown" >
+		<ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding}" Name="Entries" HorizontalAlignment="Stretch" MinWidth="50" MouseDown="Entries_MouseDown"
+				  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 			<ListView.ItemsPanel>
 				<ItemsPanelTemplate>
-					<WrapPanel></WrapPanel>
+					<WrapPanel Orientation="Horizontal"></WrapPanel>
 				</ItemsPanelTemplate>
 			</ListView.ItemsPanel>
 			<ListView.ItemTemplate>
 				<DataTemplate>
-					<DockPanel Margin="2">
+					<DockPanel Margin="4" MinWidth="64" MaxWidth="128">
 						<TextBlock Text="{Binding Name}" DockPanel.Dock="Bottom" MinWidth="32" TextAlignment="Center" />
 						<Rectangle Height="32" Width="32" Fill="Bisque" />
 					</DockPanel>
@@ -117,7 +118,7 @@
 
 						<TextBlock Grid.Row="3" Text="Type" Margin="0,0,4,0" HorizontalAlignment="Stretch" />
 						<TextBox Grid.Row="3" Grid.Column="2" Text="{Binding Type}" HorizontalAlignment="Stretch" Margin="0,0,0,4" />
-						<Button Grid.Row="3" Grid.Column="3" Margin="4,0,0,4">*</Button>
+						<Button Grid.Row="3" Grid.Column="3" Margin="4,0,0,4" HorizontalAlignment="Stretch" Click="EntryTypeButton_Click">*</Button>
 
 						<TextBlock Grid.Row="4" Grid.ColumnSpan="4" Text="{Binding LastMessage}" HorizontalAlignment="Stretch">
 							<TextBlock.Style>

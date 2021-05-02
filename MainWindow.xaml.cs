@@ -208,5 +208,25 @@ namespace SG.Checkouts_Overview
 				MessageBox.Show("Failed to scan disks: " + ex, "Checkouts Overview Scan Disks", MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
+
+		private void EntryTypeButton_Click(object sender, RoutedEventArgs e)
+		{
+			Entry entry = (sender as Button)?.DataContext as Entry;
+			if (entry == null) return;
+
+			if (!System.IO.Directory.Exists(entry.Path))
+			{
+				entry.LastMessage = "ERROR: Path is not available";
+				return;
+			}
+
+			if (System.IO.Directory.Exists(
+				System.IO.Path.Combine(entry.Path, ".git")))
+			{
+				entry.Type = "git";
+				entry.LastMessage = "Git clone detected.";
+				return;
+			}
+		}
 	}
 }

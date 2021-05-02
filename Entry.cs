@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace SG.Checkouts_Overview
 {
@@ -77,6 +78,7 @@ namespace SG.Checkouts_Overview
 		/// <summary>
 		/// True indicates that the checkout file system path and type-base analysis is available
 		/// </summary>
+		[XmlIgnore]
 		public bool Available {
 			get {
 				return available;
@@ -94,6 +96,7 @@ namespace SG.Checkouts_Overview
 		/// <summary>
 		/// True indicates that the status of the entry is currently being evaluated
 		/// </summary>
+		[XmlIgnore]
 		public bool Evaluating {
 			get {
 				return evaluating;
@@ -111,6 +114,7 @@ namespace SG.Checkouts_Overview
 		/// <summary>
 		/// True indicates that the status of the available checkout has not been determined yet
 		/// </summary>
+		[XmlIgnore]
 		public bool StatusKnown {
 			get {
 				return statusKnown;
@@ -128,6 +132,7 @@ namespace SG.Checkouts_Overview
 		/// <summary>
 		/// True indicates that the checkout has changed files (not committed)
 		/// </summary>
+		[XmlIgnore]
 		public bool LocalChanges {
 			get {
 				return localChanges;
@@ -145,6 +150,7 @@ namespace SG.Checkouts_Overview
 		/// <summary>
 		/// True indicates that the checkout has incoming changes (need to pull/fast forward)
 		/// </summary>
+		[XmlIgnore]
 		public bool IncomingChanges {
 			get {
 				return incomingChanges;
@@ -162,6 +168,7 @@ namespace SG.Checkouts_Overview
 		/// <summary>
 		/// True indicates that the checkout has outgoing changes (need to push)
 		/// </summary>
+		[XmlIgnore]
 		public bool OutgoingChanges {
 			get {
 				return outgoingChanges;
@@ -179,6 +186,7 @@ namespace SG.Checkouts_Overview
 		/// <summary>
 		/// gets a status text message, which summarizes the above flags
 		/// </summary>
+		[XmlIgnore]
 		public string StatusText {
 			get {
 				return ">> Not Impelemented <<";
@@ -188,6 +196,7 @@ namespace SG.Checkouts_Overview
 		/// <summary>
 		/// The (error/warning) messages of the last operation.
 		/// </summary>
+		[XmlIgnore]
 		public string LastMessage {
 			get {
 				return lastMessage;

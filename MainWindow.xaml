@@ -5,7 +5,7 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:SG.Checkouts_Overview"
 		mc:Ignorable="d"
-		Title="Checkouts Overview" Height="720" Width="1280" Foreground="#FFF5FAFF" Background="#FF404040">
+		Title="Checkouts Overview" Height="720" Width="1280" Foreground="#FFF5FAFF" Background="#FF404040" Closing="Window_Closing">
 	<Window.Resources>
 
 		<Style TargetType="ListView">
@@ -50,7 +50,7 @@
 			<Button Margin="0,0,2,0" Click="AddEntryButton_Click">New</Button>
 			<Button IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="DeleteEntriesButton_Click">Delete</Button>
 			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
-			<Button>Update</Button>
+			<Button Click="UpdateButton_Click">Update</Button>
 			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
 			<Button Click="SettingsButton_Click">Settings</Button>
 		</WrapPanel>

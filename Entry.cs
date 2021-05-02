@@ -20,6 +20,7 @@ namespace SG.Checkouts_Overview
 		private bool available;
 		private bool evaluating;
 		private bool statusKnown;
+		private bool failedStatus;
 		private bool localChanges;
 		private bool incomingChanges;
 		private bool outgoingChanges;
@@ -133,6 +134,24 @@ namespace SG.Checkouts_Overview
 		/// True indicates that the checkout has changed files (not committed)
 		/// </summary>
 		[XmlIgnore]
+		public bool FailedStatus {
+			get {
+				return failedStatus;
+			}
+			set {
+				if (failedStatus != value)
+				{
+					failedStatus = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FailedStatus)));
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StatusText)));
+				}
+			}
+		}
+
+		/// <summary>
+		/// True indicates that the checkout has changed files (not committed)
+		/// </summary>
+		[XmlIgnore]
 		public bool LocalChanges {
 			get {
 				return localChanges;
@@ -189,7 +208,16 @@ namespace SG.Checkouts_Overview
 		[XmlIgnore]
 		public string StatusText {
 			get {
-				return ">> Not Impelemented <<";
+				if (evaluating) return "Evaluating...";
+				if (failedStatus) return "Failed to evaluate";
+				if (!statusKnown) return "Unknown";
+				if (!available) return "Not available";
+
+				string s = (localChanges) ? "Modified" : "Unchanged";
+				if (outgoingChanges) s += "; ahead";
+				if (incomingChanges) s += "; behind";
+
+				return s;
 			}
 		}
 

@@ -27,9 +27,14 @@ namespace SG.Checkouts_Overview
 	public partial class MainWindow : Window
 	{
 
+		private EntryEvaluator evaluator;
+
 		public MainWindow()
 		{
 			InitializeComponent();
+
+			evaluator = new EntryEvaluator();
+			evaluator.Start();
 
 			ObservableCollection<Entry> entries = new ObservableCollection<Entry>();
 			DataContext = entries;
@@ -39,6 +44,25 @@ namespace SG.Checkouts_Overview
 				try
 				{
 					loadFile(Properties.Settings.Default.lastFile);
+				}
+				catch { }
+			}
+			if (Properties.Settings.Default.scanOnStart)
+			{
+				try
+				{
+					scanDisks();
+				}
+				catch { }
+			}
+			if (Properties.Settings.Default.updateOnStart)
+			{
+				try
+				{
+					foreach (Entry entry in entries)
+					{
+						evaluator.BeginEvaluate(entry);
+					}
 				}
 				catch { }
 			}
@@ -156,53 +180,57 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
-		private void ScanDisksButton_Click(object sender, RoutedEventArgs e)
+		private void scanDisks()
 		{
 			var entries = (ObservableCollection<Entry>)DataContext;
+			string everythingSearch =
+				System.IO.Path.Combine(
+					System.IO.Path.GetDirectoryName(
+						System.Reflection.Assembly.GetExecutingAssembly().Location),
+					"es.exe");
+			if (!System.IO.File.Exists(everythingSearch))
+			{
+				throw new InvalidOperationException("Unable to find `es.exe` search utility.");
+			}
+
+			Process p = new Process();
+
+			p.StartInfo.UseShellExecute = false;
+			p.StartInfo.RedirectStandardOutput = true;
+			p.StartInfo.FileName = everythingSearch;
+			p.StartInfo.ArgumentList.Clear();
+			// -r "^.git$" -ww /ad
+			p.StartInfo.ArgumentList.Add("-r");
+			p.StartInfo.ArgumentList.Add("^.git$");
+			p.StartInfo.ArgumentList.Add("-ww");
+			p.StartInfo.ArgumentList.Add("/ad");
+
+			p.Start();
+
+			var result = p.StandardOutput.ReadToEnd().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+			p.WaitForExit();
+
+			if (result == null || result.Length <= 0) return;
+
+			foreach (string dgit in result)
+			{
+				string d = System.IO.Path.GetDirectoryName(dgit);
+				if (entries.FirstOrDefault((Entry e) => { return string.Equals(e.Path, d, StringComparison.CurrentCultureIgnoreCase); }) != null) continue; // entry known
+
+				entries.Add(new Entry()
+				{
+					Name = System.IO.Path.GetFileName(d),
+					Path = d,
+					Type = "git"
+				});
+			}
+		}
+
+		private void ScanDisksButton_Click(object sender, RoutedEventArgs e)
+		{
 			try
 			{
-				string everythingSearch = 
-					System.IO.Path.Combine(
-						System.IO.Path.GetDirectoryName(
-							System.Reflection.Assembly.GetExecutingAssembly().Location),
-						"es.exe");
-				if (!System.IO.File.Exists(everythingSearch))
-				{
-					throw new InvalidOperationException("Unable to find `es.exe` search utility.");
-				}
-
-				Process p = new Process();
-
-				p.StartInfo.UseShellExecute = false;
-				p.StartInfo.RedirectStandardOutput = true;
-				p.StartInfo.FileName = everythingSearch;
-				p.StartInfo.ArgumentList.Clear();
-				// -r "^.git$" -ww /ad
-				p.StartInfo.ArgumentList.Add("-r");
-				p.StartInfo.ArgumentList.Add("^.git$");
-				p.StartInfo.ArgumentList.Add("-ww");
-				p.StartInfo.ArgumentList.Add("/ad");
-
-				p.Start();
-
-				var result = p.StandardOutput.ReadToEnd().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-				p.WaitForExit();
-
-				if (result == null || result.Length <= 0) return;
-
-				foreach (string dgit in result)
-				{
-					string d = System.IO.Path.GetDirectoryName(dgit);
-					if (entries.FirstOrDefault((Entry e) => { return string.Equals(e.Path, d, StringComparison.CurrentCultureIgnoreCase); }) != null) continue; // entry known
-
-					entries.Add(new Entry()
-					{
-						Name = System.IO.Path.GetFileName(d),
-						Path = d,
-						Type = "git"
-					});
-				}
-
+				scanDisks();
 			}
 			catch (Exception ex)
 			{
@@ -214,20 +242,7 @@ namespace SG.Checkouts_Overview
 		{
 			Entry entry = (sender as Button)?.DataContext as Entry;
 			if (entry == null) return;
-
-			if (!System.IO.Directory.Exists(entry.Path))
-			{
-				entry.LastMessage = "ERROR: Path is not available";
-				return;
-			}
-
-			if (System.IO.Directory.Exists(
-				System.IO.Path.Combine(entry.Path, ".git")))
-			{
-				entry.Type = "git";
-				entry.LastMessage = "Git clone detected.";
-				return;
-			}
+			evaluator.CheckType(entry);
 		}
 
 		private void EntryBrowsePathButton_Click(object sender, RoutedEventArgs e)
@@ -245,6 +260,24 @@ namespace SG.Checkouts_Overview
 			if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
 			{
 				entry.Path = dlg.FileName;
+			}
+		}
+
+		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			evaluator.Shutdown();
+		}
+
+		private void UpdateButton_Click(object sender, RoutedEventArgs e)
+		{
+			var entries = Entries.SelectedItems.Cast<Entry>().ToList();
+			if (entries.Count == 0)
+			{
+				entries.AddRange((ObservableCollection<Entry>)DataContext);
+			}
+			foreach (Entry entry in entries)
+			{
+				evaluator.BeginEvaluate(entry);
 			}
 		}
 	}

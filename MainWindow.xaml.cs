@@ -173,5 +173,18 @@ namespace SG.Checkouts_Overview
 				}
 			}
 		}
+
+		private void ScanDisksButton_Click(object sender, RoutedEventArgs e)
+		{
+			try
+			{
+				//IEverything everything = new Everything();
+
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show("Failed to scan disks: " + ex, "Checkouts Overview Scan Disks", MessageBoxButton.OK, MessageBoxImage.Error);
+			}
+		}
 	}
 }

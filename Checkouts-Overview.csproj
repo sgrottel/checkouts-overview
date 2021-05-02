@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ContentWithTargetPath Include="ES-1.1.0.18\es.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		<TargetPath>es.exe</TargetPath>
+    </ContentWithTargetPath>
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>

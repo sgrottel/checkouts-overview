@@ -17,7 +17,7 @@ namespace SG.Checkouts_Overview
 		private string path;
 		private string type;
 		private bool available;
-		private bool statusUnknown;
+		private bool statusKnown;
 		private bool localChanges;
 		private bool incomingChanges;
 		private bool outgoingChanges;
@@ -84,6 +84,7 @@ namespace SG.Checkouts_Overview
 				{
 					available = value;
 					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Available)));
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StatusText)));
 				}
 			}
 		}
@@ -91,15 +92,16 @@ namespace SG.Checkouts_Overview
 		/// <summary>
 		/// True indicates that the status of the available checkout has not been determined yet
 		/// </summary>
-		public bool StatusUnknown {
+		public bool StatusKnown {
 			get {
-				return statusUnknown;
+				return statusKnown;
 			}
 			set {
-				if (statusUnknown != value)
+				if (statusKnown != value)
 				{
-					statusUnknown = value;
-					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StatusUnknown)));
+					statusKnown = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StatusKnown)));
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StatusText)));
 				}
 			}
 		}
@@ -116,6 +118,7 @@ namespace SG.Checkouts_Overview
 				{
 					localChanges = value;
 					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LocalChanges)));
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StatusText)));
 				}
 			}
 		}
@@ -132,6 +135,7 @@ namespace SG.Checkouts_Overview
 				{
 					incomingChanges = value;
 					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IncomingChanges)));
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StatusText)));
 				}
 			}
 		}
@@ -148,7 +152,14 @@ namespace SG.Checkouts_Overview
 				{
 					outgoingChanges = value;
 					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OutgoingChanges)));
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StatusText)));
 				}
+			}
+		}
+
+		public string StatusText {
+			get {
+				return ">> Not Impelemented <<";
 			}
 		}
 

@@ -52,7 +52,7 @@
 			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
 			<Button>Update</Button>
 			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
-			<Button>Settings</Button>
+			<Button Click="SettingsButton_Click">Settings</Button>
 		</WrapPanel>
 
 		<!-- https://www.wpf-tutorial.com/listview-control/listview-sorting/ -->

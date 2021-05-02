@@ -80,5 +80,11 @@ namespace SG.Checkouts_Overview
 				entries.Remove(entry);
 			}
 		}
+
+		private void SettingsButton_Click(object sender, RoutedEventArgs e)
+		{
+			SettingsDialogWindow dlg = new SettingsDialogWindow();
+			dlg.ShowDialog();
+		}
 	}
 }

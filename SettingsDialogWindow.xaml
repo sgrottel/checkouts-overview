@@ -1,0 +1,46 @@
+﻿<Window x:Class="SG.Checkouts_Overview.SettingsDialogWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:SG.Checkouts_Overview"
+		mc:Ignorable="d"
+		Title="Checkouts Overview Settings" Height="250" Width="400" WindowStartupLocation="CenterScreen">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="auto" />
+		</Grid.RowDefinitions>
+
+		<Grid Margin="12">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="auto" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="auto" />
+				<RowDefinition Height="auto" />
+				<RowDefinition Height="auto" />
+				<RowDefinition Height="auto" />
+			</Grid.RowDefinitions>
+			
+			<TextBlock Grid.Row="0" Grid.Column="0" Margin="0,0,4,0" VerticalAlignment="Center">Last File</TextBlock>
+			<TextBox Grid.Row="0" Grid.Column="1" Name="lastFile" HorizontalAlignment="Stretch" Margin="2,0,0,2"></TextBox>
+			<CheckBox Grid.Row="1" Grid.ColumnSpan="2" Margin="0,2" Name="loadOnStart">Load last file on start.</CheckBox>
+			<CheckBox Grid.Row="2" Grid.ColumnSpan="2" Margin="0,2" Name="scanOnStart">Scan disks on start.</CheckBox>
+			<CheckBox Grid.Row="3" Grid.ColumnSpan="2" Margin="0,2" Name="updateOnStart">Update entries on start.</CheckBox>
+		</Grid>
+
+		<Grid Grid.Row="1" Background="{StaticResource {x:Static SystemColors.ControlBrushKey}}">
+			<Grid Margin="8">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="auto" />
+					<ColumnDefinition Width="auto" />
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="1" Padding="4,2" Margin="4" Click="OkButton_Click">Ok</Button>
+				<Button Grid.Column="2" Padding="4,2" Margin="4" Click="CancelButton_Click">Cancel</Button>
+			</Grid>
+		</Grid>
+	</Grid>
+</Window>

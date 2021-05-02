@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace SG.Checkouts_Overview
 		{
 			InitializeComponent();
 
-			List<Entry> entries = new List<Entry>();
+			ObservableCollection<Entry> entries = new ObservableCollection<Entry>();
 			entries.Add(new Entry()
 			{
 				Name = "Checkouts-Overview",
@@ -49,5 +50,35 @@ namespace SG.Checkouts_Overview
 			DataContext = entries;
 		}
 
+		/// <summary>
+		/// Deselect all when clicking on empty space
+		/// </summary>
+		private void Entries_MouseDown(object sender, MouseButtonEventArgs e)
+		{
+			HitTestResult r = VisualTreeHelper.HitTest(this, e.GetPosition(this));
+			if (r.VisualHit.GetType() != typeof(ListBoxItem))
+				((ListView)sender).UnselectAll();
+		}
+
+		private void AddEntryButton_Click(object sender, RoutedEventArgs e)
+		{
+			var entries = (ObservableCollection<Entry>)DataContext;
+			Entry entry = new Entry()
+			{
+				Name = "New Entry"
+			};
+			entries.Add(entry);
+			Entries.SelectedItem = entry;
+		}
+
+		private void DeleteEntriesButton_Click(object sender, RoutedEventArgs e)
+		{
+			var entries = (ObservableCollection<Entry>)DataContext;
+			var selEntries = Entries.SelectedItems.Cast<Entry>().ToArray();
+			foreach (Entry entry in selEntries)
+			{
+				entries.Remove(entry);
+			}
+		}
 	}
 }

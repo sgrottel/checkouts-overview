@@ -7,13 +7,14 @@
 		mc:Ignorable="d"
 		Title="Checkouts Overview" Height="720" Width="1280" Foreground="#FFF5FAFF" Background="#FF404040">
 	<Window.Resources>
+
 		<Style TargetType="ListView">
 			<Setter Property="Foreground" Value="#FFF5FAFF" />
 			<Setter Property="Background" Value="#FF202020" />
 			<Setter Property="BorderThickness" Value="0" />
 		</Style>
 
-		<Style TargetType="Button">
+		<Style TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
 			<Setter Property="Foreground" Value="#FFF5FAFF" />
 			<Setter Property="Background" Value="#FF404040" />
 			<Setter Property="Padding" Value="4,0" />
@@ -41,11 +42,21 @@
 
 		<!-- Tool bar -->
 		<WrapPanel DockPanel.Dock="Top" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 0 0 4">
-			<Button>Test</Button>
+			<Button Margin="0,0,2,0">Load</Button>
+			<Button>Save</Button>
+			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
+			<Button>Scan Disks</Button>
+			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
+			<Button Margin="0,0,2,0" Click="AddEntryButton_Click">New</Button>
+			<Button IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="DeleteEntriesButton_Click">Delete</Button>
+			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
+			<Button>Update</Button>
+			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
+			<Button>Settings</Button>
 		</WrapPanel>
 
 		<!-- https://www.wpf-tutorial.com/listview-control/listview-sorting/ -->
-		<ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding}" Name="Entries" HorizontalAlignment="Stretch" MinWidth="50" >
+		<ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding}" Name="Entries" HorizontalAlignment="Stretch" MinWidth="50" MouseDown="Entries_MouseDown" >
 			<ListView.ItemsPanel>
 				<ItemsPanelTemplate>
 					<WrapPanel></WrapPanel>

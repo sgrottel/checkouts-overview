@@ -5,7 +5,29 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:SG.Checkouts_Overview"
 		mc:Ignorable="d"
-		Title="Checkouts Overview" Height="720" Width="1280">
+		Title="Checkouts Overview" Height="720" Width="1280" Foreground="#FFF5FAFF" Background="#FF404040">
+	<Window.Resources>
+		<Style TargetType="ListView">
+			<Setter Property="Foreground" Value="#FFF5FAFF" />
+			<Setter Property="Background" Value="#FF202020" />
+			<Setter Property="BorderThickness" Value="0" />
+		</Style>
+
+		<Style TargetType="Button">
+			<Setter Property="Foreground" Value="#FFF5FAFF" />
+			<Setter Property="Background" Value="#FF404040" />
+			<Setter Property="Padding" Value="4,0" />
+			<Setter Property="BorderBrush" Value="#FF888888" />
+		</Style>
+
+		<Style TargetType="TextBox">
+			<Setter Property="Foreground" Value="#FFF5FAFF" />
+			<Setter Property="Background" Value="#FF404040" />
+			<Setter Property="BorderBrush" Value="#FF888888" />
+		</Style>
+
+	</Window.Resources>
+
 	<Grid Margin="4">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="auto"></RowDefinition>
@@ -39,7 +61,7 @@
 			</ListView.ItemTemplate>
 		</ListView>
 
-		<GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"></GridSplitter>
+		<GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Background="#FF404040"></GridSplitter>
 
 		<ListView Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" MinWidth="50" ItemsSource="{Binding ElementName=Entries,Path=SelectedItems}"
 				  Grid.IsSharedSizeScope="True">
@@ -69,7 +91,7 @@
 							<ColumnDefinition Width="auto"></ColumnDefinition>
 						</Grid.ColumnDefinitions>
 
-						<GridSplitter Grid.Column="1" Grid.RowSpan="4" Width="4" VerticalAlignment="Stretch" HorizontalAlignment="Center" />
+						<GridSplitter Grid.Column="1" Grid.RowSpan="4" Width="4" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="#00000000" />
 
 						<TextBlock Text="Name" Margin="0,0,4,0" HorizontalAlignment="Stretch" />
 						<TextBox Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding Name}" HorizontalAlignment="Stretch" Margin="0,0,0,4"/>
@@ -79,14 +101,11 @@
 
 						<TextBlock Grid.Row="2" Text="Path" Margin="0,0,4,0" HorizontalAlignment="Stretch" />
 						<TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Path}" HorizontalAlignment="Stretch" Margin="0,0,0,4" />
-						<Button Grid.Row="2" Grid.Column="3" Padding="4,0" Margin="4,0,0,4">...</Button>
+						<Button Grid.Row="2" Grid.Column="3" Margin="4,0,0,4">...</Button>
 
 						<TextBlock Grid.Row="3" Text="Type" Margin="0,0,4,0" HorizontalAlignment="Stretch" />
-						<ComboBox Grid.Row="3" Grid.Column="2" SelectedValue="{Binding Type}" SelectedValuePath="Content" HorizontalAlignment="Stretch" Margin="0,0,0,4">
-							<ComboBoxItem>none</ComboBoxItem>
-							<ComboBoxItem>git</ComboBoxItem>
-						</ComboBox>
-						<Button Grid.Row="3" Grid.Column="3" Padding="4,0" Margin="4,0,0,4">*</Button>
+						<TextBox Grid.Row="3" Grid.Column="2" Text="{Binding Type}" HorizontalAlignment="Stretch" Margin="0,0,0,4" />
+						<Button Grid.Row="3" Grid.Column="3" Margin="4,0,0,4">*</Button>
 
 					</Grid>
 				</DataTemplate>

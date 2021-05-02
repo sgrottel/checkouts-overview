@@ -33,26 +33,6 @@ namespace SG.Checkouts_Overview
 			ObservableCollection<Entry> entries = new ObservableCollection<Entry>();
 			DataContext = entries;
 
-			entries.Add(new Entry()
-			{
-				Name = "Checkouts-Overview",
-				Path = @"C:\dev\Checkouts-Overview",
-				Type = "git"
-			});
-			entries.Add(new Entry()
-			{
-				Name = "GetGallery",
-				Path = @"C:\dev\GetGallery",
-				Type = "git"
-			});
-			entries.Add(new Entry()
-			{
-				Name = "$livil",
-				Path = @"C:\dev\livil",
-				Type = "git",
-				LastMessage = "Just as a test."
-			});
-
 			if (Properties.Settings.Default.loadOnStart)
 			{
 				try

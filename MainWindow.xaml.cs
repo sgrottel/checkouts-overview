@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -226,6 +227,24 @@ namespace SG.Checkouts_Overview
 				entry.Type = "git";
 				entry.LastMessage = "Git clone detected.";
 				return;
+			}
+		}
+
+		private void EntryBrowsePathButton_Click(object sender, RoutedEventArgs e)
+		{
+			Entry entry = (sender as Button)?.DataContext as Entry;
+			if (entry == null) return;
+
+			var dlg = new CommonOpenFileDialog();
+			dlg.IsFolderPicker = true;
+			dlg.InitialDirectory = entry.Path;
+			dlg.DefaultFileName = entry.Path;
+			dlg.Title = "";
+			dlg.Multiselect = false;
+
+			if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+			{
+				entry.Path = dlg.FileName;
 			}
 		}
 	}

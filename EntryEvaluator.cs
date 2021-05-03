@@ -94,6 +94,8 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
+		private Random rnd = new Random();
+
 		private void evaluateEntry(Entry entry)
 		{
 			if (!System.IO.Directory.Exists(entry.Path))
@@ -106,6 +108,7 @@ namespace SG.Checkouts_Overview
 				entry.OutgoingChanges = false;
 				return;
 			}
+			if (!entry.Available) entry.StatusKnown = false;
 			entry.Available = true;
 
 			bool localChanges = false;
@@ -113,13 +116,17 @@ namespace SG.Checkouts_Overview
 			bool outgoingChanges = false;
 
 			// TODO: Implement
-			Thread.Sleep(1000);
+			Thread.Sleep(100);
+
+			localChanges = rnd.Next(0, 2) == 0;
+			incomingChanges = rnd.Next(0, 2) == 0;
+			outgoingChanges = rnd.Next(0, 2) == 0;
 
 			entry.LocalChanges = localChanges;
 			entry.IncomingChanges = incomingChanges;
 			entry.OutgoingChanges = outgoingChanges;
 
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
 
 			entry.StatusKnown = true;
 		}

@@ -37,12 +37,12 @@ namespace SG.Checkouts_Overview
 			if (!e.StatusKnown) return element.FindResource("Icon_Unknown_x32") as DataTemplate;
 			if (!e.Available) return element.FindResource("Icon_Unavailable_x32") as DataTemplate;
 
-			//string s = (localChanges) ? "Modified" : "Unchanged";
-			//if (outgoingChanges) s += "; ahead";
-			//if (incomingChanges) s += "; behind";
-
-
-			return element.FindResource("Icon_Empty_x32") as DataTemplate;
+			return element.FindResource(
+				String.Format("Icon_{0}{1}{2}_x32",
+				e.LocalChanges ? 'x' : 'n',
+				e.IncomingChanges ? 'i' : 'n',
+				e.OutgoingChanges ? 'o' : 'n'
+				)) as DataTemplate;
 		}
 	}
 }

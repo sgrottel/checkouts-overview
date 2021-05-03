@@ -8,6 +8,8 @@
 		Title="Checkouts Overview" Height="720" Width="1280" Foreground="#FFF5FAFF" Background="#FF404040" Closing="Window_Closing">
 	<Window.Resources>
 
+		<local:EntryIconDataTemplateSelector x:Key="entryIconDataTemplateSelector"/>
+
 		<Style TargetType="ListView">
 			<Setter Property="Foreground" Value="#FFF5FAFF" />
 			<Setter Property="Background" Value="#FF202020" />
@@ -27,6 +29,57 @@
 			<Setter Property="BorderBrush" Value="#FF888888" />
 		</Style>
 
+		<DataTemplate x:Key="Icon_Empty_x32">
+			<Canvas Width="32" Height="32">
+			</Canvas>
+		</DataTemplate>
+
+		<DataTemplate x:Key="Icon_Unknown_x32">
+			<Canvas Width="32" Height="32">
+				<Path Fill="#808080">
+					<Path.Data>
+						<PathGeometry Figures="M 16 0 C 7.169 0 0 7.169 0 16 C 0 24.831 7.169 32 16 32 C 24.831 32 32 24.831 32 16 C 32 7.169 24.831 0 16 0 z M 16 1 C 24.279 1 31 7.721 31 16 C 31 24.279 24.279 31 16 31 C 7.721 31 1 24.279 1 16 C 1 7.721 7.721 1 16 1 z M 16.460938 6.5917969 C 15.716938 6.5917969 14.925937 6.6874687 14.085938 6.8554688 C 13.245937 7.0234687 12.548094 7.2162031 11.996094 7.4082031 L 11.996094 9.8085938 L 12.117188 9.8085938 C 12.549188 9.5445937 13.148578 9.2561875 13.892578 8.9921875 C 14.660578 8.7281875 15.452969 8.609375 16.292969 8.609375 C 17.252969 8.609375 18.021094 8.8238594 18.621094 9.2558594 C 19.221094 9.6878594 19.509766 10.336609 19.509766 11.224609 C 19.509766 11.896609 19.389 12.448859 19.125 12.880859 C 18.885 13.312859 18.52575 13.744344 18.09375 14.152344 C 17.70975 14.488344 17.228906 14.847594 16.628906 15.183594 C 16.052906 15.543594 15.500094 15.856531 14.996094 16.144531 L 14.996094 19.720703 L 17.085938 19.720703 L 17.085938 17.080078 C 17.733937 16.720078 18.332203 16.335734 18.908203 15.927734 C 19.460203 15.543734 19.965875 15.135687 20.421875 14.679688 C 20.853875 14.223687 21.213953 13.695703 21.501953 13.095703 C 21.765953 12.495703 21.908203 11.824641 21.908203 11.056641 C 21.908203 9.7126406 21.405313 8.6324062 20.445312 7.8164062 C 19.461312 7.0004063 18.140937 6.5917969 16.460938 6.5917969 z M 14.876953 21.927734 L 14.876953 24.400391 L 17.277344 24.400391 L 17.277344 21.927734 L 14.876953 21.927734 z " FillRule="EvenOdd"/>
+					</Path.Data>
+				</Path>
+			</Canvas>
+		</DataTemplate>
+
+		<DataTemplate x:Key="Icon_Unavailable_x32">
+			<Canvas Width="32" Height="32">
+				<Path Fill="#808080">
+					<Path.Data>
+						<PathGeometry Figures="M16 0C24.831 0 32 7.169 32 16C32 24.831 24.831 32 16 32C7.169 32 0 24.831 0 16C0 7.169 7.169 0 16 0ZM16 2C23.727 2 30 8.273 30 16C30 23.727 23.727 30 16 30C8.273 30 2 23.727 2 16C2 8.273 8.273 2 16 2ZM24 15L8 15L8 17L24 17L24 15Z" FillRule="EvenOdd"/>
+					</Path.Data>
+				</Path>
+			</Canvas>
+		</DataTemplate>
+
+		<DataTemplate x:Key="Icon_Failed_x32">
+			<Canvas Width="32" Height="32">
+				<Path Fill="#930000">
+					<Path.Data>
+						<PathGeometry Figures="M9.373 0L22.627 0L32 9.373L32 22.627L22.627 32L9.373 32L0 22.627L0 9.373L9.373 0ZM10.201 2L21.799 2L30 10.201L30 21.799L21.799 30L10.201 30L2 21.799L2 10.201L10.201 2ZM16 13.879L11.757 9.636L9.636 11.757L13.879 16L9.636 20.243L11.757 22.364L16 18.121L20.243 22.364L22.364 20.243L18.121 16L22.364 11.757L20.243 9.636L16 13.879Z" FillRule="EvenOdd"/>
+					</Path.Data>
+				</Path>
+			</Canvas>
+		</DataTemplate>
+
+
+		<DataTemplate x:Key="Icon_Evaluating_x32">
+			<Canvas Width="32" Height="32">
+				<Path Fill="#C8C8C8">
+					<Path.Data>
+						<PathGeometry Figures="M25 18C28.863 18 32 21.137 32 25C32 28.863 28.863 32 25 32C21.137 32 18 28.863 18 25C18 21.137 21.137 18 25 18ZM25 22C26.656 22 28 23.344 28 25C28 26.656 26.656 28 25 28C23.344 28 22 26.656 22 25C22 23.344 23.344 22 25 22Z" FillRule="EvenOdd"/>
+					</Path.Data>
+				</Path>
+				<Path Fill="#2078D1">
+					<Path.Data>
+						<PathGeometry Figures="M25 19C28.311 19 31 21.689 31 25C31 28.311 28.311 31 25 31C21.689 31 19 28.311 19 25C19 21.689 21.689 19 25 19ZM25 21C27.208 21 29 22.792 29 25C29 27.208 27.208 29 25 29C22.792 29 21 27.208 21 25C21 22.792 22.792 21 25 21Z" FillRule="EvenOdd"/>
+					</Path.Data>
+				</Path>
+			</Canvas>
+		</DataTemplate>
+
 	</Window.Resources>
 
 	<Grid Margin="4">
@@ -40,7 +93,7 @@
 			<ColumnDefinition Width="*"></ColumnDefinition>
 		</Grid.ColumnDefinitions>
 
-		<!-- Tool bar -->
+		<!-- Top tool bar -->
 		<WrapPanel DockPanel.Dock="Top" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 0 0 4">
 			<Button Margin="0,0,2,0" Click="LoadButton_Click">Load</Button>
 			<Button Click="SaveButton_Click">Save</Button>
@@ -55,6 +108,7 @@
 			<Button Click="SettingsButton_Click">Settings</Button>
 		</WrapPanel>
 
+		<!-- Center ListView showing states -->
 		<!-- https://www.wpf-tutorial.com/listview-control/listview-sorting/ -->
 		<ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding}" Name="Entries" HorizontalAlignment="Stretch" MinWidth="50" MouseDown="Entries_MouseDown"
 				  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -67,7 +121,30 @@
 				<DataTemplate>
 					<DockPanel Margin="4" MinWidth="64" MaxWidth="128">
 						<TextBlock Text="{Binding Name}" DockPanel.Dock="Bottom" MinWidth="32" TextAlignment="Center" />
-						<Rectangle Height="32" Width="32" Fill="Bisque" />
+						<Viewbox Width="32" Height="32">
+							<Canvas Width="32" Height="32">
+
+								<ContentControl
+									Width="32" Height="32"
+									Content="{Binding}"
+									ContentTemplateSelector="{DynamicResource entryIconDataTemplateSelector}"
+									/>
+
+								<ContentControl ContentTemplate="{StaticResource Icon_Evaluating_x32}">
+									<ContentControl.Style>
+										<Style TargetType="ContentControl">
+											<Setter Property="Visibility" Value="Hidden"/>
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding Evaluating}" Value="True">
+													<Setter Property="Visibility" Value="Visible"/>
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</ContentControl.Style>
+								</ContentControl>
+								
+							</Canvas>
+						</Viewbox>
 					</DockPanel>
 				</DataTemplate>
 			</ListView.ItemTemplate>
@@ -75,6 +152,7 @@
 
 		<GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Background="#FF404040"></GridSplitter>
 
+		<!-- right column edit pane -->
 		<ListView Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" MinWidth="50" ItemsSource="{Binding ElementName=Entries,Path=SelectedItems}"
 				  Grid.IsSharedSizeScope="True" SelectionMode="Single">
 			<ListView.ItemsPanel>

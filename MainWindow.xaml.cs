@@ -280,5 +280,18 @@ namespace SG.Checkouts_Overview
 				evaluator.BeginEvaluate(entry);
 			}
 		}
+
+		private void ExploreButton_Click(object sender, RoutedEventArgs e)
+		{
+			foreach (Entry entry in Entries.SelectedItems.Cast<Entry>())
+			{
+				Process.Start("explorer.exe", entry.Path);
+			}
+		}
+
+		private void OpenClientButton_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
 	}
 }

@@ -232,6 +232,9 @@
 			<Button Click="UpdateButton_Click">Update</Button>
 			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
 			<Button Click="SettingsButton_Click">Settings</Button>
+			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
+			<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="ExploreButton_Click">Explore</Button>
+			<Button IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="OpenClientButton_Click">Open Client</Button>
 		</WrapPanel>
 
 		<!-- Center ListView showing states -->
@@ -280,7 +283,8 @@
 
 		<!-- right column edit pane -->
 		<ListView Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" MinWidth="50" ItemsSource="{Binding ElementName=Entries,Path=SelectedItems}"
-				  Grid.IsSharedSizeScope="True" SelectionMode="Single">
+				  Grid.IsSharedSizeScope="True" SelectionMode="Single"
+				  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 			<ListView.ItemsPanel>
 				<ItemsPanelTemplate>
 					<StackPanel />

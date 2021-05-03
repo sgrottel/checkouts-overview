@@ -291,7 +291,15 @@ namespace SG.Checkouts_Overview
 
 		private void OpenClientButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			// TODO: Configurable!
+			foreach (Entry entry in Entries.SelectedItems.Cast<Entry>())
+			{
+				Process p = new Process();
+				p.StartInfo.FileName = @"C:\Users\grott\AppData\Local\Fork\Fork.exe";
+				p.StartInfo.ArgumentList.Clear();
+				p.StartInfo.ArgumentList.Add(entry.Path);
+				p.Start();
+			}
 		}
 	}
 }

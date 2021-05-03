@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -111,25 +113,75 @@ namespace SG.Checkouts_Overview
 			if (!entry.Available) entry.StatusKnown = false;
 			entry.Available = true;
 
-			bool localChanges = false;
-			bool incomingChanges = false;
-			bool outgoingChanges = false;
+			switch (entry.Type.ToLower())
+			{
+				case "git":
+					evaluateGit(entry);
+					break;
+				default:
+					throw new Exception("Unknown type");
+			}
 
-			// TODO: Implement
-			Thread.Sleep(100);
+			if (!entry.StatusKnown)
+				throw new Exception("Failed to analyse entry: " + entry.LastMessage);
+		}
 
-			localChanges = rnd.Next(0, 2) == 0;
-			incomingChanges = rnd.Next(0, 2) == 0;
-			outgoingChanges = rnd.Next(0, 2) == 0;
+		private void evaluateGit(Entry entry)
+		{
+			Process p = new Process();
 
-			entry.LocalChanges = localChanges;
-			entry.IncomingChanges = incomingChanges;
-			entry.OutgoingChanges = outgoingChanges;
+			p.StartInfo.UseShellExecute = false;
+			p.StartInfo.RedirectStandardOutput = true;
+			p.StartInfo.FileName = "git.exe";
+			p.StartInfo.ArgumentList.Clear();
+			p.StartInfo.ArgumentList.Add("status");
+			p.StartInfo.ArgumentList.Add("--short");
+			p.StartInfo.ArgumentList.Add("--branch");
+			p.StartInfo.ArgumentList.Add("--porcelain=v2");
+			p.StartInfo.ArgumentList.Add("--ahead-behind");
+			p.StartInfo.WorkingDirectory = entry.Path;
+			p.StartInfo.CreateNoWindow = true;
 
-			//throw new NotImplementedException();
+			p.Start();
 
+			var result = p.StandardOutput.ReadToEnd().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+			p.WaitForExit();
+
+			string ab = result.FirstOrDefault((s) => { return s.StartsWith("# branch.ab "); });
+			if (!string.IsNullOrWhiteSpace(ab))
+			{
+				var abm = Regex.Match(ab, @"^\#\s+branch\.ab\s+\+(\d+)\s+-(\d+)");
+				if (abm.Success && abm.Groups[1].Success && abm.Groups[2].Success)
+				{
+					entry.OutgoingChanges = int.Parse(abm.Groups[1].Value) > 0;
+					entry.IncomingChanges = int.Parse(abm.Groups[2].Value) > 0;
+				}
+				else
+				{
+					throw new Exception("Failed to parse ahead-begin info: " + ab);
+				}
+			}
+
+			result = result.Where((s) => { return !s.StartsWith("#"); }).ToArray();
+			if (result == null || result.Length <= 0)
+			{
+				entry.LocalChanges = false;
+			}
+			else
+			{
+				bool changes = false;
+				foreach (string s in result)
+				{
+					if (Regex.IsMatch(s, @"^[12]\s\S\S\s"))
+					{
+						changes = true;
+					}
+				}
+				entry.LocalChanges = changes;
+			}
 			entry.StatusKnown = true;
 		}
+
 	}
 
 }

@@ -6,6 +6,10 @@
     <RootNamespace>SG.Checkouts_Overview</RootNamespace>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>doc\icon\332 clone.ico</ApplicationIcon>
+    <Authors>SGrottel</Authors>
+    <Product>Checkouts Overview</Product>
+    <Description>Visual overview of local repository checkouts</Description>
+    <Copyright>Copyright 2021, by SGrottel</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

@@ -70,5 +70,17 @@ namespace SG.Checkouts_Overview.Properties {
                 this["updateOnStart"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string gitClient {
+            get {
+                return ((string)(this["gitClient"]));
+            }
+            set {
+                this["gitClient"] = value;
+            }
+        }
     }
 }

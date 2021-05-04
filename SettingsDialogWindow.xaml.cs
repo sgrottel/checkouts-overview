@@ -27,6 +27,7 @@ namespace SG.Checkouts_Overview
 			loadOnStart.IsChecked = Properties.Settings.Default.loadOnStart;
 			scanOnStart.IsChecked = Properties.Settings.Default.scanOnStart;
 			updateOnStart.IsChecked = Properties.Settings.Default.updateOnStart;
+			gitClient.Text = Properties.Settings.Default.gitClient;
 		}
 
 		private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -41,6 +42,7 @@ namespace SG.Checkouts_Overview
 			Properties.Settings.Default.loadOnStart = loadOnStart.IsChecked ?? false;
 			Properties.Settings.Default.scanOnStart = scanOnStart.IsChecked ?? false;
 			Properties.Settings.Default.updateOnStart = updateOnStart.IsChecked ?? false;
+			Properties.Settings.Default.gitClient = gitClient.Text;
 			Properties.Settings.Default.Save();
 			DialogResult = true;
 			Close();

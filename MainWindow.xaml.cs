@@ -291,11 +291,18 @@ namespace SG.Checkouts_Overview
 
 		private void OpenClientButton_Click(object sender, RoutedEventArgs e)
 		{
-			// TODO: Configurable!
+			string gc = Properties.Settings.Default.gitClient;
+			if (!System.IO.File.Exists(gc))
+			{
+				MessageBox.Show("Please configure Visual Git client in Settings", "Checkouts Overview Open Git...", MessageBoxButton.OK, MessageBoxImage.Error);
+				return;
+
+			}
+
 			foreach (Entry entry in Entries.SelectedItems.Cast<Entry>())
 			{
 				Process p = new Process();
-				p.StartInfo.FileName = @"C:\Users\grott\AppData\Local\Fork\Fork.exe";
+				p.StartInfo.FileName = gc;
 				p.StartInfo.ArgumentList.Clear();
 				p.StartInfo.ArgumentList.Add(entry.Path);
 				p.Start();

@@ -15,20 +15,21 @@ namespace SG.Checkouts_Overview
 		public void Scan()
 		{
 			string everythingSearch =
-	System.IO.Path.Combine(
-		System.IO.Path.GetDirectoryName(
-			System.Reflection.Assembly.GetExecutingAssembly().Location),
-		"es.exe");
+				System.IO.Path.Combine(
+					System.IO.Path.GetDirectoryName(
+						System.Reflection.Assembly.GetExecutingAssembly().Location),
+					"es.exe");
 			if (!System.IO.File.Exists(everythingSearch))
 			{
 				throw new InvalidOperationException("Unable to find `es.exe` search utility.");
 			}
 
+			string tempFile = System.IO.Path.GetTempFileName();
+
 			Process p = new Process();
 
 			p.StartInfo.UseShellExecute = false;
-			p.StartInfo.RedirectStandardOutput = true;
-			p.StartInfo.StandardOutputEncoding = Encoding.UTF8;
+			p.StartInfo.CreateNoWindow = true;
 			p.StartInfo.FileName = everythingSearch;
 			p.StartInfo.ArgumentList.Clear();
 			// -r "^.git$" -ww /ad
@@ -36,11 +37,14 @@ namespace SG.Checkouts_Overview
 			p.StartInfo.ArgumentList.Add("^.git$");
 			p.StartInfo.ArgumentList.Add("-ww");
 			p.StartInfo.ArgumentList.Add("/ad");
+			p.StartInfo.ArgumentList.Add("-export-m3u8");
+			p.StartInfo.ArgumentList.Add(tempFile);
 
 			p.Start();
-
-			var result = p.StandardOutput.ReadToEnd().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 			p.WaitForExit();
+
+			var result = System.IO.File.ReadAllLines(tempFile, Encoding.UTF8);
+			System.IO.File.Delete(tempFile);
 
 			if (result == null || result.Length <= 0) return;
 

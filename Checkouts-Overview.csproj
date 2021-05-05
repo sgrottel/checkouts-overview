@@ -10,6 +10,7 @@
     <Product>Checkouts Overview</Product>
     <Description>Visual overview of local repository checkouts</Description>
     <Copyright>Copyright 2021, by SGrottel</Copyright>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

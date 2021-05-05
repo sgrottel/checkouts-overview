@@ -1,6 +1,8 @@
 # Checkouts Overview
 Overview dashboard app for source code repository checkouts.
 
+![Screenshot of Checkouts Overview UI](doc/screenshot.png)
+
 ## Why this App?
 In my private setup, I have a lot of smaller repos checked out (almost all git), and work on them occasionally.
 In addition I got several repos to collect the history of some text documents and files.

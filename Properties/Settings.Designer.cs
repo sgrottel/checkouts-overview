@@ -82,5 +82,17 @@ namespace SG.Checkouts_Overview.Properties {
                 this["gitClient"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool upgradeSettings {
+            get {
+                return ((bool)(this["upgradeSettings"]));
+            }
+            set {
+                this["upgradeSettings"] = value;
+            }
+        }
     }
 }

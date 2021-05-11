@@ -33,6 +33,13 @@ namespace SG.Checkouts_Overview
 		{
 			InitializeComponent();
 
+			if (Properties.Settings.Default.upgradeSettings)
+			{
+				Properties.Settings.Default.Upgrade();
+				Properties.Settings.Default.upgradeSettings = false;
+				Properties.Settings.Default.Save();
+			}
+
 			evaluator = new EntryEvaluator();
 			evaluator.Start();
 

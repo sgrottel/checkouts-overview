@@ -248,5 +248,21 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
+		/// <summary>
+		/// Entry is selected in the main list view
+		/// </summary>
+		private bool isSelected = false;
+		[XmlIgnore]
+		public bool IsSelected {
+			get { return isSelected; }
+			set {
+				if (isSelected != value)
+				{
+					isSelected = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected)));
+				}
+			}
+		}
+
 	}
 }

@@ -23,6 +23,13 @@
 			<Setter Property="BorderBrush" Value="#888" />
 		</Style>
 
+		<Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}">
+			<Setter Property="Foreground" Value="#F4F0ED" />
+			<Setter Property="Background" Value="#444" />
+			<Setter Property="Padding" Value="4,0" />
+			<Setter Property="BorderBrush" Value="#888" />
+		</Style>
+
 		<Style TargetType="TextBox">
 			<Setter Property="Foreground" Value="#F4F0ED" />
 			<Setter Property="Background" Value="#444" />
@@ -220,64 +227,93 @@
 		</Grid.ColumnDefinitions>
 
 		<!-- Top tool bar -->
-		<WrapPanel DockPanel.Dock="Top" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 0 0 4">
+		<WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 0 0 4">
 			<Button Margin="0,0,2,0" Click="LoadButton_Click">Load</Button>
 			<Button Click="SaveButton_Click">Save</Button>
 			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
 			<Button Click="ScanDisksButton_Click">Scan Disks</Button>
 			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
 			<Button Margin="0,0,2,0" Click="AddEntryButton_Click">New</Button>
-			<Button IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="DeleteEntriesButton_Click">Delete</Button>
+			<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="DeleteEntriesButton_Click">Delete</Button>
+			<ToggleButton Name="ShowSort" IsChecked="False">Sort</ToggleButton>
 			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
 			<Button Click="UpdateButton_Click">Update</Button>
 			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
-			<Button Click="SettingsButton_Click">Settings</Button>
-			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
 			<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="ExploreButton_Click">Explore</Button>
 			<Button IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="OpenClientButton_Click">Open Client</Button>
+			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
+			<Button Click="SettingsButton_Click">Settings</Button>
 		</WrapPanel>
 
-		<!-- Center ListView showing states -->
-		<!-- https://www.wpf-tutorial.com/listview-control/listview-sorting/ -->
-		<ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding}" Name="Entries" HorizontalAlignment="Stretch" MinWidth="50" MouseDown="Entries_MouseDown"
+		<DockPanel Grid.Row="1" Grid.Column="0">
+			<!-- sorting toolbar -->
+			<WrapPanel DockPanel.Dock="Top" Margin="0,0,0,4">
+				<WrapPanel.Style>
+					<Style TargetType="WrapPanel">
+						<Setter Property="Visibility" Value="Collapsed"/>
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding ElementName=ShowSort,Path=IsChecked}" Value="true">
+								<Setter Property="Visibility" Value="Visible"/>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</WrapPanel.Style>
+
+				<TextBlock Foreground="#F4F0ED" Margin="0,0,6,0">Sort by:</TextBlock>
+				<Button Margin="0,0,2,0">Name</Button>
+				<Button Margin="0,0,2,0">Path</Button>
+				<Button>Last Change Date</Button>
+				<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
+				<Button>Reverse</Button>
+				<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
+				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}">Top</Button>
+				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}">Up</Button>
+				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}">Down</Button>
+				<Button IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}">Bottom</Button>
+			</WrapPanel>
+			
+			<!-- Center ListView showing states -->
+			<!-- https://www.wpf-tutorial.com/listview-control/listview-sorting/ -->
+			<ListView ItemsSource="{Binding}" Name="Entries" HorizontalAlignment="Stretch" MinWidth="50" MouseDown="Entries_MouseDown"
 				  ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="Entries_MouseDoubleClick">
-			<ListView.ItemsPanel>
-				<ItemsPanelTemplate>
-					<WrapPanel Orientation="Horizontal"></WrapPanel>
-				</ItemsPanelTemplate>
-			</ListView.ItemsPanel>
-			<ListView.ItemTemplate>
-				<DataTemplate>
-					<DockPanel Margin="4" MinWidth="64" MaxWidth="128">
-						<TextBlock Text="{Binding Name}" DockPanel.Dock="Bottom" MinWidth="32" TextAlignment="Center" />
-						<Viewbox Width="32" Height="32">
-							<Canvas Width="32" Height="32">
+				<ListView.ItemsPanel>
+					<ItemsPanelTemplate>
+						<WrapPanel Orientation="Horizontal"></WrapPanel>
+					</ItemsPanelTemplate>
+				</ListView.ItemsPanel>
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<DockPanel Margin="4" MinWidth="64" MaxWidth="128">
+							<TextBlock Text="{Binding Name}" DockPanel.Dock="Bottom" MinWidth="32" TextAlignment="Center" />
+							<Viewbox Width="32" Height="32">
+								<Canvas Width="32" Height="32">
 
-								<ContentControl
-									Width="32" Height="32"
-									Content="{Binding}"
-									ContentTemplateSelector="{DynamicResource entryIconDataTemplateSelector}"
-									/>
+									<ContentControl
+										Width="32" Height="32"
+										Content="{Binding}"
+										ContentTemplateSelector="{DynamicResource entryIconDataTemplateSelector}"
+										/>
 
-								<ContentControl ContentTemplate="{StaticResource Icon_Evaluating_x32}">
-									<ContentControl.Style>
-										<Style TargetType="ContentControl">
-											<Setter Property="Visibility" Value="Hidden"/>
-											<Style.Triggers>
-												<DataTrigger Binding="{Binding Evaluating}" Value="True">
-													<Setter Property="Visibility" Value="Visible"/>
-												</DataTrigger>
-											</Style.Triggers>
-										</Style>
-									</ContentControl.Style>
-								</ContentControl>
-								
-							</Canvas>
-						</Viewbox>
-					</DockPanel>
-				</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
+									<ContentControl ContentTemplate="{StaticResource Icon_Evaluating_x32}">
+										<ContentControl.Style>
+											<Style TargetType="ContentControl">
+												<Setter Property="Visibility" Value="Hidden"/>
+												<Style.Triggers>
+													<DataTrigger Binding="{Binding Evaluating}" Value="True">
+														<Setter Property="Visibility" Value="Visible"/>
+													</DataTrigger>
+												</Style.Triggers>
+											</Style>
+										</ContentControl.Style>
+									</ContentControl>
+
+								</Canvas>
+							</Viewbox>
+						</DockPanel>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+		</DockPanel>
 
 		<GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Background="#FF404040"></GridSplitter>
 

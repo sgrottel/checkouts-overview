@@ -315,5 +315,97 @@ namespace SG.Checkouts_Overview
 				entries.Insert(p++, a);
 			}
 		}
+
+		private void SortReverseButton_Click(object sender, RoutedEventArgs e)
+		{
+			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
+			List<Entry> te = entries.ToList();
+
+			te.Reverse();
+
+			int p = 0;
+			foreach (Entry a in te)
+			{
+				entries.Remove(a);
+				entries.Insert(p++, a);
+			}
+		}
+
+		private void SortMoveUpButton_Click(object sender, RoutedEventArgs e)
+		{
+			List<Entry> sel = Entries.SelectedItems.Cast<Entry>().ToList();
+			if (sel == null || sel.Count <= 0) return;
+			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
+
+			sel.Sort((Entry a, Entry b) => { return entries.IndexOf(a) - entries.IndexOf(b); });
+
+			int minIdx = entries.Count;
+			foreach (Entry entry in sel) minIdx = Math.Min(minIdx, entries.IndexOf(entry));
+			minIdx = Math.Max(0, minIdx - 1);
+
+			foreach (Entry a in sel)
+			{
+				entries.Remove(a);
+				entries.Insert(minIdx++, a);
+			}
+		}
+
+		private void SortMoveTopButton_Click(object sender, RoutedEventArgs e)
+		{
+			List<Entry> sel = Entries.SelectedItems.Cast<Entry>().ToList();
+			if (sel == null || sel.Count <= 0) return;
+			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
+
+			sel.Sort((Entry a, Entry b) => { return entries.IndexOf(a) - entries.IndexOf(b); });
+
+			int minIdx = 0;
+			foreach (Entry a in sel)
+			{
+				entries.Remove(a);
+				entries.Insert(minIdx++, a);
+			}
+		}
+
+		private void SortMoveDownButton_Click(object sender, RoutedEventArgs e)
+		{
+			List<Entry> sel = Entries.SelectedItems.Cast<Entry>().ToList();
+			if (sel == null || sel.Count <= 0) return;
+			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
+
+			sel.Sort((Entry a, Entry b) => { return entries.IndexOf(a) - entries.IndexOf(b); });
+
+			int maxIdx = 0;
+			foreach (Entry entry in sel) maxIdx = Math.Max(maxIdx, entries.IndexOf(entry));
+			maxIdx++;
+
+			foreach (Entry a in sel)
+			{
+				entries.Remove(a);
+				if (maxIdx >= entries.Count)
+					entries.Add(a);
+				else
+					entries.Insert(maxIdx, a);
+			}
+		}
+
+		private void SortMoveBottomButton_Click(object sender, RoutedEventArgs e)
+		{
+			List<Entry> sel = Entries.SelectedItems.Cast<Entry>().ToList();
+			if (sel == null || sel.Count <= 0) return;
+			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
+
+			sel.Sort((Entry a, Entry b) => { return entries.IndexOf(a) - entries.IndexOf(b); });
+
+			foreach (Entry a in sel)
+			{
+				entries.Remove(a);
+				entries.Add(a);
+			}
+		}
+
+		private void SortByLastCommitDateButton_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
 	}
 }

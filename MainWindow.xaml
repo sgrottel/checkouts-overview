@@ -262,14 +262,14 @@
 				<TextBlock Foreground="#F4F0ED" Margin="0,0,6,0">Sort by:</TextBlock>
 				<Button Margin="0,0,2,0" Click="SortByNameButton_Click">Name</Button>
 				<Button Margin="0,0,2,0" Click="SortByPathButton_Click">Path</Button>
-				<Button>Last Change Date</Button>
+				<Button Click="SortByLastCommitDateButton_Click">Last Commit Date</Button>
 				<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
-				<Button>Reverse</Button>
+				<Button Click="SortReverseButton_Click">Reverse</Button>
 				<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
-				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}">Top</Button>
-				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}">Up</Button>
-				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}">Down</Button>
-				<Button IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}">Bottom</Button>
+				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="SortMoveTopButton_Click">Top</Button>
+				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="SortMoveUpButton_Click">Up</Button>
+				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="SortMoveDownButton_Click">Down</Button>
+				<Button IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="SortMoveBottomButton_Click">Bottom</Button>
 			</WrapPanel>
 			
 			<!-- Center ListView showing states -->

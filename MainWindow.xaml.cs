@@ -80,6 +80,19 @@ namespace SG.Checkouts_Overview
 				((ListView)sender).UnselectAll();
 		}
 
+		/// <summary>
+		/// Item double clicking opens client
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Entries_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+		{
+			if (Entries.SelectedItems.Count > 0)
+			{
+				OpenClientButton_Click(sender, null);
+			}
+		}
+
 		private void AddEntryButton_Click(object sender, RoutedEventArgs e)
 		{
 			var entries = (ObservableCollection<Entry>)DataContext;

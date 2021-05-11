@@ -240,7 +240,7 @@
 		<!-- Center ListView showing states -->
 		<!-- https://www.wpf-tutorial.com/listview-control/listview-sorting/ -->
 		<ListView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding}" Name="Entries" HorizontalAlignment="Stretch" MinWidth="50" MouseDown="Entries_MouseDown"
-				  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+				  ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="Entries_MouseDoubleClick">
 			<ListView.ItemsPanel>
 				<ItemsPanelTemplate>
 					<WrapPanel Orientation="Horizontal"></WrapPanel>

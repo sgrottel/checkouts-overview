@@ -285,5 +285,35 @@ namespace SG.Checkouts_Overview
 				p.Start();
 			}
 		}
+
+		private void SortByNameButton_Click(object sender, RoutedEventArgs e)
+		{
+			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
+			List<Entry> te = entries.ToList();
+
+			te.Sort((Entry a, Entry b) => { return string.Compare(a.Name, b.Name); });
+
+			int p = 0;
+			foreach (Entry a in te)
+			{
+				entries.Remove(a);
+				entries.Insert(p++, a);
+			}
+		}
+
+		private void SortByPathButton_Click(object sender, RoutedEventArgs e)
+		{
+			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
+			List<Entry> te = entries.ToList();
+
+			te.Sort((Entry a, Entry b) => { return string.Compare(a.Path, b.Path); });
+
+			int p = 0;
+			foreach (Entry a in te)
+			{
+				entries.Remove(a);
+				entries.Insert(p++, a);
+			}
+		}
 	}
 }

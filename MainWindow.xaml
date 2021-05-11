@@ -260,8 +260,8 @@
 				</WrapPanel.Style>
 
 				<TextBlock Foreground="#F4F0ED" Margin="0,0,6,0">Sort by:</TextBlock>
-				<Button Margin="0,0,2,0">Name</Button>
-				<Button Margin="0,0,2,0">Path</Button>
+				<Button Margin="0,0,2,0" Click="SortByNameButton_Click">Name</Button>
+				<Button Margin="0,0,2,0" Click="SortByPathButton_Click">Path</Button>
 				<Button>Last Change Date</Button>
 				<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
 				<Button>Reverse</Button>
@@ -275,16 +275,22 @@
 			<!-- Center ListView showing states -->
 			<!-- https://www.wpf-tutorial.com/listview-control/listview-sorting/ -->
 			<ListView ItemsSource="{Binding}" Name="Entries" HorizontalAlignment="Stretch" MinWidth="50" MouseDown="Entries_MouseDown"
-				  ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="Entries_MouseDoubleClick">
+				ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="Entries_MouseDoubleClick">
+				<ListBox.ItemContainerStyle>
+					<Style TargetType="ListViewItem">
+						<Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
+						<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+						<Setter Property="VerticalContentAlignment" Value="Top" />
+					</Style>
+				</ListBox.ItemContainerStyle>
 				<ListView.ItemsPanel>
 					<ItemsPanelTemplate>
-						<WrapPanel Orientation="Horizontal"></WrapPanel>
+						<WrapPanel Orientation="Horizontal" VerticalAlignment="Top"></WrapPanel>
 					</ItemsPanelTemplate>
 				</ListView.ItemsPanel>
 				<ListView.ItemTemplate>
 					<DataTemplate>
-						<DockPanel Margin="4" MinWidth="64" MaxWidth="128">
-							<TextBlock Text="{Binding Name}" DockPanel.Dock="Bottom" MinWidth="32" TextAlignment="Center" />
+						<StackPanel Margin="4" MinWidth="64" MaxWidth="128" VerticalAlignment="Top">
 							<Viewbox Width="32" Height="32">
 								<Canvas Width="32" Height="32">
 
@@ -309,7 +315,8 @@
 
 								</Canvas>
 							</Viewbox>
-						</DockPanel>
+							<TextBlock Text="{Binding Name}" MinWidth="32" MaxWidth="128" TextAlignment="Center" TextWrapping="Wrap" />
+						</StackPanel>
 					</DataTemplate>
 				</ListView.ItemTemplate>
 			</ListView>

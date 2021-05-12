@@ -262,6 +262,7 @@
 				<TextBlock Foreground="#F4F0ED" Margin="0,0,6,0">Sort by:</TextBlock>
 				<Button Margin="0,0,2,0" Click="SortByNameButton_Click">Name</Button>
 				<Button Margin="0,0,2,0" Click="SortByPathButton_Click">Path</Button>
+				<Button Click="SortByLastChangedDateButton_Click">Last Changed Date</Button>
 				<Button Click="SortByLastCommitDateButton_Click">Last Commit Date</Button>
 				<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
 				<Button Click="SortReverseButton_Click">Reverse</Button>

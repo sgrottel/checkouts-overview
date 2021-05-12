@@ -286,49 +286,41 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
-		private void SortByNameButton_Click(object sender, RoutedEventArgs e)
+		private void sortEntries(Action<List<Entry>> sorter)
 		{
 			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
 			List<Entry> te = entries.ToList();
-
-			te.Sort((Entry a, Entry b) => { return string.Compare(a.Name, b.Name); });
-
+			sorter(te);
 			int p = 0;
 			foreach (Entry a in te)
 			{
 				entries.Remove(a);
 				entries.Insert(p++, a);
 			}
+		}
+
+		private void SortByNameButton_Click(object sender, RoutedEventArgs e)
+		{
+			sortEntries((List<Entry> te) =>
+			{
+				te.Sort((Entry a, Entry b) => { return string.Compare(a.Name, b.Name); });
+			});
 		}
 
 		private void SortByPathButton_Click(object sender, RoutedEventArgs e)
 		{
-			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
-			List<Entry> te = entries.ToList();
-
-			te.Sort((Entry a, Entry b) => { return string.Compare(a.Path, b.Path); });
-
-			int p = 0;
-			foreach (Entry a in te)
+			sortEntries((List<Entry> te) =>
 			{
-				entries.Remove(a);
-				entries.Insert(p++, a);
-			}
+				te.Sort((Entry a, Entry b) => { return string.Compare(a.Path, b.Path); });
+			});
 		}
 
 		private void SortReverseButton_Click(object sender, RoutedEventArgs e)
 		{
-			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
-			List<Entry> te = entries.ToList();
-
-			te.Reverse();
-
-			int p = 0;
-			foreach (Entry a in te)
+			sortEntries((List<Entry> te) =>
 			{
-				entries.Remove(a);
-				entries.Insert(p++, a);
-			}
+				te.Reverse();
+			});
 		}
 
 		private void SortMoveUpButton_Click(object sender, RoutedEventArgs e)
@@ -403,9 +395,20 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
+		private void SortByLastChangedDateButton_Click(object sender, RoutedEventArgs e)
+		{
+			sortEntries((List<Entry> te) =>
+			{
+				// TODO: Implement
+			});
+		}
+
 		private void SortByLastCommitDateButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			sortEntries((List<Entry> te) =>
+			{
+				// TODO: Implement
+			});
 		}
 	}
 }

@@ -129,7 +129,6 @@ namespace SG.Checkouts_Overview
 		private void evaluateGit(Entry entry)
 		{
 			Process p = new Process();
-
 			p.StartInfo.UseShellExecute = false;
 			p.StartInfo.RedirectStandardOutput = true;
 			p.StartInfo.FileName = "git.exe";
@@ -141,9 +140,7 @@ namespace SG.Checkouts_Overview
 			p.StartInfo.ArgumentList.Add("--ahead-behind");
 			p.StartInfo.WorkingDirectory = entry.Path;
 			p.StartInfo.CreateNoWindow = true;
-
 			p.Start();
-
 			var result = p.StandardOutput.ReadToEnd().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 			p.WaitForExit();
 
@@ -182,6 +179,37 @@ namespace SG.Checkouts_Overview
 			entry.StatusKnown = true;
 		}
 
+		internal DateTime GetCommitDate(Entry entry)
+		{
+			switch (entry.Type.ToLower())
+			{
+				case "git":
+					return GetCommitDateGit(entry);
+				default:
+					return DateTime.MinValue;
+			}
+		}
+
+		private DateTime GetCommitDateGit(Entry entry)
+		{
+			Process p = new Process();
+			p.StartInfo.UseShellExecute = false;
+			p.StartInfo.RedirectStandardOutput = true;
+			p.StartInfo.FileName = "git.exe";
+			p.StartInfo.ArgumentList.Clear();
+			p.StartInfo.ArgumentList.Add("log");
+			p.StartInfo.ArgumentList.Add("-n");
+			p.StartInfo.ArgumentList.Add("1");
+			p.StartInfo.ArgumentList.Add("--format=%aI");
+			p.StartInfo.WorkingDirectory = entry.Path;
+			p.StartInfo.CreateNoWindow = true;
+			p.Start();
+			var result = p.StandardOutput.ReadToEnd();
+			p.WaitForExit();
+			DateTime d = DateTime.MinValue;
+			DateTime.TryParse(result, out d);
+			return d;
+		}
 	}
 
 }

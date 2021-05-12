@@ -403,9 +403,9 @@ namespace SG.Checkouts_Overview
 				foreach (Entry e in te)
 				{
 					cd[e] = getChangedDate(e.Path);
-					Debug.WriteLine("{0}  ==>  {1}", e.Path, cd[e]);
+					// Debug.WriteLine("{0}  ==>  {1}", e.Path, cd[e]);
 				}
-				te.Sort((Entry a, Entry b) => { return DateTime.Compare(cd[a], cd[b]); });
+				te.Sort((Entry a, Entry b) => { return DateTime.Compare(cd[b], cd[a]); });
 			});
 		}
 
@@ -416,7 +416,7 @@ namespace SG.Checkouts_Overview
 				Dictionary<Entry, DateTime> cd = new Dictionary<Entry, DateTime>();
 				foreach (Entry e in te)
 				{
-					cd[e] = getCommitDate(e.Path);
+					cd[e] = evaluator.GetCommitDate(e);
 				}
 				te.Sort((Entry a, Entry b) => { return DateTime.Compare(cd[b], cd[a]); });
 			});
@@ -441,11 +441,6 @@ namespace SG.Checkouts_Overview
 					d = sdd;
 			}
 			return d;
-		}
-
-		private DateTime getCommitDate(string path)
-		{
-			throw new NotImplementedException();
 		}
 
 	}

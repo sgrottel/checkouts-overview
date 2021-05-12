@@ -399,7 +399,13 @@ namespace SG.Checkouts_Overview
 		{
 			sortEntries((List<Entry> te) =>
 			{
-				// TODO: Implement
+				Dictionary<Entry, DateTime> cd = new Dictionary<Entry, DateTime>();
+				foreach (Entry e in te)
+				{
+					cd[e] = getChangedDate(e.Path);
+					Debug.WriteLine("{0}  ==>  {1}", e.Path, cd[e]);
+				}
+				te.Sort((Entry a, Entry b) => { return DateTime.Compare(cd[a], cd[b]); });
 			});
 		}
 
@@ -407,8 +413,40 @@ namespace SG.Checkouts_Overview
 		{
 			sortEntries((List<Entry> te) =>
 			{
-				// TODO: Implement
+				Dictionary<Entry, DateTime> cd = new Dictionary<Entry, DateTime>();
+				foreach (Entry e in te)
+				{
+					cd[e] = getCommitDate(e.Path);
+				}
+				te.Sort((Entry a, Entry b) => { return DateTime.Compare(cd[b], cd[a]); });
 			});
 		}
+
+		private DateTime getChangedDate(string path)
+		{
+			return getChangedDate(new DirectoryInfo(path));
+		}
+		private DateTime getChangedDate(DirectoryInfo di)
+		{
+			if (!di.Exists) return DateTime.MinValue;
+			DateTime d = DateTime.MinValue;
+			foreach (FileInfo fi in di.GetFiles())
+				if (fi.LastWriteTime > d)
+					d = fi.LastWriteTime;
+			foreach (DirectoryInfo sdi in di.GetDirectories())
+			{
+				if (String.Equals(sdi.Name, ".git", StringComparison.CurrentCultureIgnoreCase)) continue;
+				DateTime sdd = getChangedDate(sdi);
+				if (sdd > d)
+					d = sdd;
+			}
+			return d;
+		}
+
+		private DateTime getCommitDate(string path)
+		{
+			throw new NotImplementedException();
+		}
+
 	}
 }

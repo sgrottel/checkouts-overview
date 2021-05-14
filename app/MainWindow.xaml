@@ -261,7 +261,34 @@
 					</Style>
 				</WrapPanel.Style>
 
-				<TextBlock Foreground="#F4F0ED" Margin="0,0,6,0">Sort by:</TextBlock>
+				<TextBlock Margin="0,0,3,0">Sort</TextBlock>
+				<TextBlock>
+					<TextBlock.Style>
+						<Style TargetType="TextBlock">
+							<Setter Property="Visibility" Value="Collapsed"/>
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding ElementName=Entries,Path=SelectedItems.Count}" Value="0">
+									<Setter Property="Visibility" Value="Visible"/>
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</TextBlock.Style>
+					all
+				</TextBlock>
+				<TextBlock>
+					<TextBlock.Style>
+						<Style TargetType="TextBlock">
+							<Setter Property="Visibility" Value="Visible"/>
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding ElementName=Entries,Path=SelectedItems.Count}" Value="0">
+									<Setter Property="Visibility" Value="Collapsed"/>
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</TextBlock.Style>
+					selected
+				</TextBlock>
+				<TextBlock Margin="3,0,6,0">Entries by:</TextBlock>
 				<Button Margin="0,0,2,0" Click="SortByNameButton_Click">Name</Button>
 				<Button Margin="0,0,2,0" Click="SortByPathButton_Click">Path</Button>
 				<Button Click="SortByLastChangedDateButton_Click">Last Changed Date</Button>

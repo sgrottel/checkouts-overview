@@ -50,7 +50,7 @@ namespace SG.Checkouts_Overview
 
 			foreach (string dgit in result)
 			{
-				if (dgit.Contains("\\$RECYCLE.BIN\\"))
+				if (dgit.Contains("\\$RECYCLE.BIN\\", StringComparison.CurrentCultureIgnoreCase))
 				{
 					continue; // skip entries already recycled
 				}

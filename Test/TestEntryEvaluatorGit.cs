@@ -38,7 +38,6 @@ namespace SG.Checkouts_Overview.Test
 			Assert.IsTrue(e.Available);
 			Assert.IsFalse(e.FailedStatus);
 			Assert.IsTrue(e.StatusKnown);
-			Assert.IsTrue(e.LocalChanges);
 		}
 
 		[TestMethod]

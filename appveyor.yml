@@ -1,4 +1,4 @@
-version: 0.3.0.{build}
+version: 0.3.1.{build}
 image: Visual Studio 2019
 
 configuration:
@@ -30,7 +30,7 @@ for:
       only:
         - configuration: Release
     after_build:
-    - ps: .\publish-release.ps1 -version $env:APPVEYOR_BUILD_VERSION
+    - ps: .\app\publish-release.ps1 -version $env:APPVEYOR_BUILD_VERSION
     artifacts:
-    - path: .\bin\Release\Checkouts-Overview*.zip
+    - path: .\app\bin\Release\Checkouts-Overview*.zip
       name: Checkouts-Overview

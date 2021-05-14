@@ -28,7 +28,7 @@
 			<Viewbox Grid.Row="0" Grid.Column="0" Grid.RowSpan="4" Width="64" Height="64" Margin="4">
 				<Image Width="300">
 					<Image.Source>
-						<BitmapImage DecodePixelWidth="300" UriSource="/doc/icon/clone x256 ref.png" />
+						<BitmapImage DecodePixelWidth="300" UriSource="clone x256 ref.png" />
 					</Image.Source>
 				</Image>
 			</Viewbox>

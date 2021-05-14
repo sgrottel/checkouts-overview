@@ -56,8 +56,8 @@
 					<ColumnDefinition Width="auto" />
 					<ColumnDefinition Width="auto" />
 				</Grid.ColumnDefinitions>
-				<Button Grid.Column="1" Padding="4,2" Margin="4" Click="OkButton_Click">Ok</Button>
-				<Button Grid.Column="2" Padding="4,2" Margin="4" Click="CancelButton_Click">Cancel</Button>
+				<Button Grid.Column="1" Padding="12,2" Margin="4" Click="OkButton_Click">Ok</Button>
+				<Button Grid.Column="2" Padding="8,2" Margin="4" IsCancel="true" IsDefault="True">Cancel</Button>
 			</Grid>
 		</Grid>
 	</Grid>

@@ -243,6 +243,8 @@
 			<Button IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="OpenClientButton_Click">Open Client</Button>
 			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
 			<Button Click="SettingsButton_Click">Settings</Button>
+			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
+			<Button Click="AboutButton_Click">About</Button>
 		</WrapPanel>
 
 		<DockPanel Grid.Row="1" Grid.Column="0">

@@ -103,12 +103,6 @@ namespace SG.Checkouts_Overview
 			gitInfoUpdateTimer?.Start();
 		}
 
-		private void CancelButton_Click(object sender, RoutedEventArgs e)
-		{
-			DialogResult = false;
-			Close();
-		}
-
 		private void OkButton_Click(object sender, RoutedEventArgs e)
 		{
 			Properties.Settings.Default.lastFile = lastFile.Text;

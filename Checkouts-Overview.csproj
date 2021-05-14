@@ -10,14 +10,22 @@
     <Product>Checkouts Overview</Product>
     <Description>Visual overview of local repository checkouts</Description>
     <Copyright>Copyright 2021, by SGrottel</Copyright>
-    <Version>0.2.1.0</Version>
+    <Version>0.2.1</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="doc\icon\clone x256 ref.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <ContentWithTargetPath Include="ES-1.1.0.18\es.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		<TargetPath>es.exe</TargetPath>
     </ContentWithTargetPath>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="doc\icon\clone x256 ref.png" />
   </ItemGroup>
 
   <ItemGroup>

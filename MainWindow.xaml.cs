@@ -128,6 +128,13 @@ namespace SG.Checkouts_Overview
 			dlg.ShowDialog();
 		}
 
+		private void AboutButton_Click(object sender, RoutedEventArgs e)
+		{
+			AboutDialogWindow dlg = new AboutDialogWindow();
+			dlg.Owner = this;
+			dlg.ShowDialog();
+		}
+
 		private void SaveButton_Click(object sender, RoutedEventArgs e)
 		{
 			SaveFileDialog dlg = new SaveFileDialog();

@@ -295,10 +295,22 @@ namespace SG.Checkouts_Overview
 		private void sortEntries(Action<List<Entry>> sorter)
 		{
 			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
-			List<Entry> te = entries.ToList();
-			sorter(te);
 			int p = 0;
-			foreach (Entry a in te)
+
+			List<Entry> sel = Entries.SelectedItems.Cast<Entry>().ToList();
+			if (sel == null || sel.Count <= 0)
+			{
+				sel = entries.ToList();
+			}
+			else
+			{
+				p = entries.Count;
+				foreach (Entry a in sel) p= Math.Min(p, entries.IndexOf(a));
+			}
+
+			sorter(sel);
+
+			foreach (Entry a in sel)
 			{
 				entries.Remove(a);
 				entries.Insert(p++, a);

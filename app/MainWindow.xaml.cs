@@ -216,15 +216,17 @@ namespace SG.Checkouts_Overview
 
 		private void ScanDisksButton_Click(object sender, RoutedEventArgs e)
 		{
-			try
+			DisksScannerDialogWindow dlg = new DisksScannerDialogWindow();
+			dlg.Owner = this;
+			dlg.ShowDialog();
+			if (dlg.DisksScanner != null)
 			{
-				DisksScannerEverything scanner = new DisksScannerEverything();
-				scanner.Entries = (ObservableCollection<Entry>)DataContext;
-				scanner.Scan();
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show("Failed to scan disks: " + ex, "Checkouts Overview Scan Disks", MessageBoxButton.OK, MessageBoxImage.Error);
+				dlg.DisksScanner.Entries = (ObservableCollection<Entry>)DataContext;
+				DisksScannerProgressDialogWindow prgDlg = new DisksScannerProgressDialogWindow();
+				prgDlg.Owner = this;
+				prgDlg.DisksScanner = dlg.DisksScanner;
+				prgDlg.Start();
+				prgDlg.ShowDialog();
 			}
 		}
 

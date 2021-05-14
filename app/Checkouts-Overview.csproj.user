@@ -10,12 +10,24 @@
     <Compile Update="AboutDialogWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="DisksScannerDialogWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="DisksScannerProgressDialogWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="SettingsDialogWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="AboutDialogWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="DisksScannerDialogWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="DisksScannerProgressDialogWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">

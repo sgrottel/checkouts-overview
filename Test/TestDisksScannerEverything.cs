@@ -17,6 +17,7 @@ namespace SG.Checkouts_Overview.Test
 		{
 			DisksScannerEverything ds = new DisksScannerEverything();
 			ds.Entries = new ObservableCollection<Entry>();
+			ds.Dispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher;
 			ds.Scan();
 			// assuming "Everything" might not be installed, the whole thing should just not crash.
 		}

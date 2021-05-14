@@ -21,7 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="everything.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="..\doc\icon\clone x256 ref.png" Link="clone x256 ref.png" />
+    <Resource Include="everything.png" />
   </ItemGroup>
 
   <ItemGroup>

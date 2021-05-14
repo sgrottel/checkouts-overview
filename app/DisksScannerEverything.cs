@@ -5,15 +5,27 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace SG.Checkouts_Overview
 {
-	public class DisksScannerEverything
+	public class DisksScannerEverything : IDisksScanner
 	{
 		public Collection<Entry> Entries { get; set; } = null;
 
+		public Dispatcher Dispatcher { get; set; }
+
+		public event EventHandler<string> ScanMessage;
+
+		public void AbortScan()
+		{
+			// scan is so fast, no abort needed
+		}
+
 		public void Scan()
 		{
+			ScanMessage?.Invoke(this, "Scan started...");
+
 			string everythingSearch =
 				System.IO.Path.Combine(
 					System.IO.Path.GetDirectoryName(
@@ -48,6 +60,7 @@ namespace SG.Checkouts_Overview
 
 			if (result == null || result.Length <= 0) return;
 
+			int added = 0;
 			foreach (string dgit in result)
 			{
 				if (dgit.Contains("\\$RECYCLE.BIN\\", StringComparison.CurrentCultureIgnoreCase))
@@ -58,14 +71,20 @@ namespace SG.Checkouts_Overview
 				string d = System.IO.Path.GetDirectoryName(dgit);
 				if (Entries.FirstOrDefault((Entry e) => { return string.Equals(e.Path, d, StringComparison.CurrentCultureIgnoreCase); }) != null) continue; // entry known
 
-				Entries.Add(new Entry()
+				Dispatcher.Invoke(new Action<string>((string dir) =>
 				{
-					Name = System.IO.Path.GetFileName(d),
-					Path = d,
-					Type = "git"
-				});
+					Entries.Add(new Entry()
+					{
+						Name = System.IO.Path.GetFileName(dir),
+						Path = dir,
+						Type = "git"
+					});
+				}), new object[] { d });
+
+				added++;
 			}
 
+			ScanMessage?.Invoke(this, string.Format("Scan completed. {0} entr{1} added.", added, (added == 1) ? "y" : "ies"));
 		}
 
 	}

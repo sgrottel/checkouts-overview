@@ -13,16 +13,9 @@ namespace SG.Checkouts_Overview.Test
 	public class TestEntryEvaluatorGit
 	{
 
-		private string findMyGit()
-		{
-			string p = Assembly.GetExecutingAssembly().Location;
-			while (p.Length > 2 && !System.IO.Directory.Exists(System.IO.Path.Combine(p, ".git"))) p = System.IO.Path.GetDirectoryName(p);
-			return p;
-		}
-
 		private Entry createTestEntry()
 		{
-			return new Entry() { Name = "Test", Path = findMyGit(), Type = "git" };
+			return new Entry() { Name = "Test", Path = Utility.FindMyGit(), Type = "git" };
 		}
 
 		[TestMethod]
@@ -57,7 +50,7 @@ namespace SG.Checkouts_Overview.Test
 		public void EvaluateTestData()
 		{
 			List<Entry> entries = new List<Entry>();
-			string tdp = System.IO.Path.Combine(findMyGit(), "TestData");
+			string tdp = System.IO.Path.Combine(Utility.FindMyGit(), "TestData");
 			EntryEvaluator ee = new EntryEvaluator();
 			ee.Start();
 			for (char c = 'a'; c <= 'h'; ++c)

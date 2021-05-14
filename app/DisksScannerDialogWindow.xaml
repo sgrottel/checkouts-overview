@@ -1,0 +1,68 @@
+﻿<Window x:Class="SG.Checkouts_Overview.DisksScannerDialogWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:SG.Checkouts_Overview"
+		mc:Ignorable="d"
+		Title="Checkouts Overview - Scan Disks..." Height="450" Width="800" WindowStartupLocation="CenterScreen">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="auto"/>
+		</Grid.RowDefinitions>
+
+		<GroupBox Header="Option 1: Search with Everything..." Margin="4">
+			<Grid Margin="4">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto" />
+				</Grid.RowDefinitions>
+
+				<Viewbox Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Width="64" Height="64" Margin="4">
+					<Image>
+						<Image.Source>
+							<BitmapImage UriSource="everything.png" />
+						</Image.Source>
+					</Image>
+				</Viewbox>
+
+				<TextBlock Grid.Row="0" Grid.Column="1">Search all NTFS disks with Everything. This is very fast!</TextBlock>
+				<TextBlock Grid.Row="1" Grid.Column="1"><Hyperlink Click="Hyperlink_Click">Everything (https://www.voidtools.com)</Hyperlink> must be installed on the system. (Recommended)</TextBlock>
+				<Button Grid.Row="2" Grid.Column="1" Padding="16,8" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4" Click="SearchWithEverythingButton_Click">Search with Everything</Button>
+
+			</Grid>
+
+		</GroupBox>
+
+		<GroupBox Grid.Row="1" Header="Option 2: Search with Filesystem..." Margin="4,0,4,4">
+			<StackPanel Orientation="Vertical" Margin="4">
+				<TextBlock Margin="2,0">Search from a configured root directory using normal file system method. This will always work, but will be slow.</TextBlock>
+				<DockPanel Margin="2">
+					<TextBlock DockPanel.Dock="left">Root Directory:</TextBlock>
+					<Button DockPanel.Dock="Right" Padding="4,0" Click="BrowseSearchDirButton_Click">...</Button>
+					<TextBox Name="SearchDir" Margin="2,0"></TextBox>
+				</DockPanel>
+				<Button Grid.Row="2" Grid.Column="1" Padding="16,8" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="76,4,4,4" Click="SearchFileSystemButton_Click">Start Search File System</Button>
+			</StackPanel>
+
+		</GroupBox>
+
+		<Grid Grid.Row="2" Background="{StaticResource {x:Static SystemColors.ControlBrushKey}}">
+			<Grid Margin="8">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="auto" />
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="1" Padding="8,2" Margin="4" IsCancel="true">Cancel</Button>
+			</Grid>
+		</Grid>
+
+	</Grid>
+</Window>

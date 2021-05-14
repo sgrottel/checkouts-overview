@@ -24,6 +24,9 @@ build:
   project: .\Checkouts-Overview.sln
   verbosity: minimal
 
+before_test:
+- ps: .\create-testdata.ps1
+
 test_script:
 - cmd: nuget install Appveyor.TestLogger -Version 2.0.0
 - cmd: dotnet test .\Checkouts-Overview.sln --no-build --no-restore --test-adapter-path:. --logger:Appveyor

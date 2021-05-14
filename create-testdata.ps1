@@ -11,6 +11,8 @@ cd ".."
 mkdir i
 cd i
 git clone ../r.git .
+git config user.name "tester"
+git config user.email "tester@nowhere.com"
 echo "x" > f1.txt
 git add -A
 git commit -a -m "f1"
@@ -21,12 +23,16 @@ cd ..
 mkdir a
 cd a
 git clone ../r.git .
+git config user.name "tester"
+git config user.email "tester@nowhere.com"
 cd ..
 
 # will be in&out
 mkdir b
 cd b
 git clone ../r.git .
+git config user.name "tester"
+git config user.email "tester@nowhere.com"
 echo "y" > f2.txt
 git add -A
 git commit -a -m "f2"
@@ -37,6 +43,8 @@ cd ..
 mkdir c
 cd c
 git clone ../r.git .
+git config user.name "tester"
+git config user.email "tester@nowhere.com"
 echo "w" > f3.txt
 git add -A
 git commit -a -m "f3"
@@ -47,6 +55,8 @@ cd ..
 mkdir d
 cd d
 git clone ../r.git .
+git config user.name "tester"
+git config user.email "tester@nowhere.com"
 echo "v" > f4.txt
 git add -A
 git commit -a -m "f4"

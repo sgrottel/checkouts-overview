@@ -1,6 +1,8 @@
 rm "${PSScriptRoot}\TestData" -recurse -force -ErrorAction Ignore
 mkdir "${PSScriptRoot}\TestData"
 
+$env:GIT_REDIRECT_STDERR = '2>&1'
+
 cd "${PSScriptRoot}\TestData"
 
 mkdir "r.git"

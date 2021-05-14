@@ -124,6 +124,7 @@ namespace SG.Checkouts_Overview
 		private void SettingsButton_Click(object sender, RoutedEventArgs e)
 		{
 			SettingsDialogWindow dlg = new SettingsDialogWindow();
+			dlg.Owner = this;
 			dlg.ShowDialog();
 		}
 
@@ -158,7 +159,7 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
-		private void LoadButton_Click(object sender, RoutedEventArgs e)
+		internal static OpenFileDialog CreateOpenProjectFileDialog()
 		{
 			OpenFileDialog dlg = new OpenFileDialog();
 			dlg.Filter = "Xml files|*.xml|All files|*.*";
@@ -167,7 +168,12 @@ namespace SG.Checkouts_Overview
 			dlg.CheckFileExists = true;
 			dlg.InitialDirectory = System.IO.Path.GetDirectoryName(dlg.FileName);
 			dlg.RestoreDirectory = false;
+			return dlg;
+		}
 
+		private void LoadButton_Click(object sender, RoutedEventArgs e)
+		{
+			OpenFileDialog dlg = CreateOpenProjectFileDialog();
 			if (dlg.ShowDialog() ?? false)
 			{
 				try

@@ -126,12 +126,20 @@ namespace SG.Checkouts_Overview
 				throw new Exception("Failed to analyse entry: " + entry.LastMessage);
 		}
 
+		private string gitBin()
+		{
+			return
+				System.IO.File.Exists(Properties.Settings.Default.gitBin)
+				? Properties.Settings.Default.gitBin
+				: "git.exe";
+		}
+
 		private void evaluateGit(Entry entry)
 		{
 			Process p = new Process();
 			p.StartInfo.UseShellExecute = false;
 			p.StartInfo.RedirectStandardOutput = true;
-			p.StartInfo.FileName = "git.exe";
+			p.StartInfo.FileName = gitBin();
 			p.StartInfo.ArgumentList.Clear();
 			p.StartInfo.ArgumentList.Add("status");
 			p.StartInfo.ArgumentList.Add("--short");
@@ -195,7 +203,7 @@ namespace SG.Checkouts_Overview
 			Process p = new Process();
 			p.StartInfo.UseShellExecute = false;
 			p.StartInfo.RedirectStandardOutput = true;
-			p.StartInfo.FileName = "git.exe";
+			p.StartInfo.FileName = gitBin();
 			p.StartInfo.ArgumentList.Clear();
 			p.StartInfo.ArgumentList.Add("log");
 			p.StartInfo.ArgumentList.Add("-n");

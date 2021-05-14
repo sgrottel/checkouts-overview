@@ -94,5 +94,17 @@ namespace SG.Checkouts_Overview.Properties {
                 this["upgradeSettings"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string gitBin {
+            get {
+                return ((string)(this["gitBin"]));
+            }
+            set {
+                this["gitBin"] = value;
+            }
+        }
     }
 }

@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace SG.Checkouts_Overview
 {
-	internal class EntryEvaluator
+	public class EntryEvaluator
 	{
 
-		internal void CheckType(Entry entry)
+		public void CheckType(Entry entry)
 		{
 			if (!System.IO.Directory.Exists(entry.Path))
 			{
@@ -33,11 +33,11 @@ namespace SG.Checkouts_Overview
 		private List<Entry> queue = new List<Entry>();
 		private Thread worker = null;
 
-		internal void Start()
+		public void Start()
 		{
 		}
 
-		internal void Shutdown()
+		public void Shutdown()
 		{
 			lock (queuelock)
 			{
@@ -45,7 +45,7 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
-		internal void BeginEvaluate(Entry entry)
+		public void BeginEvaluate(Entry entry)
 		{
 			lock (queuelock)
 			{
@@ -187,7 +187,7 @@ namespace SG.Checkouts_Overview
 			entry.StatusKnown = true;
 		}
 
-		internal DateTime GetCommitDate(Entry entry)
+		public DateTime GetCommitDate(Entry entry)
 		{
 			switch (entry.Type.ToLower())
 			{

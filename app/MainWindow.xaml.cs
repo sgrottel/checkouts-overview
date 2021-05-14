@@ -58,7 +58,7 @@ namespace SG.Checkouts_Overview
 			{
 				try
 				{
-					DisksScanner scanner = new DisksScanner() { Entries = entries };
+					DisksScannerEverything scanner = new DisksScannerEverything() { Entries = entries };
 					scanner.Scan();
 				}
 				catch { }
@@ -218,7 +218,7 @@ namespace SG.Checkouts_Overview
 		{
 			try
 			{
-				DisksScanner scanner = new DisksScanner();
+				DisksScannerEverything scanner = new DisksScannerEverything();
 				scanner.Entries = (ObservableCollection<Entry>)DataContext;
 				scanner.Scan();
 			}

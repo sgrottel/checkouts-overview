@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SG.Checkouts_Overview
 {
-	class DisksScanner
+	public class DisksScannerEverything
 	{
 		public Collection<Entry> Entries { get; set; } = null;
 

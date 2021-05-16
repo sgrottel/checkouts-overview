@@ -304,8 +304,8 @@
 			
 			<!-- Center ListView showing states -->
 			<!-- https://www.wpf-tutorial.com/listview-control/listview-sorting/ -->
-			<ListView ItemsSource="{Binding}" Name="Entries" HorizontalAlignment="Stretch" MinWidth="50" MouseDown="Entries_MouseDown"
-				ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="Entries_MouseDoubleClick">
+			<ListView ItemsSource="{Binding}" Name="EntriesView" HorizontalAlignment="Stretch" MinWidth="50" MouseDown="EntriesView_MouseDown"
+				ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="EntriesView_MouseDoubleClick">
 				<ListBox.ItemContainerStyle>
 					<Style TargetType="ListViewItem">
 						<Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>

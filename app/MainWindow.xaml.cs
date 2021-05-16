@@ -80,7 +80,7 @@ namespace SG.Checkouts_Overview
 		/// <summary>
 		/// Deselect all when clicking on empty space
 		/// </summary>
-		private void Entries_MouseDown(object sender, MouseButtonEventArgs e)
+		private void EntriesView_MouseDown(object sender, MouseButtonEventArgs e)
 		{
 			HitTestResult r = VisualTreeHelper.HitTest(this, e.GetPosition(this));
 			if (r.VisualHit.GetType() != typeof(ListBoxItem))
@@ -92,9 +92,9 @@ namespace SG.Checkouts_Overview
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Entries_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+		private void EntriesView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
-			if (Entries.SelectedItems.Count > 0)
+			if (EntriesView.SelectedItems.Count > 0)
 			{
 				OpenClientButton_Click(sender, null);
 			}
@@ -108,13 +108,13 @@ namespace SG.Checkouts_Overview
 				Name = "New Entry"
 			};
 			entries.Add(entry);
-			Entries.SelectedItem = entry;
+			EntriesView.SelectedItem = entry;
 		}
 
 		private void DeleteEntriesButton_Click(object sender, RoutedEventArgs e)
 		{
 			var entries = (ObservableCollection<Entry>)DataContext;
-			var selEntries = Entries.SelectedItems.Cast<Entry>().ToArray();
+			var selEntries = EntriesView.SelectedItems.Cast<Entry>().ToArray();
 			foreach (Entry entry in selEntries)
 			{
 				entries.Remove(entry);
@@ -262,7 +262,7 @@ namespace SG.Checkouts_Overview
 
 		private void UpdateButton_Click(object sender, RoutedEventArgs e)
 		{
-			var entries = Entries.SelectedItems.Cast<Entry>().ToList();
+			var entries = EntriesView.SelectedItems.Cast<Entry>().ToList();
 			if (entries.Count == 0)
 			{
 				entries.AddRange((ObservableCollection<Entry>)DataContext);
@@ -275,7 +275,7 @@ namespace SG.Checkouts_Overview
 
 		private void ExploreButton_Click(object sender, RoutedEventArgs e)
 		{
-			foreach (Entry entry in Entries.SelectedItems.Cast<Entry>())
+			foreach (Entry entry in EntriesView.SelectedItems.Cast<Entry>())
 			{
 				Process.Start("explorer.exe", entry.Path);
 			}
@@ -291,7 +291,7 @@ namespace SG.Checkouts_Overview
 
 			}
 
-			foreach (Entry entry in Entries.SelectedItems.Cast<Entry>())
+			foreach (Entry entry in EntriesView.SelectedItems.Cast<Entry>())
 			{
 				Process p = new Process();
 				p.StartInfo.FileName = gc;
@@ -306,7 +306,7 @@ namespace SG.Checkouts_Overview
 			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
 			int p = 0;
 
-			List<Entry> sel = Entries.SelectedItems.Cast<Entry>().ToList();
+			List<Entry> sel = EntriesView.SelectedItems.Cast<Entry>().ToList();
 			if (sel == null || sel.Count <= 0)
 			{
 				sel = entries.ToList();
@@ -352,7 +352,7 @@ namespace SG.Checkouts_Overview
 
 		private void SortMoveUpButton_Click(object sender, RoutedEventArgs e)
 		{
-			List<Entry> sel = Entries.SelectedItems.Cast<Entry>().ToList();
+			List<Entry> sel = EntriesView.SelectedItems.Cast<Entry>().ToList();
 			if (sel == null || sel.Count <= 0) return;
 			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
 
@@ -371,7 +371,7 @@ namespace SG.Checkouts_Overview
 
 		private void SortMoveTopButton_Click(object sender, RoutedEventArgs e)
 		{
-			List<Entry> sel = Entries.SelectedItems.Cast<Entry>().ToList();
+			List<Entry> sel = EntriesView.SelectedItems.Cast<Entry>().ToList();
 			if (sel == null || sel.Count <= 0) return;
 			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
 
@@ -387,7 +387,7 @@ namespace SG.Checkouts_Overview
 
 		private void SortMoveDownButton_Click(object sender, RoutedEventArgs e)
 		{
-			List<Entry> sel = Entries.SelectedItems.Cast<Entry>().ToList();
+			List<Entry> sel = EntriesView.SelectedItems.Cast<Entry>().ToList();
 			if (sel == null || sel.Count <= 0) return;
 			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
 
@@ -409,7 +409,7 @@ namespace SG.Checkouts_Overview
 
 		private void SortMoveBottomButton_Click(object sender, RoutedEventArgs e)
 		{
-			List<Entry> sel = Entries.SelectedItems.Cast<Entry>().ToList();
+			List<Entry> sel = EntriesView.SelectedItems.Cast<Entry>().ToList();
 			if (sel == null || sel.Count <= 0) return;
 			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
 

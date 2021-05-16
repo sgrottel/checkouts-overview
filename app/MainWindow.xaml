@@ -235,7 +235,7 @@
 			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
 			<Button Margin="0,0,2,0" Click="AddEntryButton_Click">New</Button>
 			<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="DeleteEntriesButton_Click">Delete</Button>
-			<ToggleButton Name="ShowSort" IsChecked="False">Sort</ToggleButton>
+			<ToggleButton Name="ShowSort" IsChecked="False">Sort...</ToggleButton>
 			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
 			<Button Click="UpdateButton_Click">Update</Button>
 			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
@@ -244,6 +244,7 @@
 			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
 			<Button Click="SettingsButton_Click">Settings</Button>
 			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
+			<Button Margin="0,0,2,0" Click="OnlineHelpButton_Click">Online Help</Button>
 			<Button Click="AboutButton_Click">About</Button>
 		</WrapPanel>
 

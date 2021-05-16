@@ -470,5 +470,43 @@ namespace SG.Checkouts_Overview
 			return d;
 		}
 
+		private void OnlineHelpButton_Click(object sender, RoutedEventArgs e)
+		{
+			const string knownUrl = "https://github.com/sgrottel/checkouts-overview/blob/main/doc/manual.md";
+			const string fallbackUrl = "https://go.grottel.net/checkouts-overview-manual";
+
+			System.Net.WebClient wc = new System.Net.WebClient();
+			try
+			{
+				string page = wc.DownloadString(knownUrl);
+				if (page.Contains("Checkouts Overview - Usage Manual"))
+				{
+					try
+					{
+						System.Diagnostics.Process.Start(
+							new System.Diagnostics.ProcessStartInfo()
+							{
+								UseShellExecute = true,
+								FileName = knownUrl
+							});
+						return;
+					}
+					catch { }
+				}
+			}
+			catch { }
+			try
+			{
+				System.Diagnostics.Process.Start(
+					new System.Diagnostics.ProcessStartInfo()
+					{
+						UseShellExecute = true,
+						FileName = fallbackUrl
+					});
+				return;
+			}
+			catch { }
+
+		}
 	}
 }

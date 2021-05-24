@@ -229,28 +229,54 @@
 
 		<!-- Top tool bar -->
 		<WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 0 0 4">
-			<Button Margin="0,0,2,0" Click="LoadButton_Click">Load</Button>
-			<Button Click="SaveButton_Click">Save</Button>
-			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
-			<Button Click="ScanDisksButton_Click">Scan Disks</Button>
-			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
-			<Button Margin="0,0,2,0" Click="AddEntryButton_Click">New</Button>
-			<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="DeleteEntriesButton_Click">Delete</Button>
-			<ToggleButton Name="ShowSort" IsChecked="False">Sort</ToggleButton>
-			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
-			<Button Click="UpdateButton_Click">Update</Button>
-			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
-			<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="ExploreButton_Click">Explore</Button>
-			<Button IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="OpenClientButton_Click">Open Client</Button>
-			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
-			<Button Click="SettingsButton_Click">Settings</Button>
-			<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
-			<Button Click="AboutButton_Click">About</Button>
+			<StackPanel Orientation="Vertical">
+				<TextBlock Margin="0,0,0,4" HorizontalAlignment="Center">Collection</TextBlock>
+				<StackPanel Orientation="Horizontal">
+					<Button Margin="0,0,2,0" Click="LoadButton_Click">Load</Button>
+					<Button Click="SaveButton_Click">Save</Button>
+				</StackPanel>
+			</StackPanel>
+			<Separator Margin="4,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"></Separator>
+			<StackPanel Orientation="Vertical">
+				<TextBlock Margin="0,0,0,4" HorizontalAlignment="Center">Auto. Search</TextBlock>
+				<Button Click="ScanDisksButton_Click">Scan Disks</Button>
+			</StackPanel>
+			<Separator Margin="4,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"></Separator>
+			<StackPanel Orientation="Vertical">
+				<TextBlock Margin="0,0,0,4" HorizontalAlignment="Center">Manage Entries</TextBlock>
+				<StackPanel Orientation="Horizontal">
+					<Button Margin="0,0,2,0" Click="AddEntryButton_Click">Add</Button>
+					<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=EntriesView,Path=SelectedItems.Count}" Click="DeleteEntriesButton_Click">Remove</Button>
+					<ToggleButton Name="ShowSort" IsChecked="False">Sort...</ToggleButton>
+				</StackPanel>
+			</StackPanel>
+			<Separator Margin="4,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"></Separator>
+			<StackPanel Orientation="Vertical">
+				<TextBlock Margin="0,0,0,4" HorizontalAlignment="Center">Status</TextBlock>
+				<Button Click="UpdateButton_Click">Update</Button>
+			</StackPanel>
+			<Separator Margin="4,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"></Separator>
+			<StackPanel Orientation="Vertical">
+				<TextBlock Margin="0,0,0,4" HorizontalAlignment="Center">Open Entries</TextBlock>
+				<StackPanel Orientation="Horizontal">
+					<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=EntriesView,Path=SelectedItems.Count}" Click="ExploreButton_Click">Explore</Button>
+					<Button IsEnabled="{Binding ElementName=EntriesView,Path=SelectedItems.Count}" Click="OpenClientButton_Click">Client</Button>
+				</StackPanel>
+			</StackPanel>
+			<Separator Margin="4,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"></Separator>
+			<StackPanel Orientation="Vertical">
+				<TextBlock Margin="0,0,0,4" HorizontalAlignment="Center">Application</TextBlock>
+				<StackPanel Orientation="Horizontal">
+					<Button Margin="0,0,2,0" Click="SettingsButton_Click">Settings</Button>
+					<Button Margin="0,0,2,0" Click="OnlineHelpButton_Click">Online Help</Button>
+					<Button Click="AboutButton_Click">About</Button>
+				</StackPanel>
+			</StackPanel>
 		</WrapPanel>
 
 		<DockPanel Grid.Row="1" Grid.Column="0">
 			<!-- sorting toolbar -->
-			<WrapPanel DockPanel.Dock="Top" Margin="0,0,0,4">
+			<WrapPanel DockPanel.Dock="Top" Margin="0,4">
 				<WrapPanel.Style>
 					<Style TargetType="WrapPanel">
 						<Setter Property="Visibility" Value="Collapsed"/>
@@ -268,7 +294,7 @@
 						<Style TargetType="TextBlock">
 							<Setter Property="Visibility" Value="Collapsed"/>
 							<Style.Triggers>
-								<DataTrigger Binding="{Binding ElementName=Entries,Path=SelectedItems.Count}" Value="0">
+								<DataTrigger Binding="{Binding ElementName=EntriesView,Path=SelectedItems.Count}" Value="0">
 									<Setter Property="Visibility" Value="Visible"/>
 								</DataTrigger>
 							</Style.Triggers>
@@ -281,7 +307,7 @@
 						<Style TargetType="TextBlock">
 							<Setter Property="Visibility" Value="Visible"/>
 							<Style.Triggers>
-								<DataTrigger Binding="{Binding ElementName=Entries,Path=SelectedItems.Count}" Value="0">
+								<DataTrigger Binding="{Binding ElementName=EntriesView,Path=SelectedItems.Count}" Value="0">
 									<Setter Property="Visibility" Value="Collapsed"/>
 								</DataTrigger>
 							</Style.Triggers>
@@ -294,13 +320,13 @@
 				<Button Margin="0,0,2,0" Click="SortByPathButton_Click">Path</Button>
 				<Button Click="SortByLastChangedDateButton_Click">Last Changed Date</Button>
 				<Button Click="SortByLastCommitDateButton_Click">Last Commit Date</Button>
-				<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
+				<Separator Margin="4,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"></Separator>
 				<Button Click="SortReverseButton_Click">Reverse</Button>
-				<TextBlock Margin="6,0" VerticalAlignment="Stretch">|</TextBlock>
-				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="SortMoveTopButton_Click">Top</Button>
-				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="SortMoveUpButton_Click">Up</Button>
-				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="SortMoveDownButton_Click">Down</Button>
-				<Button IsEnabled="{Binding ElementName=Entries,Path=SelectedItems.Count}" Click="SortMoveBottomButton_Click">Bottom</Button>
+				<Separator Margin="4,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"></Separator>
+				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=EntriesView,Path=SelectedItems.Count}" Click="SortMoveTopButton_Click">Top</Button>
+				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=EntriesView,Path=SelectedItems.Count}" Click="SortMoveUpButton_Click">Up</Button>
+				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=EntriesView,Path=SelectedItems.Count}" Click="SortMoveDownButton_Click">Down</Button>
+				<Button IsEnabled="{Binding ElementName=EntriesView,Path=SelectedItems.Count}" Click="SortMoveBottomButton_Click">Bottom</Button>
 			</WrapPanel>
 			
 			<!-- Center ListView showing states -->
@@ -356,7 +382,7 @@
 		<GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Background="#FF404040"></GridSplitter>
 
 		<!-- right column edit pane -->
-		<ListView Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" MinWidth="50" ItemsSource="{Binding ElementName=Entries,Path=SelectedItems}"
+		<ListView Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" MinWidth="50" ItemsSource="{Binding ElementName=EntriesView,Path=SelectedItems}"
 				  Grid.IsSharedSizeScope="True" SelectionMode="Single"
 				  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 			<ListView.ItemsPanel>

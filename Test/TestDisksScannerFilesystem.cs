@@ -16,21 +16,21 @@ namespace SG.Checkouts_Overview.Test
 		{
 			string tdp = System.IO.Path.Combine(Utility.FindMyGit(), "TestData");
 
+			List<Entry> es = new List<Entry>();
 			DisksScannerFilesystem dsfs = new DisksScannerFilesystem()
 			{
-				Entries = new System.Collections.ObjectModel.Collection<Entry>(),
-				Dispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher,
 				Root = tdp
 			};
+			dsfs.EntryFound += (Entry e) => { es.Add(e); return true; };
 
 			dsfs.Scan();
 
-			Assert.IsTrue(dsfs.Entries.Count >= 8); // 8 test repos "a"-"h", and optionally the one initialization repo "i"
+			Assert.IsTrue(es.Count >= 8); // 8 test repos "a"-"h", and optionally the one initialization repo "i"
 
 			for (char sd = 'a'; sd <= 'h'; sd++)
 			{
 				bool found = false;
-				foreach (Entry e in dsfs.Entries)
+				foreach (Entry e in es)
 				{
 					if (string.Equals(System.IO.Path.GetFileName(e.Path), sd.ToString(), StringComparison.CurrentCultureIgnoreCase))
 					{

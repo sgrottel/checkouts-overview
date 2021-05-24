@@ -11,11 +11,9 @@ namespace SG.Checkouts_Overview
 {
 	public class DisksScannerEverything : IDisksScanner
 	{
-		public Collection<Entry> Entries { get; set; } = null;
-
-		public Dispatcher Dispatcher { get; set; }
 
 		public event EventHandler<string> ScanMessage;
+		public event Func<Entry, bool> EntryFound;
 
 		public void AbortScan()
 		{
@@ -69,19 +67,15 @@ namespace SG.Checkouts_Overview
 				}
 
 				string d = System.IO.Path.GetDirectoryName(dgit);
-				if (Entries.FirstOrDefault((Entry e) => { return string.Equals(e.Path, d, StringComparison.CurrentCultureIgnoreCase); }) != null) continue; // entry known
-
-				Dispatcher.Invoke(new Action<string>((string dir) =>
-				{
-					Entries.Add(new Entry()
+				if (EntryFound?.Invoke(new Entry()
 					{
-						Name = System.IO.Path.GetFileName(dir),
-						Path = dir,
+						Name = System.IO.Path.GetFileName(d),
+						Path = d,
 						Type = "git"
-					});
-				}), new object[] { d });
-
-				added++;
+					}) ?? false)
+				{
+					added++;
+				}
 			}
 
 			ScanMessage?.Invoke(this, string.Format("Scan completed. {0} entr{1} added.", added, (added == 1) ? "y" : "ies"));

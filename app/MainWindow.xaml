@@ -362,7 +362,7 @@
 											<Style TargetType="ContentControl">
 												<Setter Property="Visibility" Value="Hidden"/>
 												<Style.Triggers>
-													<DataTrigger Binding="{Binding Evaluating}" Value="True">
+													<DataTrigger Binding="{Binding Status.Evaluating}" Value="True">
 														<Setter Property="Visibility" Value="Visible"/>
 													</DataTrigger>
 												</Style.Triggers>
@@ -415,17 +415,17 @@
 						<GridSplitter Grid.Column="1" Grid.RowSpan="4" Width="4" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="#00000000" />
 
 						<TextBlock Text="Name" Margin="0,0,4,0" HorizontalAlignment="Stretch" />
-						<TextBox Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding Name}" HorizontalAlignment="Stretch" Margin="0,0,0,4"/>
+						<TextBox Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding Entry.Name}" HorizontalAlignment="Stretch" Margin="0,0,0,4"/>
 
 						<TextBlock Grid.Row="1" Text="Status" Margin="0,0,4,4" HorizontalAlignment="Stretch" />
 						<TextBlock Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding StatusText}" Margin="0,0,4,4" Padding="4,0" HorizontalAlignment="Stretch" />
 
 						<TextBlock Grid.Row="2" Text="Path" Margin="0,0,4,0" HorizontalAlignment="Stretch" />
-						<TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Path}" HorizontalAlignment="Stretch" Margin="0,0,0,4" />
+						<TextBox Grid.Row="2" Grid.Column="2" Text="{Binding Entry.Path}" HorizontalAlignment="Stretch" Margin="0,0,0,4" />
 						<Button Grid.Row="2" Grid.Column="3" Margin="4,0,0,4" Click="EntryBrowsePathButton_Click">...</Button>
 
 						<TextBlock Grid.Row="3" Text="Type" Margin="0,0,4,0" HorizontalAlignment="Stretch" />
-						<TextBox Grid.Row="3" Grid.Column="2" Text="{Binding Type}" HorizontalAlignment="Stretch" Margin="0,0,0,4" />
+						<TextBox Grid.Row="3" Grid.Column="2" Text="{Binding Entry.Type}" HorizontalAlignment="Stretch" Margin="0,0,0,4" />
 						<Button Grid.Row="3" Grid.Column="3" Margin="4,0,0,4" HorizontalAlignment="Stretch" Click="EntryTypeButton_Click">*</Button>
 
 						<TextBlock Grid.Row="4" Grid.ColumnSpan="4" Text="{Binding LastMessage}" HorizontalAlignment="Stretch">

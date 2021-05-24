@@ -28,6 +28,7 @@ namespace SG.Checkouts_Overview
 	{
 
 		private EntryEvaluator evaluator;
+		private ObservableCollection<EntryView> entries = new ObservableCollection<EntryView>();
 
 		public MainWindow()
 		{
@@ -43,7 +44,6 @@ namespace SG.Checkouts_Overview
 			evaluator = new EntryEvaluator();
 			evaluator.Start();
 
-			ObservableCollection<Entry> entries = new ObservableCollection<Entry>();
 			DataContext = entries;
 
 			if (Properties.Settings.Default.loadOnStart)
@@ -58,7 +58,24 @@ namespace SG.Checkouts_Overview
 			{
 				try
 				{
-					DisksScannerEverything scanner = new DisksScannerEverything() { Entries = entries };
+					DisksScannerEverything scanner = new DisksScannerEverything();
+					scanner.EntryFound += (Entry e) =>
+					{
+						foreach (var ke in entries)
+						{
+							if (string.Equals(ke.Entry.Path, e.Path, StringComparison.CurrentCultureIgnoreCase)) return false;
+						}
+						Dispatcher.Invoke(() =>
+						{
+							EntryView ev = new EntryView() { Entry = e };
+							entries.Add(ev);
+							if (Properties.Settings.Default.updateOnStart)
+							{
+								ev.Status = evaluator.BeginEvaluate(e, (string s) => { ev.LastMessage = s; });
+							}
+						});
+						return true;
+					};
 					scanner.Scan();
 				}
 				catch { }
@@ -67,9 +84,9 @@ namespace SG.Checkouts_Overview
 			{
 				try
 				{
-					foreach (Entry entry in entries)
+					foreach (EntryView entry in entries)
 					{
-						evaluator.BeginEvaluate(entry);
+						entry.Status = evaluator.BeginEvaluate(entry.Entry, (string s) => { entry.LastMessage = s; });
 					}
 				}
 				catch { }
@@ -102,20 +119,18 @@ namespace SG.Checkouts_Overview
 
 		private void AddEntryButton_Click(object sender, RoutedEventArgs e)
 		{
-			var entries = (ObservableCollection<Entry>)DataContext;
 			Entry entry = new Entry()
 			{
 				Name = "New Entry"
 			};
-			entries.Add(entry);
+			entries.Add(new EntryView() { Entry = entry });
 			EntriesView.SelectedItem = entry;
 		}
 
 		private void DeleteEntriesButton_Click(object sender, RoutedEventArgs e)
 		{
-			var entries = (ObservableCollection<Entry>)DataContext;
-			var selEntries = EntriesView.SelectedItems.Cast<Entry>().ToArray();
-			foreach (Entry entry in selEntries)
+			var selEntries = EntriesView.SelectedItems.Cast<EntryView>().ToArray();
+			foreach (EntryView entry in selEntries)
 			{
 				entries.Remove(entry);
 			}
@@ -154,7 +169,9 @@ namespace SG.Checkouts_Overview
 					using (TextWriter wrtr = new StreamWriter(dlg.FileName))
 					{
 						XmlSerializer ser = new XmlSerializer(typeof(Entry[]));
-						ser.Serialize(wrtr, ((ObservableCollection<Entry>)DataContext).ToArray());
+						ser.Serialize(wrtr,
+							Array.ConvertAll<EntryView, Entry>(entries.ToArray(), (EntryView ev) => { return ev.Entry; })
+							);
 					}
 					Properties.Settings.Default.lastFile = dlg.FileName;
 					Properties.Settings.Default.Save();
@@ -204,11 +221,10 @@ namespace SG.Checkouts_Overview
 				Entry[] es = ser.Deserialize(rdr) as Entry[];
 				if (es != null && es.Length > 0)
 				{
-					var entries = (ObservableCollection<Entry>)DataContext;
 					entries.Clear();
 					foreach (Entry e in es)
 					{
-						entries.Add(e);
+						entries.Add(new EntryView() { Entry = e });
 					}
 				}
 			}
@@ -221,7 +237,18 @@ namespace SG.Checkouts_Overview
 			dlg.ShowDialog();
 			if (dlg.DisksScanner != null)
 			{
-				dlg.DisksScanner.Entries = (ObservableCollection<Entry>)DataContext;
+				dlg.DisksScanner.EntryFound += (Entry e) =>
+				{
+					foreach (var ke in entries)
+					{
+						if (string.Equals(ke.Entry.Path, e.Path, StringComparison.CurrentCultureIgnoreCase)) return false;
+					}
+					Dispatcher.Invoke(() =>
+					{
+						entries.Add(new EntryView() { Entry = e });
+					});
+					return true;
+				};
 				DisksScannerProgressDialogWindow prgDlg = new DisksScannerProgressDialogWindow();
 				prgDlg.Owner = this;
 				prgDlg.DisksScanner = dlg.DisksScanner;
@@ -232,26 +259,26 @@ namespace SG.Checkouts_Overview
 
 		private void EntryTypeButton_Click(object sender, RoutedEventArgs e)
 		{
-			Entry entry = (sender as Button)?.DataContext as Entry;
+			EntryView entry = (sender as Button)?.DataContext as EntryView;
 			if (entry == null) return;
-			evaluator.CheckType(entry);
+			evaluator.CheckType(entry.Entry, (string s) => { entry.LastMessage = s; });
 		}
 
 		private void EntryBrowsePathButton_Click(object sender, RoutedEventArgs e)
 		{
-			Entry entry = (sender as Button)?.DataContext as Entry;
-			if (entry == null) return;
+			EntryView entry = (sender as Button)?.DataContext as EntryView;
+			if (entry == null || entry.Entry == null) return;
 
 			var dlg = new CommonOpenFileDialog();
 			dlg.IsFolderPicker = true;
-			dlg.InitialDirectory = entry.Path;
-			dlg.DefaultFileName = entry.Path;
+			dlg.InitialDirectory = entry.Entry.Path;
+			dlg.DefaultFileName = entry.Entry.Path;
 			dlg.Title = "";
 			dlg.Multiselect = false;
 
 			if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
 			{
-				entry.Path = dlg.FileName;
+				entry.Entry.Path = dlg.FileName;
 			}
 		}
 
@@ -262,22 +289,25 @@ namespace SG.Checkouts_Overview
 
 		private void UpdateButton_Click(object sender, RoutedEventArgs e)
 		{
-			var entries = EntriesView.SelectedItems.Cast<Entry>().ToList();
-			if (entries.Count == 0)
+
+			var sel = EntriesView.SelectedItems.Cast<EntryView>().ToList();
+			if (sel.Count == 0)
 			{
-				entries.AddRange((ObservableCollection<Entry>)DataContext);
+				sel.AddRange(entries);
 			}
-			foreach (Entry entry in entries)
+			foreach (EntryView entry in sel)
 			{
-				evaluator.BeginEvaluate(entry);
+				EntryStatus es = evaluator.BeginEvaluate(entry.Entry, (string s) => { entry.LastMessage = s; });
+				if (es != null) entry.Status = es;
 			}
 		}
 
 		private void ExploreButton_Click(object sender, RoutedEventArgs e)
 		{
-			foreach (Entry entry in EntriesView.SelectedItems.Cast<Entry>())
+			foreach (EntryView entry in EntriesView.SelectedItems.Cast<EntryView>())
 			{
-				Process.Start("explorer.exe", entry.Path);
+				if (entry == null || entry.Entry == null) continue;
+				Process.Start("explorer.exe", entry.Entry.Path);
 			}
 		}
 
@@ -291,22 +321,22 @@ namespace SG.Checkouts_Overview
 
 			}
 
-			foreach (Entry entry in EntriesView.SelectedItems.Cast<Entry>())
+			foreach (EntryView entry in EntriesView.SelectedItems.Cast<EntryView>())
 			{
+				if (entry == null || entry.Entry == null) continue;
 				Process p = new Process();
 				p.StartInfo.FileName = gc;
 				p.StartInfo.ArgumentList.Clear();
-				p.StartInfo.ArgumentList.Add(entry.Path);
+				p.StartInfo.ArgumentList.Add(entry.Entry.Path);
 				p.Start();
 			}
 		}
 
-		private void sortEntries(Action<List<Entry>> sorter)
+		private void sortEntries(Action<List<EntryView>> sorter)
 		{
-			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
 			int p = 0;
 
-			List<Entry> sel = EntriesView.SelectedItems.Cast<Entry>().ToList();
+			List<EntryView> sel = EntriesView.SelectedItems.Cast<EntryView>().ToList();
 			if (sel == null || sel.Count <= 0)
 			{
 				sel = entries.ToList();
@@ -314,12 +344,12 @@ namespace SG.Checkouts_Overview
 			else
 			{
 				p = entries.Count;
-				foreach (Entry a in sel) p= Math.Min(p, entries.IndexOf(a));
+				foreach (EntryView a in sel) p= Math.Min(p, entries.IndexOf(a));
 			}
 
 			sorter(sel);
 
-			foreach (Entry a in sel)
+			foreach (EntryView a in sel)
 			{
 				entries.Remove(a);
 				entries.Insert(p++, a);
@@ -328,23 +358,23 @@ namespace SG.Checkouts_Overview
 
 		private void SortByNameButton_Click(object sender, RoutedEventArgs e)
 		{
-			sortEntries((List<Entry> te) =>
+			sortEntries((List<EntryView> te) =>
 			{
-				te.Sort((Entry a, Entry b) => { return string.Compare(a.Name, b.Name); });
+				te.Sort((EntryView a, EntryView b) => { return string.Compare(a.Entry.Name, b.Entry.Name); });
 			});
 		}
 
 		private void SortByPathButton_Click(object sender, RoutedEventArgs e)
 		{
-			sortEntries((List<Entry> te) =>
+			sortEntries((List<EntryView> te) =>
 			{
-				te.Sort((Entry a, Entry b) => { return string.Compare(a.Path, b.Path); });
+				te.Sort((EntryView a, EntryView b) => { return string.Compare(a.Entry.Path, b.Entry.Path); });
 			});
 		}
 
 		private void SortReverseButton_Click(object sender, RoutedEventArgs e)
 		{
-			sortEntries((List<Entry> te) =>
+			sortEntries((List<EntryView> te) =>
 			{
 				te.Reverse();
 			});
@@ -352,17 +382,16 @@ namespace SG.Checkouts_Overview
 
 		private void SortMoveUpButton_Click(object sender, RoutedEventArgs e)
 		{
-			List<Entry> sel = EntriesView.SelectedItems.Cast<Entry>().ToList();
+			List<EntryView> sel = EntriesView.SelectedItems.Cast<EntryView>().ToList();
 			if (sel == null || sel.Count <= 0) return;
-			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
 
-			sel.Sort((Entry a, Entry b) => { return entries.IndexOf(a) - entries.IndexOf(b); });
+			sel.Sort((EntryView a, EntryView b) => { return entries.IndexOf(a) - entries.IndexOf(b); });
 
 			int minIdx = entries.Count;
-			foreach (Entry entry in sel) minIdx = Math.Min(minIdx, entries.IndexOf(entry));
+			foreach (EntryView entry in sel) minIdx = Math.Min(minIdx, entries.IndexOf(entry));
 			minIdx = Math.Max(0, minIdx - 1);
 
-			foreach (Entry a in sel)
+			foreach (EntryView a in sel)
 			{
 				entries.Remove(a);
 				entries.Insert(minIdx++, a);
@@ -371,14 +400,13 @@ namespace SG.Checkouts_Overview
 
 		private void SortMoveTopButton_Click(object sender, RoutedEventArgs e)
 		{
-			List<Entry> sel = EntriesView.SelectedItems.Cast<Entry>().ToList();
+			List<EntryView> sel = EntriesView.SelectedItems.Cast<EntryView>().ToList();
 			if (sel == null || sel.Count <= 0) return;
-			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
 
-			sel.Sort((Entry a, Entry b) => { return entries.IndexOf(a) - entries.IndexOf(b); });
+			sel.Sort((EntryView a, EntryView b) => { return entries.IndexOf(a) - entries.IndexOf(b); });
 
 			int minIdx = 0;
-			foreach (Entry a in sel)
+			foreach (EntryView a in sel)
 			{
 				entries.Remove(a);
 				entries.Insert(minIdx++, a);
@@ -387,17 +415,16 @@ namespace SG.Checkouts_Overview
 
 		private void SortMoveDownButton_Click(object sender, RoutedEventArgs e)
 		{
-			List<Entry> sel = EntriesView.SelectedItems.Cast<Entry>().ToList();
+			List<EntryView> sel = EntriesView.SelectedItems.Cast<EntryView>().ToList();
 			if (sel == null || sel.Count <= 0) return;
-			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
 
-			sel.Sort((Entry a, Entry b) => { return entries.IndexOf(a) - entries.IndexOf(b); });
+			sel.Sort((EntryView a, EntryView b) => { return entries.IndexOf(a) - entries.IndexOf(b); });
 
 			int maxIdx = 0;
-			foreach (Entry entry in sel) maxIdx = Math.Max(maxIdx, entries.IndexOf(entry));
+			foreach (EntryView entry in sel) maxIdx = Math.Max(maxIdx, entries.IndexOf(entry));
 			maxIdx++;
 
-			foreach (Entry a in sel)
+			foreach (EntryView a in sel)
 			{
 				entries.Remove(a);
 				if (maxIdx >= entries.Count)
@@ -409,13 +436,12 @@ namespace SG.Checkouts_Overview
 
 		private void SortMoveBottomButton_Click(object sender, RoutedEventArgs e)
 		{
-			List<Entry> sel = EntriesView.SelectedItems.Cast<Entry>().ToList();
+			List<EntryView> sel = EntriesView.SelectedItems.Cast<EntryView>().ToList();
 			if (sel == null || sel.Count <= 0) return;
-			ObservableCollection<Entry> entries = (ObservableCollection<Entry>)DataContext;
 
-			sel.Sort((Entry a, Entry b) => { return entries.IndexOf(a) - entries.IndexOf(b); });
+			sel.Sort((EntryView a, EntryView b) => { return entries.IndexOf(a) - entries.IndexOf(b); });
 
-			foreach (Entry a in sel)
+			foreach (EntryView a in sel)
 			{
 				entries.Remove(a);
 				entries.Add(a);
@@ -424,28 +450,28 @@ namespace SG.Checkouts_Overview
 
 		private void SortByLastChangedDateButton_Click(object sender, RoutedEventArgs e)
 		{
-			sortEntries((List<Entry> te) =>
+			sortEntries((List<EntryView> te) =>
 			{
-				Dictionary<Entry, DateTime> cd = new Dictionary<Entry, DateTime>();
-				foreach (Entry e in te)
+				Dictionary<EntryView, DateTime> cd = new Dictionary<EntryView, DateTime>();
+				foreach (EntryView e in te)
 				{
-					cd[e] = getChangedDate(e.Path);
+					cd[e] = getChangedDate(e.Entry.Path);
 					// Debug.WriteLine("{0}  ==>  {1}", e.Path, cd[e]);
 				}
-				te.Sort((Entry a, Entry b) => { return DateTime.Compare(cd[b], cd[a]); });
+				te.Sort((EntryView a, EntryView b) => { return DateTime.Compare(cd[b], cd[a]); });
 			});
 		}
 
 		private void SortByLastCommitDateButton_Click(object sender, RoutedEventArgs e)
 		{
-			sortEntries((List<Entry> te) =>
+			sortEntries((List<EntryView> te) =>
 			{
-				Dictionary<Entry, DateTime> cd = new Dictionary<Entry, DateTime>();
-				foreach (Entry e in te)
+				Dictionary<EntryView, DateTime> cd = new Dictionary<EntryView, DateTime>();
+				foreach (EntryView e in te)
 				{
-					cd[e] = evaluator.GetCommitDate(e);
+					cd[e] = evaluator.GetCommitDate(e.Entry);
 				}
-				te.Sort((Entry a, Entry b) => { return DateTime.Compare(cd[b], cd[a]); });
+				te.Sort((EntryView a, EntryView b) => { return DateTime.Compare(cd[b], cd[a]); });
 			});
 		}
 
@@ -462,7 +488,7 @@ namespace SG.Checkouts_Overview
 					d = fi.LastWriteTime;
 			foreach (DirectoryInfo sdi in di.GetDirectories())
 			{
-				if (String.Equals(sdi.Name, ".git", StringComparison.CurrentCultureIgnoreCase)) continue;
+				if (string.Equals(sdi.Name, ".git", StringComparison.CurrentCultureIgnoreCase)) continue;
 				DateTime sdd = getChangedDate(sdi);
 				if (sdd > d)
 					d = sdd;
@@ -491,14 +517,13 @@ namespace SG.Checkouts_Overview
 				e.Handled = true;
 				return;
 			}
-			var entries = (ObservableCollection<Entry>)DataContext;
-			List<Entry> toSelect = new List<Entry>();
+			List<EntryView> toSelect = new List<EntryView>();
 			foreach (string p in fdo)
 			{
 				bool found = false;
-				foreach (Entry ee in entries)
+				foreach (EntryView ee in entries)
 				{
-					if (string.Equals(ee.Path, p, StringComparison.CurrentCultureIgnoreCase))
+					if (string.Equals(ee.Entry.Path, p, StringComparison.CurrentCultureIgnoreCase))
 					{
 						toSelect.Add(ee);
 						found = true;
@@ -507,12 +532,15 @@ namespace SG.Checkouts_Overview
 				}
 				if (!found)
 				{
-					Entry ne = new Entry()
+					EntryView ne = new EntryView()
 					{
-						Name = System.IO.Path.GetFileName(p),
-						Path = p
+						Entry = new Entry()
+						{
+							Name = System.IO.Path.GetFileName(p),
+							Path = p
+						}
 					};
-					evaluator.CheckType(ne);
+					evaluator.CheckType(ne.Entry, (string s) => { ne.LastMessage = s; });
 					toSelect.Add(ne);
 					entries.Add(ne);
 				}
@@ -521,7 +549,7 @@ namespace SG.Checkouts_Overview
 			if (toSelect.Count > 0)
 			{
 				EntriesView.SelectedItem = null;
-				foreach (Entry se in toSelect)
+				foreach (EntryView se in toSelect)
 				{
 					se.IsSelected = true;
 				}

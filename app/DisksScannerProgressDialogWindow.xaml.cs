@@ -70,7 +70,8 @@ namespace SG.Checkouts_Overview
 		void work()
 		{
 			IDisksScanner ds = DisksScanner;
-			ds.Dispatcher = Dispatcher;
+			// TODO: Fix me
+			//ds.Dispatcher = Dispatcher;
 			if (ds == null) return;
 			ds.ScanMessage += Ds_ScanMessage;
 			try

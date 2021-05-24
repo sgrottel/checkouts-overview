@@ -30,45 +30,21 @@ namespace SG.Checkouts_Overview.Test
 				{
 					Name = "Name 1",
 					Path = paths["Name 1"],
-					Type = types["Name 1"],
-					Available = false,
-					Evaluating = true,
-					StatusKnown = false,
-					FailedStatus = true,
-					LocalChanges = false,
-					IncomingChanges = false,
-					OutgoingChanges = true,
-					LastMessage = "Dummy"
+					Type = types["Name 1"]
 				});
 			entries.Add(
 				new Entry()
 				{
 					Name = "Name 2",
 					Path = paths["Name 2"],
-					Type = types["Name 2"],
-					Available = true,
-					Evaluating = true,
-					StatusKnown = false,
-					FailedStatus = false,
-					LocalChanges = false,
-					IncomingChanges = false,
-					OutgoingChanges = true,
-					LastMessage = "Dummy-2"
+					Type = types["Name 2"]
 				});
 			entries.Add(
 				new Entry()
 				{
 					Name = "Name 3",
 					Path = paths["Name 3"],
-					Type = types["Name 3"],
-					Available = true,
-					Evaluating = true,
-					StatusKnown = true,
-					FailedStatus = true,
-					LocalChanges = true,
-					IncomingChanges = true,
-					OutgoingChanges = true,
-					LastMessage = "Dummy-3"
+					Type = types["Name 3"]
 				});
 
 			string serialized = null;
@@ -143,8 +119,6 @@ namespace SG.Checkouts_Overview.Test
 			types["Name 2"] = @"gut";
 			types["Name 3"] = @"good";
 
-			Entry ee = new Entry();
-
 			using (StringReader rdr = new StringReader(xml))
 			{
 				XmlSerializer ser = new XmlSerializer(typeof(Entry[]));
@@ -161,15 +135,6 @@ namespace SG.Checkouts_Overview.Test
 					Assert.IsTrue(types.ContainsKey(e.Name));
 					Assert.AreEqual(types[e.Name], e.Type);
 					types.Remove(e.Name);
-
-					Assert.AreEqual(ee.Available, e.Available);
-					Assert.AreEqual(ee.Evaluating, e.Evaluating);
-					Assert.AreEqual(ee.StatusKnown, e.StatusKnown);
-					Assert.AreEqual(ee.FailedStatus, e.FailedStatus);
-					Assert.AreEqual(ee.LocalChanges, e.LocalChanges);
-					Assert.AreEqual(ee.IncomingChanges, e.IncomingChanges);
-					Assert.AreEqual(ee.OutgoingChanges, e.OutgoingChanges);
-					Assert.AreEqual(ee.LastMessage, e.LastMessage);
 				}
 			}
 		}
@@ -193,45 +158,21 @@ namespace SG.Checkouts_Overview.Test
 				{
 					Name = "Name 1",
 					Path = paths["Name 1"],
-					Type = types["Name 1"],
-					Available = false,
-					Evaluating = true,
-					StatusKnown = false,
-					FailedStatus = true,
-					LocalChanges = false,
-					IncomingChanges = false,
-					OutgoingChanges = true,
-					LastMessage = "Dummy"
+					Type = types["Name 1"]
 				});
 			entries.Add(
 				new Entry()
 				{
 					Name = "Name 2",
 					Path = paths["Name 2"],
-					Type = types["Name 2"],
-					Available = true,
-					Evaluating = true,
-					StatusKnown = false,
-					FailedStatus = false,
-					LocalChanges = false,
-					IncomingChanges = false,
-					OutgoingChanges = true,
-					LastMessage = "Dummy-2"
+					Type = types["Name 2"]
 				});
 			entries.Add(
 				new Entry()
 				{
 					Name = "Name 3",
 					Path = paths["Name 3"],
-					Type = types["Name 3"],
-					Available = true,
-					Evaluating = true,
-					StatusKnown = true,
-					FailedStatus = true,
-					LocalChanges = true,
-					IncomingChanges = true,
-					OutgoingChanges = true,
-					LastMessage = "Dummy-3"
+					Type = types["Name 3"]
 				});
 
 			string serialized = null;
@@ -254,8 +195,6 @@ namespace SG.Checkouts_Overview.Test
 
 			Assert.AreEqual(3, doc.DocumentElement.ChildNodes.Count);
 
-			Entry ee = new Entry();
-
 			using (StringReader rdr = new StringReader(serialized))
 			{
 				XmlSerializer ser = new XmlSerializer(typeof(Entry[]));
@@ -272,15 +211,6 @@ namespace SG.Checkouts_Overview.Test
 					Assert.IsTrue(types.ContainsKey(e.Name));
 					Assert.AreEqual(types[e.Name], e.Type);
 					types.Remove(e.Name);
-
-					Assert.AreEqual(ee.Available, e.Available);
-					Assert.AreEqual(ee.Evaluating, e.Evaluating);
-					Assert.AreEqual(ee.StatusKnown, e.StatusKnown);
-					Assert.AreEqual(ee.FailedStatus, e.FailedStatus);
-					Assert.AreEqual(ee.LocalChanges, e.LocalChanges);
-					Assert.AreEqual(ee.IncomingChanges, e.IncomingChanges);
-					Assert.AreEqual(ee.OutgoingChanges, e.OutgoingChanges);
-					Assert.AreEqual(ee.LastMessage, e.LastMessage);
 				}
 			}
 
@@ -301,15 +231,7 @@ namespace SG.Checkouts_Overview.Test
 				{
 					Name = "Name 2",
 					Path = paths["Name 2"],
-					Type = types["Name 2"],
-					Available = true,
-					Evaluating = true,
-					StatusKnown = false,
-					FailedStatus = false,
-					LocalChanges = false,
-					IncomingChanges = false,
-					OutgoingChanges = true,
-					LastMessage = "Dummy-2"
+					Type = types["Name 2"]
 				});
 
 			string serialized = null;
@@ -332,8 +254,6 @@ namespace SG.Checkouts_Overview.Test
 
 			Assert.AreEqual(1, doc.DocumentElement.ChildNodes.Count);
 
-			Entry ee = new Entry();
-
 			using (StringReader rdr = new StringReader(serialized))
 			{
 				XmlSerializer ser = new XmlSerializer(typeof(Entry[]));
@@ -350,15 +270,6 @@ namespace SG.Checkouts_Overview.Test
 					Assert.IsTrue(types.ContainsKey(e.Name));
 					Assert.AreEqual(types[e.Name], e.Type);
 					types.Remove(e.Name);
-
-					Assert.AreEqual(ee.Available, e.Available);
-					Assert.AreEqual(ee.Evaluating, e.Evaluating);
-					Assert.AreEqual(ee.StatusKnown, e.StatusKnown);
-					Assert.AreEqual(ee.FailedStatus, e.FailedStatus);
-					Assert.AreEqual(ee.LocalChanges, e.LocalChanges);
-					Assert.AreEqual(ee.IncomingChanges, e.IncomingChanges);
-					Assert.AreEqual(ee.OutgoingChanges, e.OutgoingChanges);
-					Assert.AreEqual(ee.LastMessage, e.LastMessage);
 				}
 			}
 

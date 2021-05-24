@@ -10,12 +10,10 @@ namespace SG.Checkouts_Overview
 {
 	public class DisksScannerFilesystem : IDisksScanner
 	{
-		public Collection<Entry> Entries { get; set; }
-
-		public Dispatcher Dispatcher { get; set; }
 		public string Root { get; set; }
 
 		public event EventHandler<string> ScanMessage;
+		public event Func<Entry, bool> EntryFound;
 
 		private bool abort = false;
 		private object abortLock = new object();
@@ -52,17 +50,13 @@ namespace SG.Checkouts_Overview
 
 					if (System.IO.Directory.Exists(System.IO.Path.Combine(d, ".git")))
 					{
-						if (Entries.FirstOrDefault((Entry e) => { return string.Equals(e.Path, d, StringComparison.CurrentCultureIgnoreCase); }) == null)
-						{
-							Dispatcher.Invoke(new Action<string>((string dir) =>
+						if (EntryFound?.Invoke(new Entry()
 							{
-								Entries.Add(new Entry()
-								{
-									Name = System.IO.Path.GetFileName(dir),
-									Path = dir,
-									Type = "git"
-								});
-							}), new object[] { d });
+								Name = System.IO.Path.GetFileName(d),
+								Path = d,
+								Type = "git"
+							}) ?? false)
+						{
 							added++;
 						}
 					}

@@ -12,11 +12,11 @@ namespace SG.Checkouts_Overview
 	public class EntryEvaluator
 	{
 
-		public void CheckType(Entry entry)
+		public void CheckType(Entry entry, Action<string> setLastMessage)
 		{
 			if (!System.IO.Directory.Exists(entry.Path))
 			{
-				entry.LastMessage = "ERROR: Path is not available";
+				setLastMessage?.Invoke("ERROR: Path is not available");
 				return;
 			}
 
@@ -24,13 +24,13 @@ namespace SG.Checkouts_Overview
 				System.IO.Path.Combine(entry.Path, ".git")))
 			{
 				entry.Type = "git";
-				entry.LastMessage = "Git clone detected.";
+				setLastMessage?.Invoke("Git clone detected.");
 				return;
 			}
 		}
 
 		private object queuelock = new object();
-		private List<Entry> queue = new List<Entry>();
+		private List<Tuple<Entry, EntryStatus, Action<string>>> queue = new List<Tuple<Entry, EntryStatus, Action<string>>>();
 		private Thread worker = null;
 
 		public void Start()
@@ -45,18 +45,22 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
-		public void BeginEvaluate(Entry entry)
+		public EntryStatus BeginEvaluate(Entry entry, Action<string> setLastMessage)
 		{
 			lock (queuelock)
 			{
-				if (queue.Contains(entry)) return;
-				queue.Add(entry);
-				entry.Evaluating = true;
+				foreach (var i in queue) if (i.Item1 == entry) return null; // already in queue
+
+				EntryStatus es = new EntryStatus() { Evaluating = true };
+				queue.Add(new Tuple<Entry, EntryStatus, Action<string>>(entry, es, setLastMessage));
+
 				if (worker == null)
 				{
 					worker = new Thread(work);
 					worker.Start();
 				}
+
+				return es;
 			}
 		}
 
@@ -64,7 +68,7 @@ namespace SG.Checkouts_Overview
 		{
 			while (true)
 			{
-				Entry entry = null;
+				Tuple<Entry, EntryStatus, Action<string>> it = null;
 				lock (queuelock)
 				{
 					if (queue.Count <= 0)
@@ -72,58 +76,53 @@ namespace SG.Checkouts_Overview
 						worker = null;
 						return;
 					}
-					entry = queue.First();
+					it = queue.First();
 				}
 
 				try
 				{
-					evaluateEntry(entry);
+					evaluateEntry(it.Item1, it.Item2, it.Item3);
 
-					entry.FailedStatus = false;
+					it.Item2.FailedStatus = false;
 				}
 				catch (Exception ex)
 				{
-					entry.FailedStatus = true;
-					entry.LastMessage = "Failed to evaluate: " + ex;
+					it.Item2.FailedStatus = true;
+					it.Item3("Failed to evaluate: " + ex);
 				}
 
 				// work completed
 				lock (queuelock)
 				{
-					queue.Remove(entry);
-					entry.Evaluating = false;
+					queue.Remove(it);
+					it.Item2.Evaluating = false;
 				}
 			}
 		}
 
 		private Random rnd = new Random();
 
-		private void evaluateEntry(Entry entry)
+		private void evaluateEntry(Entry entry, EntryStatus status, Action<string> setLastMessage)
 		{
 			if (!System.IO.Directory.Exists(entry.Path))
 			{
-				entry.StatusKnown = true;
-				entry.Available = false;
+				status.Available = false;
 
-				entry.LocalChanges = false;
-				entry.IncomingChanges = false;
-				entry.OutgoingChanges = false;
+				status.LocalChanges = false;
+				status.IncomingChanges = false;
+				status.OutgoingChanges = false;
 				return;
 			}
-			if (!entry.Available) entry.StatusKnown = false;
-			entry.Available = true;
+			status.Available = true;
 
 			switch (entry.Type.ToLower())
 			{
 				case "git":
-					evaluateGit(entry);
+					evaluateGit(entry, status, setLastMessage);
 					break;
 				default:
 					throw new Exception("Unknown type");
 			}
-
-			if (!entry.StatusKnown)
-				throw new Exception("Failed to analyse entry: " + entry.LastMessage);
 		}
 
 		private string gitBin()
@@ -134,7 +133,7 @@ namespace SG.Checkouts_Overview
 				: "git.exe";
 		}
 
-		private void evaluateGit(Entry entry)
+		private void evaluateGit(Entry entry, EntryStatus status, Action<string> setLastMessage)
 		{
 			Process p = new Process();
 			p.StartInfo.UseShellExecute = false;
@@ -158,8 +157,8 @@ namespace SG.Checkouts_Overview
 				var abm = Regex.Match(ab, @"^\#\s+branch\.ab\s+\+(\d+)\s+-(\d+)");
 				if (abm.Success && abm.Groups[1].Success && abm.Groups[2].Success)
 				{
-					entry.OutgoingChanges = int.Parse(abm.Groups[1].Value) > 0;
-					entry.IncomingChanges = int.Parse(abm.Groups[2].Value) > 0;
+					status.OutgoingChanges = int.Parse(abm.Groups[1].Value) > 0;
+					status.IncomingChanges = int.Parse(abm.Groups[2].Value) > 0;
 				}
 				else
 				{
@@ -170,7 +169,7 @@ namespace SG.Checkouts_Overview
 			result = result.Where((s) => { return !s.StartsWith("#"); }).ToArray();
 			if (result == null || result.Length <= 0)
 			{
-				entry.LocalChanges = false;
+				status.LocalChanges = false;
 			}
 			else
 			{
@@ -182,9 +181,8 @@ namespace SG.Checkouts_Overview
 						changes = true;
 					}
 				}
-				entry.LocalChanges = changes;
+				status.LocalChanges = changes;
 			}
-			entry.StatusKnown = true;
 		}
 
 		public DateTime GetCommitDate(Entry entry)

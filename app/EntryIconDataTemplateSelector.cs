@@ -14,7 +14,7 @@ namespace SG.Checkouts_Overview
 		{
 			FrameworkElement element = container as FrameworkElement;
 
-			Entry e = item as Entry;
+			EntryView e = item as EntryView;
 			if (e == null) return element.FindResource("Icon_Empty_x32") as DataTemplate;
 
 			// refresh content template selector when any property of entry changes
@@ -33,15 +33,16 @@ namespace SG.Checkouts_Overview
 				catch { }
 			};
 
-			if (e.FailedStatus) return element.FindResource("Icon_Failed_x32") as DataTemplate;
-			if (!e.StatusKnown) return element.FindResource("Icon_Unknown_x32") as DataTemplate;
-			if (!e.Available) return element.FindResource("Icon_Unavailable_x32") as DataTemplate;
+			if (e.Status == null) return element.FindResource("Icon_Unknown_x32") as DataTemplate;
+
+			if (e.Status.FailedStatus) return element.FindResource("Icon_Failed_x32") as DataTemplate;
+			if (!e.Status.Available) return element.FindResource("Icon_Unavailable_x32") as DataTemplate;
 
 			return element.FindResource(
 				String.Format("Icon_{0}{1}{2}_x32",
-				e.LocalChanges ? 'x' : 'n',
-				e.IncomingChanges ? 'i' : 'n',
-				e.OutgoingChanges ? 'o' : 'n'
+				e.Status.LocalChanges ? 'x' : 'n',
+				e.Status.IncomingChanges ? 'i' : 'n',
+				e.Status.OutgoingChanges ? 'o' : 'n'
 				)) as DataTemplate;
 		}
 	}

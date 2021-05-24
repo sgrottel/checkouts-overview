@@ -24,13 +24,12 @@ namespace SG.Checkouts_Overview.Test
 			EntryEvaluator ee = new EntryEvaluator();
 			ee.Start();
 			Entry e = createTestEntry();
-			ee.BeginEvaluate(e);
-			while (e.Evaluating) System.Threading.Thread.Sleep(20);
+			EntryStatus es = ee.BeginEvaluate(e, (string s) => { });
+			while (es.Evaluating) System.Threading.Thread.Sleep(20);
 			ee.Shutdown();
 
-			Assert.IsTrue(e.Available);
-			Assert.IsFalse(e.FailedStatus);
-			Assert.IsTrue(e.StatusKnown);
+			Assert.IsTrue(es.Available);
+			Assert.IsFalse(es.FailedStatus);
 		}
 
 		[TestMethod]
@@ -53,6 +52,7 @@ namespace SG.Checkouts_Overview.Test
 			string tdp = System.IO.Path.Combine(Utility.FindMyGit(), "TestData");
 			EntryEvaluator ee = new EntryEvaluator();
 			ee.Start();
+			Dictionary<Entry, EntryStatus> es = new Dictionary<Entry, EntryStatus>();
 			for (char c = 'a'; c <= 'h'; ++c)
 			{
 				Entry e = new Entry()
@@ -62,10 +62,10 @@ namespace SG.Checkouts_Overview.Test
 					Type = "git"
 				};
 				entries.Add(e);
-				ee.BeginEvaluate(e);
+				es[e] = ee.BeginEvaluate(e, (string s) => { });
 			}
 			foreach (Entry e in entries)
-				while (e.Evaluating) System.Threading.Thread.Sleep(20);
+				while (es[e].Evaluating) System.Threading.Thread.Sleep(20);
 			ee.Shutdown();
 
 			Dictionary<string, bool> localchanges = new Dictionary<string, bool>();
@@ -100,12 +100,11 @@ namespace SG.Checkouts_Overview.Test
 
 			foreach (Entry e in entries)
 			{
-				Assert.IsTrue(e.Available);
-				Assert.IsFalse(e.FailedStatus);
-				Assert.IsTrue(e.StatusKnown);
-				Assert.AreEqual(localchanges[e.Name], e.LocalChanges);
-				Assert.AreEqual(incoming[e.Name], e.IncomingChanges);
-				Assert.AreEqual(outgoing[e.Name], e.OutgoingChanges);
+				Assert.IsTrue(es[e].Available);
+				Assert.IsFalse(es[e].FailedStatus);
+				Assert.AreEqual(localchanges[e.Name], es[e].LocalChanges);
+				Assert.AreEqual(incoming[e.Name], es[e].IncomingChanges);
+				Assert.AreEqual(outgoing[e.Name], es[e].OutgoingChanges);
 			}
 
 		}

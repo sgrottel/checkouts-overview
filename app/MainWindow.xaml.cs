@@ -470,6 +470,66 @@ namespace SG.Checkouts_Overview
 			return d;
 		}
 
+		private void Window_PreviewDragOver(object sender, DragEventArgs e)
+		{
+			string[] fdo = (e.Data.GetData(DataFormats.FileDrop) as string[]).Where((string p) => { return System.IO.Directory.Exists(p); }).ToArray();
+			if (fdo == null || fdo.Length <= 0)
+			{
+				e.Effects = DragDropEffects.None;
+				e.Handled = true;
+				return;
+			}
+			e.Effects = DragDropEffects.Link;
+			e.Handled = true;
+		}
+
+		private void Window_Drop(object sender, DragEventArgs e)
+		{
+			string[] fdo = (e.Data.GetData(DataFormats.FileDrop) as string[]).Where((string p) => { return System.IO.Directory.Exists(p); }).ToArray();
+			if (fdo == null || fdo.Length <= 0)
+			{
+				e.Handled = true;
+				return;
+			}
+			var entries = (ObservableCollection<Entry>)DataContext;
+			List<Entry> toSelect = new List<Entry>();
+			foreach (string p in fdo)
+			{
+				bool found = false;
+				foreach (Entry ee in entries)
+				{
+					if (string.Equals(ee.Path, p, StringComparison.CurrentCultureIgnoreCase))
+					{
+						toSelect.Add(ee);
+						found = true;
+						break;
+					}
+				}
+				if (!found)
+				{
+					Entry ne = new Entry()
+					{
+						Name = System.IO.Path.GetFileName(p),
+						Path = p
+					};
+					evaluator.CheckType(ne);
+					toSelect.Add(ne);
+					entries.Add(ne);
+				}
+			}
+
+			if (toSelect.Count > 0)
+			{
+				EntriesView.SelectedItem = null;
+				foreach (Entry se in toSelect)
+				{
+					se.IsSelected = true;
+				}
+			}
+
+			e.Handled = true;
+		}
+
 		private void OnlineHelpButton_Click(object sender, RoutedEventArgs e)
 		{
 			const string knownUrl = "https://github.com/sgrottel/checkouts-overview/blob/main/doc/manual.md";

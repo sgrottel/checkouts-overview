@@ -520,7 +520,7 @@ namespace SG.Checkouts_Overview
 
 			if (toSelect.Count > 0)
 			{
-				EntriesView.SelectedItem = null;
+				Entries.SelectedItem = null;
 				foreach (Entry se in toSelect)
 				{
 					se.IsSelected = true;

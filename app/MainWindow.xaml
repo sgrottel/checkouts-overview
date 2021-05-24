@@ -5,7 +5,8 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:SG.Checkouts_Overview"
 		mc:Ignorable="d"
-		Title="Checkouts Overview" Height="720" Width="1280" Foreground="#F4F0ED" Background="#444" Closing="Window_Closing">
+		Title="Checkouts Overview" Height="720" Width="1280" Foreground="#F4F0ED" Background="#444" Closing="Window_Closing"
+		AllowDrop="True" PreviewDragOver="Window_PreviewDragOver" Drop="Window_Drop">
 	<Window.Resources>
 
 		<local:EntryIconDataTemplateSelector x:Key="entryIconDataTemplateSelector"/>

@@ -3,7 +3,9 @@ Overview dashboard app for source code repository checkouts.
 
 ![Screenshot of Checkouts Overview UI](doc/screenshot.png)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/cb6auvbucv3ikudr?svg=true)](https://ci.appveyor.com/project/s_grottel/checkouts-overview)
+[![Github Actions build status](https://github.com/sgrottel/checkouts-overview/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/sgrottel/checkouts-overview/actions/workflows/dotnet-desktop.yml)
+
+[![Appveyor build status](https://ci.appveyor.com/api/projects/status/cb6auvbucv3ikudr?svg=true)](https://ci.appveyor.com/project/s_grottel/checkouts-overview)
 
 ## Why this App?
 In my private setup, I have a lot of smaller repos checked out (almost all git), and work on them occasionally.

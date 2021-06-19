@@ -1,0 +1,67 @@
+
+name: Build Action
+
+on: [ push, pull_request ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    - name: Install dependencies
+      run: dotnet restore
+
+    - name: Inject build number
+      shell: pwsh
+      run: |
+        $csproj = New-Object System.XML.XMLDocument
+        $csprojPath = Resolve-Path ".\app\Checkouts-Overview.csproj"
+        $csproj.Load($csprojPath)
+        $version = New-Object System.Version $csproj.Project.PropertyGroup.Version
+        $version = New-Object System.Version @( $version.Major, $version.Minor, ([System.Math]::Max(0, $version.Build)), $env:GITHUB_RUN_NUMBER )
+        Write-Host "Version number: $version"
+        $csproj.Project.PropertyGroup.Version = $version.ToString()
+        $csproj.Save($csprojPath)
+        Write-Output "FULL_VERSION_NUMBER=$version" >> $env:GITHUB_ENV
+
+    - name: Build application
+      run: dotnet build --configuration ${{ matrix.configuration }} --no-restore
+
+    - name: Prepare test data
+      shell: pwsh
+      run: .\create-testdata.ps1
+
+    - name: Run tests
+      run: dotnet test --configuration ${{ matrix.configuration }} --no-restore --verbosity normal
+
+    # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions
+    - name: Package release
+      if: ${{ matrix.configuration == 'Release' }}
+      shell: pwsh
+      run: |
+        .\app\publish-release.ps1 -version $env:FULL_VERSION_NUMBER
+        gci *.zip -recurse
+
+    - name: Upload test results
+      if: ${{ matrix.configuration == 'Release' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: Checkouts-Overview-${{ env.FULL_VERSION_NUMBER }}
+        path: |
+          app/bin/Release/Checkouts-Overview*
+          !app/bin/Release/Checkouts-Overview*.zip
+        if-no-files-found: error

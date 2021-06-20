@@ -1,4 +1,4 @@
-version: 0.4.3.{build}
+version: 0.0.0.{build}
 image: Visual Studio 2019
 
 configuration:
@@ -8,17 +8,18 @@ configuration:
 platform: Any CPU
 
 before_build:
-  - nuget restore
+- ps: |
+    $csproj = New-Object System.XML.XMLDocument
+    $csprojPath = Resolve-Path ".\app\Checkouts-Overview.csproj"
+    $csproj.Load($csprojPath)
+    $version = New-Object System.Version $csproj.Project.PropertyGroup.Version
+    $version = New-Object System.Version @( $version.Major, $version.Minor, ([System.Math]::Max(0, $version.Build)), $env:APPVEYOR_BUILD_NUMBER )
+    Write-Host "Version number: $version"
+    $csproj.Project.PropertyGroup.Version = $version.ToString()
+    $csproj.Save($csprojPath)
+    appveyor UpdateBuild -Version "$version"
 
-dotnet_csproj:
-  patch: true
-  file: '**\*.csproj'
-  version: '{version}'
-  version_prefix: '{version}'
-  package_version: '{version}'
-  assembly_version: '{version}'
-  file_version: '{version}'
-  informational_version: '{version}'
+    nuget restore
 
 build:
   project: .\Checkouts-Overview.sln

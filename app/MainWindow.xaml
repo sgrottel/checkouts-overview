@@ -9,8 +9,6 @@
 		AllowDrop="True" PreviewDragOver="Window_PreviewDragOver" Drop="Window_Drop">
 	<Window.Resources>
 
-		<local:EntryIconDataTemplateSelector x:Key="entryIconDataTemplateSelector"/>
-
 		<Style TargetType="ListView">
 			<Setter Property="Foreground" Value="#F4F0ED" />
 			<Setter Property="Background" Value="#222" />
@@ -75,127 +73,19 @@
 		<SolidColorBrush x:Key="StatusOk" Color="#F4F0ED"/>
 		<SolidColorBrush x:Key="StatusX" Color="#DF7B3D"/>
 
-		<DataTemplate x:Key="Icon_nnn_x32">
+		<DataTemplate x:Key="Icon_EntryStatus_x32">
 			<Canvas Width="32" Height="32">
-				<Ellipse Canvas.Left="0" Canvas.Top="0" Width="32" Height="32" Fill="{StaticResource StatusOk}"/>
-			</Canvas>
-		</DataTemplate>
-		<DataTemplate x:Key="Icon_nno_x32">
-			<Canvas Width="32" Height="32">
-				<Path Fill="{StaticResource StatusOk}">
-					<Path.Data>
-						<PathGeometry Figures="M15 17L31.969 17C31.453 25.365 24.495 32 16 32C7.169 32 0 24.831 0 16C0 7.505 6.635 0.547 15 0.031L15 17Z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-				<Path Fill="{StaticResource StatusX}">
-					<Path.Data>
-						<PathGeometry Figures="m 17 0 h 4 l 9 9 v 2 h -7 v 4 h -6 z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-			</Canvas>
-		</DataTemplate>
-		<DataTemplate x:Key="Icon_nio_x32">
-			<Canvas Width="32" Height="32">
-				<Path Fill="{StaticResource StatusOk}">
-					<Path.Data>
-						<PathGeometry Figures="M31.969 17C31.453 25.365 24.495 32 16 32C7.505 32 0.547 25.365 0.031 17L31.969 17Z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-				<Path Fill="{StaticResource StatusX}">
-					<Path.Data>
-						<PathGeometry Figures="M15 15L11 15L2 6L2 4L9 4L9 0L15 0L15 15Z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-				<Path Fill="{StaticResource StatusX}">
-					<Path.Data>
-						<PathGeometry Figures="m 17 0 h 4 l 9 9 v 2 h -7 v 4 h -6 z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-			</Canvas>
-		</DataTemplate>
-		<DataTemplate x:Key="Icon_xno_x32">
-			<Canvas Width="32" Height="32">
-				<Path Fill="{StaticResource StatusOk}">
-					<Path.Data>
-						<PathGeometry Figures="M15 15L0.031 15C0.527 6.965 6.965 0.527 15 0.031L15 15Z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-				<Path Fill="{StaticResource StatusX}">
-					<Path.Data>
-						<PathGeometry Figures="M0 17L32 17L32 22.627L22.627 32L9.373 32L0 22.627L0 17Z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-				<Path Fill="{StaticResource StatusX}">
-					<Path.Data>
-						<PathGeometry Figures="m 17 0 h 4 l 9 9 v 2 h -7 v 4 h -6 z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-			</Canvas>
-		</DataTemplate>
-		<DataTemplate x:Key="Icon_xnn_x32">
-			<Canvas Width="32" Height="32">
-				<Path Fill="{StaticResource StatusOk}">
-					<Path.Data>
-						<PathGeometry Figures="M0.031 15C0.547 6.635 7.505 0 16 0C24.495 0 31.453 6.635 31.969 15L0.031 15Z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-				<Path Fill="{StaticResource StatusX}">
-					<Path.Data>
-						<PathGeometry Figures="M0 17L32 17L32 22.627L22.627 32L9.373 32L0 22.627L0 17Z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-			</Canvas>
-		</DataTemplate>
-		<DataTemplate x:Key="Icon_xin_x32">
-			<Canvas Width="32" Height="32">
-				<Path Fill="{StaticResource StatusOk}">
-					<Path.Data>
-						<PathGeometry Figures="M17 0.031C25.035 0.527 31.473 6.965 31.969 15L17 15L17 0.031Z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-				<Path Fill="{StaticResource StatusX}">
-					<Path.Data>
-						<PathGeometry Figures="M0 17L32 17L32 22.627L22.627 32L9.373 32L0 22.627L0 17Z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-				<Path Fill="{StaticResource StatusX}">
-					<Path.Data>
-						<PathGeometry Figures="M15 15L11 15L2 6L2 4L9 4L9 0L15 0L15 15Z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-			</Canvas>
-		</DataTemplate>
-		<DataTemplate x:Key="Icon_xio_x32">
-			<Canvas Width="32" Height="32">
-				<Path Fill="{StaticResource StatusX}">
-					<Path.Data>
-						<PathGeometry Figures="M0 17L32 17L32 22.627L22.627 32L9.373 32L0 22.627L0 17Z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-				<Path Fill="{StaticResource StatusX}">
-					<Path.Data>
-						<PathGeometry Figures="M15 15L11 15L2 6L2 4L9 4L9 0L15 0L15 15Z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-				<Path Fill="{StaticResource StatusX}">
-					<Path.Data>
-						<PathGeometry Figures="m 17 0 h 4 l 9 9 v 2 h -7 v 4 h -6 z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-			</Canvas>
-		</DataTemplate>
-		<DataTemplate x:Key="Icon_nin_x32">
-			<Canvas Width="32" Height="32">
-				<Path Fill="{StaticResource StatusOk}">
-					<Path.Data>
-						<PathGeometry Figures="M17 0.031C25.365 0.547 32 7.505 32 16C32 24.831 24.831 32 16 32C7.505 32 0.547 25.365 0.031 17L17 17L17 0.031Z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
-				<Path Fill="{StaticResource StatusX}">
-					<Path.Data>
-						<PathGeometry Figures="M15 15L11 15L2 6L2 4L9 4L9 0L15 0L15 15Z" FillRule="EvenOdd"/>
-					</Path.Data>
-				</Path>
+				<Canvas.Resources>
+					<EllipseGeometry x:Key="baseClip" Center="16,16" RadiusX="16" RadiusY="16"/>
+				</Canvas.Resources>
+				<Canvas Clip="{StaticResource baseClip}">
+					<Path Name="BaseFill3" Visibility="{Binding SubIconUntrackedVisibility}" Fill="{StaticResource StatusOk}" Data="M 32 0 H 0 V 15 H 32 Z M 2.323 13 C 3.697 6.713 9.303 2 16 2 22.697 2 28.303 6.713 29.677 13 Z"/>
+					<Rectangle Name="BaseFill2" Visibility="{Binding SubIconBase2Visibility}" Canvas.Left="{Binding SubIconBase2X}" Canvas.Top="0" Width="32" Height="{Binding SubIconBase2H}" Fill="{StaticResource StatusOk}"/>
+					<Rectangle Name="BaseFill1" Visibility="{Binding SubIconMainBranchVisibility}" Canvas.Left="0" Canvas.Top="17" Width="32" Height="17" Fill="{Binding SubIconChangesBrush}"/>
+				</Canvas>
+				<Path Name="DownMarker" Visibility="{Binding SubIconDownVisibility}" Fill="{StaticResource StatusX}" Data="M15 15L11 15L2 6L2 4L9 4L9 0L15 0L15 15Z"/>
+				<Path Name="UpMarker" Visibility="{Binding SubIconUpVisibility}" Fill="{StaticResource StatusX}" Data="M17 0L21 0L30 9L30 11L23 11L23 15L17 15L17 0Z"/>
+				<Path Name="BranchMarker" Visibility="{Binding SubIconBranchVisibility}" Fill="{Binding SubIconChangesBrush}" Data="M11 23L11 30L9 30L-0 21L-0 17L32 17L32 21L23 30L21 30L21 23L11 23Z"/>
 			</Canvas>
 		</DataTemplate>
 
@@ -351,24 +241,17 @@
 							<Viewbox Width="32" Height="32">
 								<Canvas Width="32" Height="32">
 
-									<ContentControl
-										Width="32" Height="32"
+									<ContentControl Width="32" Height="32" ContentTemplate="{StaticResource Icon_Unknown_x32}"
+										Visibility="{Binding IconUnknownVisibility}" />
+									<ContentControl Width="32" Height="32" ContentTemplate="{StaticResource Icon_Unavailable_x32}"
+										Visibility="{Binding IconUnavailableVisibility}" />
+									<ContentControl Width="32" Height="32" ContentTemplate="{StaticResource Icon_Failed_x32}"
+										Visibility="{Binding IconFailedVisibility}" />
+									<ContentControl Width="32" Height="32" ContentTemplate="{StaticResource Icon_EntryStatus_x32}"
 										Content="{Binding}"
-										ContentTemplateSelector="{DynamicResource entryIconDataTemplateSelector}"
-										/>
-
-									<ContentControl ContentTemplate="{StaticResource Icon_Evaluating_x32}">
-										<ContentControl.Style>
-											<Style TargetType="ContentControl">
-												<Setter Property="Visibility" Value="Hidden"/>
-												<Style.Triggers>
-													<DataTrigger Binding="{Binding Status.Evaluating}" Value="True">
-														<Setter Property="Visibility" Value="Visible"/>
-													</DataTrigger>
-												</Style.Triggers>
-											</Style>
-										</ContentControl.Style>
-									</ContentControl>
+										Visibility="{Binding IconNormalVisibility}" />
+									<ContentControl Width="32" Height="32" ContentTemplate="{StaticResource Icon_Evaluating_x32}"
+										Visibility="{Binding IconEvaluatingVisibility}" />
 
 								</Canvas>
 							</Viewbox>

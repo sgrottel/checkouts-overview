@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
 
 namespace SG.Checkouts_Overview
 {
@@ -56,6 +58,115 @@ namespace SG.Checkouts_Overview
 		private void EntryStatus_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StatusText)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IconUnknownVisibility)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IconEvaluatingVisibility)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IconFailedVisibility)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IconUnavailableVisibility)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IconNormalVisibility)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubIconBranchVisibility)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubIconMainBranchVisibility)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubIconUpVisibility)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubIconDownVisibility)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubIconChangesBrush)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubIconUntrackedVisibility)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubIconBase2Visibility)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubIconBase2X)));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SubIconBase2H)));
+		}
+
+		public Visibility IconUnknownVisibility {
+			get {
+				return (status == null) ? Visibility.Visible : Visibility.Hidden;
+			}
+		}
+		public Visibility IconEvaluatingVisibility {
+			get {
+				return ((status?.Evaluating)??false) ? Visibility.Visible : Visibility.Hidden;
+			}
+		}
+		public Visibility IconFailedVisibility {
+			get {
+				if (status == null) return Visibility.Hidden;
+				return (status.FailedStatus) ? Visibility.Visible : Visibility.Hidden;
+			}
+		}
+		public Visibility IconUnavailableVisibility {
+			get {
+				if (status == null) return Visibility.Hidden;
+				if (status.FailedStatus) return Visibility.Hidden;
+				return (!status.Available) ? Visibility.Visible : Visibility.Hidden;
+			}
+		}
+		public Visibility IconNormalVisibility {
+			get {
+				if (status == null) return Visibility.Hidden;
+				if (status.FailedStatus) return Visibility.Hidden;
+				return (status.Available) ? Visibility.Visible : Visibility.Hidden;
+			}
+		}
+		public Visibility SubIconBranchVisibility {
+			get {
+				if (status == null) return Visibility.Hidden;
+				return (status.OnBranch) ? Visibility.Visible : Visibility.Hidden;
+			}
+		}
+		public Visibility SubIconMainBranchVisibility {
+			get {
+				if (status == null) return Visibility.Hidden;
+				return (!status.OnBranch) ? Visibility.Visible : Visibility.Hidden;
+			}
+		}
+		public Visibility SubIconUpVisibility {
+			get {
+				if (status == null) return Visibility.Hidden;
+				return (status.OutgoingChanges) ? Visibility.Visible : Visibility.Hidden;
+			}
+		}
+		public Visibility SubIconDownVisibility {
+			get {
+				if (status == null) return Visibility.Hidden;
+				return (status.IncomingChanges) ? Visibility.Visible : Visibility.Hidden;
+			}
+		}
+		public Brush SubIconChangesBrush {
+			get {
+				if (status == null) return Brushes.Transparent;
+				return
+					Application.Current.MainWindow.FindResource(
+						status.LocalChanges
+						? "StatusX"
+						: "StatusOk"
+					) as Brush;
+			}
+		}
+		public Visibility SubIconUntrackedVisibility {
+			get {
+				if (status == null) return Visibility.Hidden;
+				return (!status.RemoteTracked) ? Visibility.Visible : Visibility.Hidden;
+			}
+		}
+		public Visibility SubIconBase2Visibility {
+			get {
+				if (status == null) return Visibility.Hidden;
+				if (!status.RemoteTracked) return Visibility.Hidden;
+				if (status.IncomingChanges && status.OutgoingChanges) return Visibility.Hidden;
+				return Visibility.Visible;
+			}
+		}
+		public int SubIconBase2X {
+			get {
+				if (status == null) return 0;
+				if (status.IncomingChanges) return 17;
+				if (status.OutgoingChanges) return -17;
+				return 0;
+			}
+		}
+		public int SubIconBase2H {
+			get {
+				if (status == null) return 0;
+				if (!status.LocalChanges && !status.OnBranch) return 18;
+				return 15;
+			}
 		}
 
 		/// <summary>

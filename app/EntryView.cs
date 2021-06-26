@@ -114,8 +114,13 @@ namespace SG.Checkouts_Overview
 				if (!status.Available) return "Not available";
 
 				string s = (status.LocalChanges) ? "Modified" : "Unchanged";
-				if (status.OutgoingChanges) s += "; ahead";
-				if (status.IncomingChanges) s += "; behind";
+				if (status.OnBranch) s += "; banched";
+				if (!status.RemoteTracked) s += "; untracked";
+				else
+				{
+					if (status.OutgoingChanges) s += "; ahead";
+					if (status.IncomingChanges) s += "; behind";
+				}
 
 				return s;
 			}

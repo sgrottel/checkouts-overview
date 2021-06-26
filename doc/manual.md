@@ -3,8 +3,16 @@ Overview dashboard app for source code repository checkouts.
 
 
 ## Setup
+The Checkouts Overview app is provided as portable zip.
+No installation is required.
+You can grab the [latest release](https://github.com/sgrottel/checkouts-overview/releases), or even pre-release from successful CI runs.
 
-TODO
+The zip file contains all files within a directory named `Checkouts-Overview`.
+Extract it to any location on your computer you like.
+Shortcuts, e.g. to the Desktop or the Start menu, are not generated automatically. If you want those, you need to create them yourself.
+Since all future releases can be extracted in the same place, overwriting the previous files, your shortcuts will stay valid.
+
+Your application settings are automatically migrated from older versions to newer versions (not the other way round).
 
 
 ## List of Entries
@@ -33,7 +41,6 @@ TODO
 
 
 ### Sort
-
 Click on \[Sort...\] in the menu bar, and a second menu bar will open beneath, showing the sorting commands.
 
 TODO
@@ -55,7 +62,6 @@ TODO
 
 
 ## Settings
-
 Click on \[Settings\] to open the applications settings dialog window. There you can configure:
 
 * The `Last File` that was opened or saved by the application.
@@ -72,7 +78,6 @@ The client application will be called with the selected repositories path as fir
 
 
 ## Links
-
 * https://github.com/sgrottel/checkouts-overview -- Project Website, hosting [Releases Downloads](https://github.com/sgrottel/checkouts-overview/releases), source code, documentation, and work log
 * https://github.com/sgrottel/checkouts-overview/releases -- Releases and Downloads
 * https://www.sgrottel.de -- Developer's website
@@ -81,7 +86,6 @@ The client application will be called with the selected repositories path as fir
 
 
 ## License
-
 Copyright 2021 SGrottel (https://www.sgrottel.de)
 
 Licensed under the Apache License, Version 2.0 (the "License");

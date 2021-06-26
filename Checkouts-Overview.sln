@@ -7,7 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Checkouts-Overview", "app\C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{4B570530-FCA8-494F-97A3-0159444F5AB7}"
 	ProjectSection(SolutionItems) = preProject
-		appveyor.yml = appveyor.yml
 		create-testdata.ps1 = create-testdata.ps1
 		LICENSE = LICENSE
 		README.md = README.md

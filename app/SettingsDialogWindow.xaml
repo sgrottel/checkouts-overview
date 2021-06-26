@@ -26,6 +26,7 @@
 				<RowDefinition Height="auto" />
 				<RowDefinition Height="auto" />
 				<RowDefinition Height="auto" />
+				<RowDefinition Height="auto" />
 			</Grid.RowDefinitions>
 
 			<TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Last File</TextBlock>
@@ -43,9 +44,12 @@
 			<Button Grid.Row="4" Grid.Column="2" Margin="2,0,0,0" Padding="4,0" Click="BrowseGitBinButton_Click">...</Button>
 			<TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="2,0,0,2" VerticalAlignment="Center" Name="gitBinInfo" TextWrapping="NoWrap">...</TextBlock>
 
-			<TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center">UI Client</TextBlock>
-			<TextBox Grid.Row="6" Grid.Column="1" Name="gitClient" HorizontalAlignment="Stretch" Margin="2,0,0,2"></TextBox>
-			<Button Grid.Row="6" Grid.Column="2" Margin="2,0,0,0" Padding="4,0" HorizontalAlignment="Left" Click="BrowseGitUIClientButton_Click">...</Button>
+			<TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center">Git Main</TextBlock>
+			<TextBox Grid.Row="6" Grid.Column="1" Name="gitMain" HorizontalAlignment="Stretch" Margin="2,0,0,2"></TextBox>
+
+			<TextBlock Grid.Row="7" Grid.Column="0" VerticalAlignment="Center">UI Client</TextBlock>
+			<TextBox Grid.Row="7" Grid.Column="1" Name="gitClient" HorizontalAlignment="Stretch" Margin="2,0,0,2"></TextBox>
+			<Button Grid.Row="7" Grid.Column="2" Margin="2,0,0,0" Padding="4,0" HorizontalAlignment="Left" Click="BrowseGitUIClientButton_Click">...</Button>
 
 		</Grid>
 

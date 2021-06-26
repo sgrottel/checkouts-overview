@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -53,58 +54,54 @@ namespace SG.Checkouts_Overview.Test
 			EntryEvaluator ee = new EntryEvaluator();
 			ee.Start();
 			Dictionary<Entry, EntryStatus> es = new Dictionary<Entry, EntryStatus>();
-			for (char c = 'a'; c <= 'h'; ++c)
+
+			for (byte i = 0; i < 32; ++i)
 			{
+				BitArray bits = new BitArray(new byte[] { i });
+				string n = "c";
+				n += bits[0] ? "-branch" : "-main";
+				if (bits[1]) n += "-untracked";
+				if (bits[2]) n += "-behind";
+				if (bits[3]) n += "-ahead";
+				if (bits[4]) n += "-changed";
+
 				Entry e = new Entry()
 				{
-					Name = c.ToString(),
-					Path = System.IO.Path.Combine(tdp, c.ToString()),
+					Name = (bits[0] ? "1" : "0")
+						+ (bits[1] ? "1" : "0")
+						+ (bits[2] ? "1" : "0")
+						+ (bits[3] ? "1" : "0")
+						+ (bits[4] ? "1" : "0"),
+					Path = System.IO.Path.Combine(tdp, n),
 					Type = "git"
 				};
 				entries.Add(e);
 				es[e] = ee.BeginEvaluate(e, (string s) => { });
 			}
+
 			foreach (Entry e in entries)
-				while (es[e].Evaluating) System.Threading.Thread.Sleep(20);
+				while (es[e].Evaluating) System.Threading.Thread.Sleep(10);
+
 			ee.Shutdown();
-
-			Dictionary<string, bool> localchanges = new Dictionary<string, bool>();
-			localchanges["a"] = false;
-			localchanges["b"] = false;
-			localchanges["c"] = false;
-			localchanges["d"] = false;
-			localchanges["e"] = true;
-			localchanges["f"] = true;
-			localchanges["g"] = true;
-			localchanges["h"] = true;
-
-			Dictionary<string, bool> incoming = new Dictionary<string, bool>();
-			incoming["a"] = true;
-			incoming["b"] = true;
-			incoming["c"] = false;
-			incoming["d"] = false;
-			incoming["e"] = true;
-			incoming["f"] = true;
-			incoming["g"] = false;
-			incoming["h"] = false;
-
-			Dictionary<string, bool> outgoing = new Dictionary<string, bool>();
-			outgoing["a"] = false;
-			outgoing["b"] = true;
-			outgoing["c"] = false;
-			outgoing["d"] = true;
-			outgoing["e"] = false;
-			outgoing["f"] = true;
-			outgoing["g"] = false;
-			outgoing["h"] = true;
 
 			foreach (Entry e in entries)
 			{
 				Assert.IsTrue(es[e].Available);
 				Assert.IsFalse(es[e].FailedStatus);
-				Assert.AreEqual(localchanges[e.Name], es[e].LocalChanges);
-				Assert.AreEqual(incoming[e.Name], es[e].IncomingChanges);
-				Assert.AreEqual(outgoing[e.Name], es[e].OutgoingChanges);
+				bool branch = e.Name[0] == '1';
+				bool untracked = e.Name[1] == '1';
+				bool behind = e.Name[2] == '1';
+				bool ahead = e.Name[3] == '1';
+				bool changed = e.Name[4] == '1';
+
+				Assert.AreEqual(changed, es[e].LocalChanges);
+				Assert.AreEqual(branch, es[e].OnBranch);
+				Assert.AreEqual(untracked, !es[e].RemoteTracked);
+
+				if (untracked) continue;
+
+				Assert.AreEqual(behind, es[e].IncomingChanges);
+				Assert.AreEqual(ahead, es[e].OutgoingChanges);
 			}
 
 		}

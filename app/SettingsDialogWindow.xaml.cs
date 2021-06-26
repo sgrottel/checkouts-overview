@@ -38,6 +38,7 @@ namespace SG.Checkouts_Overview
 			updateOnStart.IsChecked = Properties.Settings.Default.updateOnStart;
 			gitClient.Text = Properties.Settings.Default.gitClient;
 			gitBin.Text = Properties.Settings.Default.gitBin;
+			gitMain.Text = Properties.Settings.Default.gitDefaultBranches;
 			getGitBinInfo();
 		}
 
@@ -111,6 +112,7 @@ namespace SG.Checkouts_Overview
 			Properties.Settings.Default.updateOnStart = updateOnStart.IsChecked ?? false;
 			Properties.Settings.Default.gitClient = gitClient.Text;
 			Properties.Settings.Default.gitBin = gitBin.Text;
+			Properties.Settings.Default.gitDefaultBranches = gitMain.Text;
 			Properties.Settings.Default.Save();
 			DialogResult = true;
 			Close();

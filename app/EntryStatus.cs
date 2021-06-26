@@ -17,6 +17,8 @@ namespace SG.Checkouts_Overview
 		private bool localChanges = false;
 		private bool incomingChanges = false;
 		private bool outgoingChanges = false;
+		private bool onBranch = false;
+		private bool remoteTracked = false;
 
 		/// <summary>
 		/// True indicates that the checkout file system path and type-base analysis is available
@@ -111,6 +113,38 @@ namespace SG.Checkouts_Overview
 				{
 					outgoingChanges = value;
 					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OutgoingChanges)));
+				}
+			}
+		}
+
+		/// <summary>
+		/// True indicates that the checkout is on a non-main branch
+		/// </summary>
+		public bool OnBranch {
+			get {
+				return onBranch;
+			}
+			set {
+				if (onBranch != value)
+				{
+					onBranch = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OnBranch)));
+				}
+			}
+		}
+
+		/// <summary>
+		/// True indicates that the local branch is tracking a remote branch
+		/// </summary>
+		public bool RemoteTracked {
+			get {
+				return remoteTracked;
+			}
+			set {
+				if (remoteTracked != value)
+				{
+					remoteTracked = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RemoteTracked)));
 				}
 			}
 		}

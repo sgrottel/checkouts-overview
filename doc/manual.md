@@ -34,7 +34,7 @@ TODO
 
 ### Sort
 
-Click on [Sort...] in the menu bar, and a second menu bar will open beneath, showing the sorting commands.
+Click on \[Sort...\] in the menu bar, and a second menu bar will open beneath, showing the sorting commands.
 
 TODO
 
@@ -52,6 +52,23 @@ TODO
 ### File System Scan
 
 TODO
+
+
+## Settings
+
+Click on \[Settings\] to open the applications settings dialog window. There you can configure:
+
+* The `Last File` that was opened or saved by the application.
+* Switch on automatic `Load last file on start`.
+* Switch on automatic `Scan disks on start` (not recommended).
+* Switch on automatic `Update entries on start`.
+* Configure the path to the `Git` command line client.<br>
+If empty, the default git command line client will be used, as configured by the system's `PATH` variable.
+* Configure the possible names of `Git Main` branches.<br>
+This is a semicolon separated list of names, e.g. "`main;master`".
+If empty, the names `main` and `master` will be used.
+* Configure the `UI Client` application to be started as `Client` from the main window.<br>
+The client application will be called with the selected repositories path as first argument.
 
 
 ## Links

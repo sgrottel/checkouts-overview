@@ -33,8 +33,25 @@ namespace SG.Checkouts_Overview
 		private List<Tuple<Entry, EntryStatus, Action<string>>> queue = new List<Tuple<Entry, EntryStatus, Action<string>>>();
 		private Thread worker = null;
 
+		private List<string> defaultBranches = new List<string>();
+
 		public void Start()
 		{
+			defaultBranches.Clear();
+			string db = Properties.Settings.Default.gitDefaultBranches;
+			if (string.IsNullOrWhiteSpace(db))
+			{
+				defaultBranches.Add("main");
+				defaultBranches.Add("master");
+			}
+			else
+			{
+				defaultBranches = db
+					.Split(";", StringSplitOptions.RemoveEmptyEntries)
+					.Select(s => s.Trim().ToLower())
+					.ToList();
+			}
+
 		}
 
 		public void Shutdown()
@@ -150,6 +167,29 @@ namespace SG.Checkouts_Overview
 			p.Start();
 			var result = p.StandardOutput.ReadToEnd().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 			p.WaitForExit();
+
+			string branch = result.FirstOrDefault((s) => { return s.StartsWith("# branch.head "); });
+			if (!string.IsNullOrWhiteSpace(branch))
+			{
+				branch = branch.Substring(13).Trim().ToLower();
+
+				if (defaultBranches.Contains(branch))
+				{
+					status.OnBranch = false;
+				}
+				else
+				{
+					status.OnBranch = true;
+				}
+
+			}
+			else
+			{
+				status.OnBranch = true;
+			}
+
+			string upstream = result.FirstOrDefault((s) => { return s.StartsWith("# branch.upstream "); });
+			status.RemoteTracked = upstream?.Length > 18;
 
 			string ab = result.FirstOrDefault((s) => { return s.StartsWith("# branch.ab "); });
 			if (!string.IsNullOrWhiteSpace(ab))

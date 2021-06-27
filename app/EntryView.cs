@@ -224,16 +224,19 @@ namespace SG.Checkouts_Overview
 				if (status.FailedStatus) return "Failed to evaluate";
 				if (!status.Available) return "Not available";
 
-				string s = (status.LocalChanges) ? "Modified" : "Unchanged";
-				if (status.OnBranch) s += "; banched";
-				if (!status.RemoteTracked) s += "; untracked";
+				List<string> items = new List<string>();
+				if (status.LocalChanges) items.Add("local changes");
+				if (status.OnBranch) items.Add("⎇ " + status.BranchName);
+				if (!status.RemoteTracked) items.Add("untracked");
 				else
 				{
-					if (status.OutgoingChanges) s += "; ahead";
-					if (status.IncomingChanges) s += "; behind";
+					if (status.OutgoingChanges) items.Add("ahead");
+					if (status.IncomingChanges) items.Add("behind");
 				}
 
-				return s;
+				if (items.Count <= 0) return "up to date";
+
+				return string.Join("; ", items);
 			}
 		}
 

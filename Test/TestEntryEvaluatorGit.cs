@@ -96,6 +96,10 @@ namespace SG.Checkouts_Overview.Test
 
 				Assert.AreEqual(changed, es[e].LocalChanges);
 				Assert.AreEqual(branch, es[e].OnBranch);
+				if (es[e].OnBranch)
+				{
+					Assert.AreEqual("work", es[e].BranchName);
+				}
 				Assert.AreEqual(untracked, !es[e].RemoteTracked);
 
 				if (untracked) continue;

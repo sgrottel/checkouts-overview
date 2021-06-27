@@ -171,9 +171,9 @@ namespace SG.Checkouts_Overview
 			string branch = result.FirstOrDefault((s) => { return s.StartsWith("# branch.head "); });
 			if (!string.IsNullOrWhiteSpace(branch))
 			{
-				branch = branch.Substring(13).Trim().ToLower();
+				status.BranchName = branch.Substring(13).Trim().ToLower();
 
-				if (defaultBranches.Contains(branch))
+				if (defaultBranches.Contains(status.BranchName))
 				{
 					status.OnBranch = false;
 				}
@@ -186,6 +186,7 @@ namespace SG.Checkouts_Overview
 			else
 			{
 				status.OnBranch = true;
+				status.BranchName = null;
 			}
 
 			string upstream = result.FirstOrDefault((s) => { return s.StartsWith("# branch.upstream "); });

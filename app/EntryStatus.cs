@@ -18,6 +18,7 @@ namespace SG.Checkouts_Overview
 		private bool incomingChanges = false;
 		private bool outgoingChanges = false;
 		private bool onBranch = false;
+		private string branchName = null;
 		private bool remoteTracked = false;
 
 		/// <summary>
@@ -129,6 +130,22 @@ namespace SG.Checkouts_Overview
 				{
 					onBranch = value;
 					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(OnBranch)));
+				}
+			}
+		}
+
+		/// <summary>
+		/// True indicates that the checkout is on a non-main branch
+		/// </summary>
+		public string BranchName {
+			get {
+				return branchName;
+			}
+			set {
+				if (branchName != value)
+				{
+					branchName = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BranchName)));
 				}
 			}
 		}

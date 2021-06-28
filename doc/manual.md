@@ -17,12 +17,51 @@ Your application settings are automatically migrated from older versions to newe
 
 ## List of Entries
 
-TODO
+![Screenshot of Checkouts Overview UI](screenshot.png)
+
+The main window is separated into the command bar at the top, the entry list in the center, and the edit details pane an the right.
+The list of entries, also called the `Collection` is the main data for the application.
 
 
 ### Entries
+Each entry represents one repository clone.
+Each entry is defined by three fields:
+* `Name` is a human readable display name for the entry.
+This can be any arbitrary string.
+* `Path` is the full file system path to the local repository clone.
+You can use the `[...]` button next to the text boxes to browse of a path.
+* `Type` is the type of the repository clone.
+This is for future extensions.
+Currently, the only supported value is `git` for git repository clones.
+You can use the `[*]` button to auto-detect the repository type.
 
-TODO
+With the commands in the `Manage Entries` category, you can `Add` new entries to the collection and `Remove` the selected entries from the collection.
+When you `Add` a new entry, all fields will be empty.
+The new entry will be selected.
+
+For all selected entries, edit boxes for the fields of the entries will be shown in the right edit details pane.
+You can edit all entry values directly.
+The values will be automatically updated, as soon as you leave any of the edit boxes.
+
+The edit details pane also shows the `Status` for all selected entries.
+This is a computed value.
+Trigger `Status | Update` to update this value for all entries or for all selected entries.
+Possible status texts are:
+* `Up to date` if the repository is on `main` branch and is in sync with the remote repository
+* `⎇` to indicate that the repository is not on a `main` branch.
+The actual branch name will be shown after the icon.
+* `Failed to evaluate` if the status evaluation failed for any reason.
+A reason is then usually displayed as text beneath the whole entry detail information.
+* `Not available` if the entry's path could not be found.
+* `local changes` if the entry has uncommitted local changes.
+* `untracked` if the entry has no configured upstream remote.
+* `ahead` if the entry has local commits which need to be pushed.
+* `behind` if the remote repository has commits not available on the local repository.
+This is only available, if those remote changes have been `fetched`.
+The Checkouts Overview application will not automatically trigger the fetch operation.
+You need to trigger this manually using your favorite git client.
+
+This `Status` is a textual description, and the same information is also shown as the entry icon in the central entry list.
 
 
 ### Icons
@@ -31,8 +70,12 @@ TODO
 
 
 ### Load/Save
+The collection of entries can be automatically loaded, if configured accordingly in the application's settings.
+Then the last file you are loading or saving, will be memorized of automatic load on application start.
 
-TODO
+When you trigger `Save` the current collection file's directory and file name will be pre-selected in the save dialog window.
+The save dialog window will always be shown.
+You can browse to any other local, change the name of the file, or simply press `Ok` to overwrite the existing file with the updated contents.
 
 
 ### Update
@@ -43,7 +86,29 @@ TODO
 ### Sort
 Click on \[Sort...\] in the menu bar, and a second menu bar will open beneath, showing the sorting commands.
 
-TODO
+![Sort Bar UI](screenshot-sortbar.png)
+
+This first group of commands sorts all selected entries or all entries if non are selected.
+* `Name` sorts alphabetically by the entries display names.
+* `Path` sorts alphabetically by the full paths of the entries.
+* `Last Changed Date` will sort by the date of the last change of any file within the subdirectories of the entries.
+Be aware, that this needs to access the file system and might be slow to evaluate.
+* `Last Commit Date` will sort the entries by the dates of the last commit into the respective repository.
+Be aware, that this needs to access the file system and might be slow to evaluate.
+* `Reverse` reverses the order of the entries.
+
+All selected entries will be placed in the list where the first selected entry was.
+
+The second group of commands will replace the selected entries.
+* `Top` will move all selected entries to the beginning of the list.
+* `Up` will move all selected entries one place before the first selected entry.
+* `Down` will move all selected entries one place after the last selected entry.
+* `Bottom` will move all selected entries to the end of the list.
+
+The relative order within the selection will be kept.
+
+The order of entries is part of the collection data.
+If you want to persist the order, you need to save your collection.
 
 
 ## Scanning Disks

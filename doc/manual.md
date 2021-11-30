@@ -16,12 +16,10 @@ Your application settings are automatically migrated from older versions to newe
 
 
 ## List of Entries
-
 ![Screenshot of Checkouts Overview UI](screenshot.png)
 
 The main window is separated into the command bar at the top, the entry list in the center, and the edit details pane an the right.
 The list of entries, also called the `Collection` is the main data for the application.
-
 
 ### Entries
 Each entry represents one repository clone.
@@ -35,8 +33,8 @@ This is for future extensions.
 Currently, the only supported value is `git` for git repository clones.
 You can use the `[*]` button to auto-detect the repository type.
 
-With the commands in the `Manage Entries` category, you can `Add` new entries to the collection and `Remove` the selected entries from the collection.
-When you `Add` a new entry, all fields will be empty.
+With the commands in the `Manage Entries` category, you can `[Add]` new entries to the collection and `[Remove]` the selected entries from the collection.
+When you `[Add]` a new entry, all fields will be empty.
 The new entry will be selected.
 
 For all selected entries, edit boxes for the fields of the entries will be shown in the right edit details pane.
@@ -45,7 +43,10 @@ The values will be automatically updated, as soon as you leave any of the edit b
 
 The edit details pane also shows the `Status` for all selected entries.
 This is a computed value.
-Trigger `Status | Update` to update this value for all entries or for all selected entries.
+This `Status` is a textual description, and the same information is also shown as the entry icon in the central entry list.
+
+### Update
+Trigger `Status | [Update]` to update this value for all entries or for all selected entries.
 Possible status texts are:
 * `Up to date` if the repository is on `main` branch and is in sync with the remote repository
 * `⎇` to indicate that the repository is not on a `main` branch.
@@ -61,9 +62,6 @@ This is only available, if those remote changes have been `fetched`.
 The Checkouts Overview application will not automatically trigger the fetch operation.
 You need to trigger this manually using your favorite git client.
 
-This `Status` is a textual description, and the same information is also shown as the entry icon in the central entry list.
-
-
 ### Icons
 
 TODO
@@ -73,18 +71,12 @@ TODO
 The collection of entries can be automatically loaded, if configured accordingly in the application's settings.
 Then the last file you are loading or saving, will be memorized of automatic load on application start.
 
-When you trigger `Save` the current collection file's directory and file name will be pre-selected in the save dialog window.
+When you trigger `[Save]` the current collection file's directory and file name will be pre-selected in the save dialog window.
 The save dialog window will always be shown.
 You can browse to any other local, change the name of the file, or simply press `Ok` to overwrite the existing file with the updated contents.
 
-
-### Update
-
-TODO
-
-
 ### Sort
-Click on \[Sort...\] in the menu bar, and a second menu bar will open beneath, showing the sorting commands.
+Click on `[Sort...]` in the menu bar, and a second menu bar will open beneath, showing the sorting commands.
 
 ![Sort Bar UI](screenshot-sortbar.png)
 
@@ -112,22 +104,34 @@ If you want to persist the order, you need to save your collection.
 
 
 ## Scanning Disks
+The application is capable of automatically scanning your file system to detect new repositories.
 
-TODO
-
+![Scanning Dialog](screenshot-scan.png)
 
 ### Everything
+Scan with [Everything](https://www.voidtools.com/) will scan all your NTFS disks with light speed fast performance.
+You need to have Everything installed, and the Everything service needs to be running.
 
-TODO
-
+Just click `[Search with Everything]` and be amazed how quick it is.
 
 ### File System Scan
+Scan with Filesystem manually iterates through your file system, starting from the specified root directory.
+Any existing directory path is a valid starting point.
+All subdirectories within this path will be scanned.
+This method works on all file systems and all disk types, including network drives.
+But, this method can be very slow.
 
-TODO
+Enter the root directory path, or browse for a path using the `...` button.
+Then click `[Start Search File System]` button.
+A progress dialog will appear, summarizing the repositories found so far, and offering you an option to abort the search process.
 
 
 ## Settings
-Click on \[Settings\] to open the applications settings dialog window. There you can configure:
+Click on `[Settings]` to open the applications settings dialog window.
+
+![Settings Dialog](screenshot-settings.png)
+
+There you can configure:
 
 * The `Last File` that was opened or saved by the application.
 * Switch on automatic `Load last file on start`.

@@ -63,8 +63,30 @@ The Checkouts Overview application will not automatically trigger the fetch oper
 You need to trigger this manually using your favorite git client.
 
 ### Icons
+The status of each entry is visualized by it's icon as well.
 
-TODO
+The bottom halve of the icon represents the local checkout:
+| Icon | Description |
+| --- | --- |
+| ![Main branch, no changes](s0.png) | A circle shape indicates the local checkout is on the main branch. White color indicates that there are no local changes. |
+| ![Branch, no changes](s1.png) | A polygon shape indicates the local checkout is on a branch. |
+| ![Main branch, with changes](s3.png) | An orange color indicates local changes, which have not been committed yet. |
+| ![Branch, with changes](s2.png) | An orange color indicates local changes, which have not been committed yet. |
+
+The top halve of the icon represents the status of the connected origin:
+| Icon | Description |
+| --- | --- |
+| ![Main branch, no changes](s4.png) | The current branch is not tracking any origin. |
+| ![Main branch, no changes](s5.png) | The current branch is ahead of it's origin and ready to push. |
+| ![Main branch, no changes](s6.png) | The current branch is behind it's origin, and you can pull in changes. |
+
+Note: the indication of being behind the origin requires you to fetch the origin's state.
+The "Checkouts Overview" application will not do this for you!
+
+Combinations of all indicators are possible:
+| Icon | Description |
+| --- | --- |
+| ![Main branch, no changes](s7.png) | The local checkout is on the main branch. It does have local changes not committed yet. And, the local branch is ahead of the remote origin, ready to push. |
 
 
 ### Load/Save

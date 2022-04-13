@@ -5,42 +5,49 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:SG.Checkouts_Overview"
 		mc:Ignorable="d"
-		Title="Checkouts Overview" Height="200" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+		Title="Checkouts Overview" Height="200" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+		Style="{StaticResource DarkWindow}">
+	<Window.Resources>
+		<Style TargetType="Button" BasedOn="{StaticResource DarkToolBarButton}"/>
+	</Window.Resources>
+
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*" />
 			<RowDefinition Height="auto" />
 		</Grid.RowDefinitions>
 
-		<Grid Margin="4">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="auto" />
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="auto" />
-				<RowDefinition Height="auto" />
-				<RowDefinition Height="auto" />
-				<RowDefinition Height="auto" />
-				<RowDefinition Height="auto" />
-			</Grid.RowDefinitions>
+		<Grid Background="{StaticResource Darker}">
+			<Grid Margin="4">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto" />
+				</Grid.RowDefinitions>
 
-			<Viewbox Grid.Row="0" Grid.Column="0" Grid.RowSpan="4" Width="64" Height="64" Margin="4">
-				<Image>
-					<Image.Source>
-						<BitmapImage UriSource="clone x256 ref.png" />
-					</Image.Source>
-				</Image>
-			</Viewbox>
-			<TextBlock Grid.Row="0" Grid.Column="1">Checkouts Overview</TextBlock>
-			<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Version}" Margin="0,0,0,8"/>
-			<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Description}" />
-			<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Copyright}"/>
-			<TextBlock Grid.Row="4" Grid.Column="1"><Hyperlink Click="Hyperlink_Click"><TextBlock Text="{Binding Url}"></TextBlock></Hyperlink></TextBlock>
+				<Viewbox Grid.Row="0" Grid.Column="0" Grid.RowSpan="4" Width="64" Height="64" Margin="4">
+					<Image>
+						<Image.Source>
+							<BitmapImage UriSource="clone x256 ref.png" />
+						</Image.Source>
+					</Image>
+				</Viewbox>
+				<TextBlock Grid.Row="0" Grid.Column="1">Checkouts Overview</TextBlock>
+				<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Version}" Margin="0,0,0,8"/>
+				<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Description}" />
+				<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Copyright}"/>
+				<TextBlock Grid.Row="4" Grid.Column="1"><Hyperlink Click="Hyperlink_Click" Foreground="{StaticResource Light}"><TextBlock Text="{Binding Url}"/></Hyperlink></TextBlock>
 
+			</Grid>
 		</Grid>
 
-		<Grid Grid.Row="1" Background="{StaticResource {x:Static SystemColors.ControlBrushKey}}">
+		<Grid Grid.Row="1">
 			<Grid Margin="8">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*" />

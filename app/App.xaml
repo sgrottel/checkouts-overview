@@ -3,6 +3,76 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:local="clr-namespace:SG.Checkouts_Overview"
 		StartupUri="MainWindow.xaml">
+    
 	<Application.Resources>
-	</Application.Resources>
+
+        <SolidColorBrush x:Key="Light" Color="#F4F0ED"/>
+        <SolidColorBrush x:Key="Grey" Color="#888"/>
+        <SolidColorBrush x:Key="Dark" Color="#444"/>
+        <SolidColorBrush x:Key="Darker" Color="#222"/>
+
+        <Style x:Key="DarkWindow" TargetType="Window">
+            <Setter Property="Foreground" Value="{StaticResource Light}"/>
+            <Setter Property="Background" Value="{StaticResource Dark}"/>
+        </Style>
+        
+        <Style x:Key="DarkToolBarButton" TargetType="Button"
+               BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+            <Setter Property="Foreground" Value="{StaticResource Light}" />
+            <Setter Property="Background" Value="{StaticResource Dark}" />
+            <Setter Property="Padding" Value="4,0" />
+            <Setter Property="BorderBrush" Value="{StaticResource Grey}" />
+        </Style>
+
+        <Style x:Key="DarkToggleButton" TargetType="ToggleButton" BasedOn="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}">
+            <Setter Property="Foreground" Value="{StaticResource Light}" />
+            <Setter Property="Background" Value="{StaticResource Dark}" />
+            <Setter Property="Padding" Value="4,0" />
+            <Setter Property="BorderBrush" Value="{StaticResource Grey}" />
+        </Style>
+
+        <Style x:Key="DarkTextBox" TargetType="TextBox">
+            <Setter Property="Foreground" Value="{StaticResource Light}" />
+            <Setter Property="Background" Value="{StaticResource Dark}" />
+            <Setter Property="BorderBrush" Value="{StaticResource Grey}" />
+        </Style>
+
+        <Style x:Key="DarkCheckBox" TargetType="CheckBox">
+            <Setter Property="SnapsToDevicePixels" Value="true"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Foreground" Value="{StaticResource Light}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <BulletDecorator Background="Transparent">
+                            <BulletDecorator.Bullet>
+                                <Border x:Name="Border" Width="15" Height="15" Background="{StaticResource Dark}" BorderBrush="{StaticResource Grey}" BorderThickness="1">
+                                    <Path Width="9" Height="9" x:Name="CheckMark" SnapsToDevicePixels="False" Stroke="{StaticResource Light}" StrokeThickness="2" Data="M 0 4 L 3 8 8 0" />
+                                </Border>
+                            </BulletDecorator.Bullet>
+                            <ContentPresenter Margin="4,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" RecognizesAccessKey="True"/>
+                        </BulletDecorator>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="false">
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="{x:Null}">
+                                <Setter TargetName="CheckMark" Property="Data" Value="M 0 8 L 8 0" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter TargetName="Border" Property="Background" Value="{StaticResource Grey}" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter TargetName="CheckMark" Property="Stroke" Value="{StaticResource Grey}"/>
+                                <Setter Property="Foreground" Value="{StaticResource Grey}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Application.Resources>
+    
 </Application>

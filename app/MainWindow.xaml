@@ -10,32 +10,16 @@
 	<Window.Resources>
 
 		<Style TargetType="ListView">
-			<Setter Property="Foreground" Value="#F4F0ED" />
-			<Setter Property="Background" Value="#222" />
+            <Setter Property="Foreground" Value="{StaticResource Light}" />
+			<Setter Property="Background" Value="{StaticResource Darker}" />
 			<Setter Property="BorderThickness" Value="0" />
 		</Style>
 
-		<Style TargetType="Button" BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-			<Setter Property="Foreground" Value="#F4F0ED" />
-			<Setter Property="Background" Value="#444" />
-			<Setter Property="Padding" Value="4,0" />
-			<Setter Property="BorderBrush" Value="#888" />
-		</Style>
-
-		<Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}">
-			<Setter Property="Foreground" Value="#F4F0ED" />
-			<Setter Property="Background" Value="#444" />
-			<Setter Property="Padding" Value="4,0" />
-			<Setter Property="BorderBrush" Value="#888" />
-		</Style>
-
-		<Style TargetType="TextBox">
-			<Setter Property="Foreground" Value="#F4F0ED" />
-			<Setter Property="Background" Value="#444" />
-			<Setter Property="BorderBrush" Value="#888" />
-		</Style>
-
-		<DataTemplate x:Key="Icon_Empty_x32">
+        <Style TargetType="Button" BasedOn="{StaticResource DarkToolBarButton}"/>
+        <Style TargetType="ToggleButton" BasedOn="{StaticResource DarkToggleButton}"/>
+        <Style TargetType="TextBox" BasedOn="{StaticResource DarkTextBox}"/>
+        
+        <DataTemplate x:Key="Icon_Empty_x32">
 			<Canvas Width="32" Height="32">
 			</Canvas>
 		</DataTemplate>
@@ -232,7 +216,9 @@
 			<!-- Center ListView showing states -->
 			<!-- https://www.wpf-tutorial.com/listview-control/listview-sorting/ -->
 			<ListView ItemsSource="{Binding}" Name="EntriesView" HorizontalAlignment="Stretch" MinWidth="50" MouseDown="EntriesView_MouseDown"
-				ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="EntriesView_MouseDoubleClick">
+				ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="EntriesView_MouseDoubleClick"
+                      Background="#222">
+                <!-- explicit background color, to match the icon design -->
 				<ListBox.ItemContainerStyle>
 					<Style TargetType="ListViewItem">
 						<Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>

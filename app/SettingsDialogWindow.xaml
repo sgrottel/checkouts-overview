@@ -5,55 +5,64 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:SG.Checkouts_Overview"
 		mc:Ignorable="d"
-		Title="Checkouts Overview Settings" Height="300" Width="800" WindowStartupLocation="CenterScreen">
+		Title="Checkouts Overview Settings" Height="300" Width="800" WindowStartupLocation="CenterScreen"
+		Style="{StaticResource DarkWindow}">
+    <Window.Resources>
+        <Style TargetType="Button" BasedOn="{StaticResource DarkToolBarButton}"/>
+        <Style TargetType="TextBox" BasedOn="{StaticResource DarkTextBox}"/>
+        <Style TargetType="CheckBox" BasedOn="{StaticResource DarkCheckBox}"/>
+    </Window.Resources>
+    
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*" />
 			<RowDefinition Height="auto" />
 		</Grid.RowDefinitions>
 
-		<Grid Margin="12">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="auto" />
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="auto" />
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="auto" />
-				<RowDefinition Height="auto" />
-				<RowDefinition Height="auto" />
-				<RowDefinition Height="auto" />
-				<RowDefinition Height="auto" />
-				<RowDefinition Height="auto" />
-				<RowDefinition Height="auto" />
-				<RowDefinition Height="auto" />
-			</Grid.RowDefinitions>
+        <Grid Background="{StaticResource Darker}">
+            <Grid Margin="12">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="auto" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="auto" />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto" />
+					<RowDefinition Height="auto" />
+				</Grid.RowDefinitions>
 
-			<TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Last File</TextBlock>
-			<TextBox Grid.Row="0" Grid.Column="1" Name="lastFile" HorizontalAlignment="Stretch" Margin="2,0,0,2"></TextBox>
-			<Button Grid.Row="0" Grid.Column="2" Margin="2,0,0,0" Padding="4,0" Click="BrowseLastFileButton_Click">...</Button>
+				<TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Last File</TextBlock>
+				<TextBox Grid.Row="0" Grid.Column="1" Name="lastFile" HorizontalAlignment="Stretch" Margin="2,0,0,2"></TextBox>
+				<Button Grid.Row="0" Grid.Column="2" Margin="2,0,0,0" Padding="4,0" Click="BrowseLastFileButton_Click">...</Button>
 
-			<CheckBox Grid.Row="1" Grid.ColumnSpan="3" Margin="0,2" Name="loadOnStart">Load last file on start.</CheckBox>
+				<CheckBox Grid.Row="1" Grid.ColumnSpan="3" Margin="0,2" Name="loadOnStart">Load last file on start.</CheckBox>
 
-			<CheckBox Grid.Row="2" Grid.ColumnSpan="3" Margin="0,2" Name="scanOnStart">Scan disks on start.</CheckBox>
+				<CheckBox Grid.Row="2" Grid.ColumnSpan="3" Margin="0,2" Name="scanOnStart">Scan disks on start.</CheckBox>
 
-			<CheckBox Grid.Row="3" Grid.ColumnSpan="3" Margin="0,2" Name="updateOnStart">Update entries on start.</CheckBox>
+				<CheckBox Grid.Row="3" Grid.ColumnSpan="3" Margin="0,2" Name="updateOnStart">Update entries on start.</CheckBox>
 
-			<TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Git</TextBlock>
-			<TextBox Grid.Row="4" Grid.Column="1" Name="gitBin" HorizontalAlignment="Stretch" Margin="2,0,0,0" TextChanged="gitBin_TextChanged"></TextBox>
-			<Button Grid.Row="4" Grid.Column="2" Margin="2,0,0,0" Padding="4,0" Click="BrowseGitBinButton_Click">...</Button>
-			<TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="2,0,0,2" VerticalAlignment="Center" Name="gitBinInfo" TextWrapping="NoWrap">...</TextBlock>
+				<TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Git</TextBlock>
+				<TextBox Grid.Row="4" Grid.Column="1" Name="gitBin" HorizontalAlignment="Stretch" Margin="2,0,0,0" TextChanged="gitBin_TextChanged"></TextBox>
+				<Button Grid.Row="4" Grid.Column="2" Margin="2,0,0,0" Padding="4,0" Click="BrowseGitBinButton_Click">...</Button>
+				<TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="2,0,0,2" VerticalAlignment="Center" Name="gitBinInfo" TextWrapping="NoWrap">...</TextBlock>
 
-			<TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center">Git Main</TextBlock>
-			<TextBox Grid.Row="6" Grid.Column="1" Name="gitMain" HorizontalAlignment="Stretch" Margin="2,0,0,2"></TextBox>
+				<TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center">Git Main</TextBlock>
+				<TextBox Grid.Row="6" Grid.Column="1" Name="gitMain" HorizontalAlignment="Stretch" Margin="2,0,0,2"></TextBox>
 
-			<TextBlock Grid.Row="7" Grid.Column="0" VerticalAlignment="Center">UI Client</TextBlock>
-			<TextBox Grid.Row="7" Grid.Column="1" Name="gitClient" HorizontalAlignment="Stretch" Margin="2,0,0,2"></TextBox>
-			<Button Grid.Row="7" Grid.Column="2" Margin="2,0,0,0" Padding="4,0" HorizontalAlignment="Left" Click="BrowseGitUIClientButton_Click">...</Button>
+				<TextBlock Grid.Row="7" Grid.Column="0" VerticalAlignment="Center">UI Client</TextBlock>
+				<TextBox Grid.Row="7" Grid.Column="1" Name="gitClient" HorizontalAlignment="Stretch" Margin="2,0,0,2"></TextBox>
+				<Button Grid.Row="7" Grid.Column="2" Margin="2,0,0,0" Padding="4,0" HorizontalAlignment="Left" Click="BrowseGitUIClientButton_Click">...</Button>
 
-		</Grid>
+			</Grid>
+        </Grid>
 
-		<Grid Grid.Row="1" Background="{StaticResource {x:Static SystemColors.ControlBrushKey}}">
+        <Grid Grid.Row="1">
 			<Grid Margin="8">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*" />

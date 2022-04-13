@@ -28,7 +28,7 @@ namespace SG.Checkouts_Overview
 	{
 
 		private EntryEvaluator evaluator;
-		private ObservableCollection<EntryView> entries = new ObservableCollection<EntryView>();
+		private EntryViewsCollection entries = new EntryViewsCollection();
 
 		public MainWindow()
 		{
@@ -173,6 +173,7 @@ namespace SG.Checkouts_Overview
 							Array.ConvertAll<EntryView, Entry>(entries.ToArray(), (EntryView ev) => { return ev.Entry; })
 							);
 					}
+					entries.IsDirty = false;
 					Properties.Settings.Default.lastFile = dlg.FileName;
 					Properties.Settings.Default.Save();
 				}
@@ -195,8 +196,38 @@ namespace SG.Checkouts_Overview
 			return dlg;
 		}
 
+		/// <summary>
+		/// If there are unsaved changes, aka the entries are dirty, the user will asked to save those.
+		/// </summary>
+		/// <returns>
+		/// Yes, if the user wants to continue.
+		/// </returns>
+		private MessageBoxResult AssertChangesSaved()
+        {
+			if (entries.IsDirty)
+            {
+				MessageBoxResult r = MessageBox.Show("If you continue, you changes will be lost. Save now?", "Checkouts Overview Unsaved Changes ...", MessageBoxButton.YesNoCancel, MessageBoxImage.Stop);
+				if (r == MessageBoxResult.Yes)
+                {
+					SaveButton_Click(this, null);
+					if (entries.IsDirty)
+                    {
+						// still dirty? Then, no save happend (error or cancel)
+						return MessageBoxResult.Cancel;
+					}
+				} else if (r == MessageBoxResult.Cancel)
+                {
+					return MessageBoxResult.Cancel;
+                }
+            }
+
+			return MessageBoxResult.Yes;
+        }
+
 		private void LoadButton_Click(object sender, RoutedEventArgs e)
 		{
+			if (AssertChangesSaved() != MessageBoxResult.Yes) return;
+
 			OpenFileDialog dlg = CreateOpenProjectFileDialog();
 			if (dlg.ShowDialog() ?? false)
 			{
@@ -226,6 +257,7 @@ namespace SG.Checkouts_Overview
 					{
 						entries.Add(new EntryView() { Entry = e });
 					}
+					entries.IsDirty = false;
 				}
 			}
 		}
@@ -284,6 +316,12 @@ namespace SG.Checkouts_Overview
 
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
+			if (AssertChangesSaved() != MessageBoxResult.Yes)
+			{
+				e.Cancel = true;
+				return;
+			}
+
 			evaluator.Shutdown();
 		}
 

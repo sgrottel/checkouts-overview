@@ -258,7 +258,7 @@
 			</ListView>
 		</DockPanel>
 
-		<GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Background="#FF404040"></GridSplitter>
+		<GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Background="{StaticResource Dark}"></GridSplitter>
 
 		<!-- right column edit pane -->
 		<ListView Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" MinWidth="50" ItemsSource="{Binding ElementName=EntriesView,Path=SelectedItems}"

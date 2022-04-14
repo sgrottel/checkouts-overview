@@ -206,8 +206,9 @@ namespace SG.Checkouts_Overview
         {
 			if (entries.IsDirty)
             {
-				MessageBoxResult r = MessageBox.Show("If you continue, you changes will be lost. Save now?", "Checkouts Overview Unsaved Changes ...", MessageBoxButton.YesNoCancel, MessageBoxImage.Stop);
-				if (r == MessageBoxResult.Yes)
+				SaveConfirmDialogWindow dlg = new SaveConfirmDialogWindow();
+				dlg.ShowDialog();
+				if (dlg.Result == MessageBoxResult.Yes)
                 {
 					SaveButton_Click(this, null);
 					if (entries.IsDirty)
@@ -215,7 +216,7 @@ namespace SG.Checkouts_Overview
 						// still dirty? Then, no save happend (error or cancel)
 						return MessageBoxResult.Cancel;
 					}
-				} else if (r == MessageBoxResult.Cancel)
+				} else if (dlg.Result == MessageBoxResult.Cancel)
                 {
 					return MessageBoxResult.Cancel;
                 }

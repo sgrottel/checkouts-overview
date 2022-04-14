@@ -16,6 +16,9 @@
     <Compile Update="DisksScannerProgressDialogWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="SaveConfirmDialogWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="SettingsDialogWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -31,6 +34,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="SaveConfirmDialogWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="SettingsDialogWindow.xaml">

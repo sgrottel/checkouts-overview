@@ -14,9 +14,10 @@ namespace SG.Checkouts_Overview
 	/// </summary>
 	public class Entry : INotifyPropertyChanged
 	{
-		private string name;
-		private string path;
-		private string type;
+		private string name = string.Empty;
+		private string path = string.Empty;
+		private string type = string.Empty;
+		private string mainBranch = string.Empty;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -68,5 +69,22 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
-	}
+        /// <summary>
+        /// Overrides the main branch for this repo
+        /// </summary>
+		[DefaultValue("")]
+        public string MainBranch {
+            get {
+				return mainBranch;
+			}
+            set {
+                if (!string.Equals(mainBranch, value))
+                {
+                    mainBranch = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MainBranch)));
+                }
+            }
+        }
+
+    }
 }

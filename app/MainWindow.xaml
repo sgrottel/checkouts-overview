@@ -282,8 +282,9 @@
 							<RowDefinition></RowDefinition>
 							<RowDefinition></RowDefinition>
 							<RowDefinition></RowDefinition>
-							<RowDefinition></RowDefinition>
-						</Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="auto" SharedSizeGroup="Col1"></ColumnDefinition>
 							<ColumnDefinition Width="auto"></ColumnDefinition>
@@ -291,7 +292,7 @@
 							<ColumnDefinition Width="auto"></ColumnDefinition>
 						</Grid.ColumnDefinitions>
 
-						<GridSplitter Grid.Column="1" Grid.RowSpan="4" Width="4" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="#00000000" />
+						<GridSplitter Grid.Column="1" Grid.RowSpan="5" Width="4" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="#00000000" />
 
 						<TextBlock Text="Name" Margin="0,0,4,0" HorizontalAlignment="Stretch" />
 						<TextBox Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding Entry.Name}" HorizontalAlignment="Stretch" Margin="0,0,0,4"/>
@@ -307,7 +308,10 @@
 						<TextBox Grid.Row="3" Grid.Column="2" Text="{Binding Entry.Type}" HorizontalAlignment="Stretch" Margin="0,0,0,4" />
 						<Button Grid.Row="3" Grid.Column="3" Margin="4,0,0,4" HorizontalAlignment="Stretch" Click="EntryTypeButton_Click">*</Button>
 
-						<TextBlock Grid.Row="4" Grid.ColumnSpan="4" Text="{Binding LastMessage}" HorizontalAlignment="Stretch">
+                        <TextBlock Grid.Row="4" Text="Main Branch" Margin="0,0,4,4" HorizontalAlignment="Stretch" />
+                        <TextBox Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding Entry.MainBranch}" Margin="0,0,0,4" HorizontalAlignment="Stretch" />
+
+                        <TextBlock Grid.Row="5" Grid.ColumnSpan="4" Text="{Binding LastMessage}" HorizontalAlignment="Stretch">
 							<TextBlock.Style>
 								<Style TargetType="TextBlock">
 									<Setter Property="Visibility" Value="Visible" />

@@ -172,15 +172,14 @@ namespace SG.Checkouts_Overview
 			if (!string.IsNullOrWhiteSpace(branch))
 			{
 				status.BranchName = branch.Substring(13).Trim().ToLower();
-
-				if (defaultBranches.Contains(status.BranchName))
+				if (string.IsNullOrWhiteSpace(entry.MainBranch))
 				{
-					status.OnBranch = false;
+					status.OnBranch = (defaultBranches.Contains(status.BranchName) == false);
 				}
 				else
-				{
-					status.OnBranch = true;
-				}
+                {
+					status.OnBranch = (entry.MainBranch.Equals(status.BranchName) == false);
+                }
 
 			}
 			else

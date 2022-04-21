@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -302,16 +301,13 @@ namespace SG.Checkouts_Overview
 			EntryView entry = (sender as Button)?.DataContext as EntryView;
 			if (entry == null || entry.Entry == null) return;
 
-			var dlg = new CommonOpenFileDialog();
-			dlg.IsFolderPicker = true;
-			dlg.InitialDirectory = entry.Entry.Path;
-			dlg.DefaultFileName = entry.Entry.Path;
-			dlg.Title = "";
-			dlg.Multiselect = false;
-
-			if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
+			var dlg = new FolderPicker();
+			dlg.InputPath = entry.Entry.Path;
+			dlg.Title = entry.Name;
+			dlg.ForceFileSystem = true;
+			if (dlg.ShowDialog() == true)
 			{
-				entry.Entry.Path = dlg.FileName;
+				entry.Entry.Path = dlg.ResultPath;
 			}
 		}
 

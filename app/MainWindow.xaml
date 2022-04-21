@@ -5,8 +5,9 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:SG.Checkouts_Overview"
 		mc:Ignorable="d"
-		Title="Checkouts Overview" Height="720" Width="1280" Foreground="#F4F0ED" Background="#444" Closing="Window_Closing"
-		AllowDrop="True" PreviewDragOver="Window_PreviewDragOver" Drop="Window_Drop">
+		Title="Checkouts Overview" Height="720" Width="1280" Closing="Window_Closing"
+		AllowDrop="True" PreviewDragOver="Window_PreviewDragOver" Drop="Window_Drop"
+        Style="{StaticResource DarkWindow}">
 	<Window.Resources>
 
 		<Style TargetType="ListView">

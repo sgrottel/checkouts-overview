@@ -21,26 +21,42 @@ namespace SG.Checkouts_Overview
 	/// </summary>
 	public partial class DisksScannerDialogWindow : Window
 	{
+        //public Observable<bool>
+
 
 		//public IDisksScanner DisksScanner {get;set;} = null;
 
 		public DisksScannerDialogWindow()
 		{
 			InitializeComponent();
-			//DisksScanner = null;
 
-			//string d = Assembly.GetExecutingAssembly().Location;
-			//string pd = System.IO.Path.GetDirectoryName(d);
-			//while (!string.IsNullOrEmpty(pd)) {
-			//	d = pd;
-			//	pd = System.IO.Path.GetDirectoryName(d);
-			//}
-			//SearchDir.Text = d;
-		}
+            string se = Properties.Settings.Default.scannerEngine?.ToLowerInvariant() ?? "";
+            if (se == "filesystem")
+            {
+                scannerEngineFilesystem.IsChecked = true;
+            }
+            else if (se == "everything")
+            {
+                scannerEngineEverything.IsChecked = true;
+            }
+            else
+            {
+                scannerEngineEverything.IsChecked = true;
+            }
+            scannerRoot.Text = Properties.Settings.Default.scannerRoot;
+            scannerIgnore.Text = string.Join(Environment.NewLine, Properties.Settings.Default.scannerIgnorePatterns);
+            scannerEntrySubdir.IsChecked = Properties.Settings.Default.scannerEntrySubdir;
 
-        private void Hyperlink_Click(object sender, RoutedEventArgs e)
-        {
 
+            //DisksScanner = null;
+
+            //string d = Assembly.GetExecutingAssembly().Location;
+            //string pd = System.IO.Path.GetDirectoryName(d);
+            //while (!string.IsNullOrEmpty(pd)) {
+            //	d = pd;
+            //	pd = System.IO.Path.GetDirectoryName(d);
+            //}
+            //SearchDir.Text = d;
         }
 
         private void EverythingHyperlink_Click(object sender, RoutedEventArgs e)
@@ -55,6 +71,18 @@ namespace SG.Checkouts_Overview
                     });
             }
             catch { }
+        }
+
+        private void BrowseScannerRootButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new FolderPicker();
+            dlg.InputPath = scannerRoot.Text;
+            dlg.Title = "Select Filesystem Scanner Root...";
+            dlg.ForceFileSystem = true;
+            if (dlg.ShowDialog() == true)
+            {
+                scannerRoot.Text = dlg.ResultPath;
+            }
         }
 
         //private void SearchWithEverythingButton_Click(object sender, RoutedEventArgs e)

@@ -12,7 +12,7 @@ namespace SG.Checkouts_Overview.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.1.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -116,6 +116,54 @@ namespace SG.Checkouts_Overview.Properties {
             }
             set {
                 this["gitDefaultBranches"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string scannerEngine {
+            get {
+                return ((string)(this["scannerEngine"]));
+            }
+            set {
+                this["scannerEngine"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string scannerRoot {
+            get {
+                return ((string)(this["scannerRoot"]));
+            }
+            set {
+                this["scannerRoot"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string scannerIgnorePatterns {
+            get {
+                return ((string)(this["scannerIgnorePatterns"]));
+            }
+            set {
+                this["scannerIgnorePatterns"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool scannerEntrySubdir {
+            get {
+                return ((bool)(this["scannerEntrySubdir"]));
+            }
+            set {
+                this["scannerEntrySubdir"] = value;
             }
         }
     }

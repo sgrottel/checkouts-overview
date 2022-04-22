@@ -39,6 +39,21 @@ namespace SG.Checkouts_Overview
 			gitClient.Text = Properties.Settings.Default.gitClient;
 			gitBin.Text = Properties.Settings.Default.gitBin;
 			gitMain.Text = Properties.Settings.Default.gitDefaultBranches;
+			string se = Properties.Settings.Default.scannerEngine?.ToLowerInvariant() ?? "";
+			if (se == "filesystem")
+            {
+				scannerEngineFilesystem.IsChecked = true;
+            } else if (se == "everything")
+            {
+				scannerEngineEverything.IsChecked = true;
+            } else
+            {
+				scannerEngineEverything.IsChecked = true;
+            }
+			scannerRoot.Text = Properties.Settings.Default.scannerRoot;
+			scannerIgnore.Text = Properties.Settings.Default.scannerIgnorePatterns;
+			scannerEntrySubdir.IsChecked = Properties.Settings.Default.scannerEntrySubdir;
+
 			getGitBinInfo();
 		}
 
@@ -113,6 +128,19 @@ namespace SG.Checkouts_Overview
 			Properties.Settings.Default.gitClient = gitClient.Text;
 			Properties.Settings.Default.gitBin = gitBin.Text;
 			Properties.Settings.Default.gitDefaultBranches = gitMain.Text;
+			if (scannerEngineEverything.IsChecked??false)
+            {
+				Properties.Settings.Default.scannerEngine = "everything";
+			} else if (scannerEngineFilesystem.IsChecked??false)
+            {
+				Properties.Settings.Default.scannerEngine = "filesystem";
+			} else
+            {
+				Properties.Settings.Default.scannerEngine = null;
+			}
+			Properties.Settings.Default.scannerRoot = scannerRoot.Text;
+			Properties.Settings.Default.scannerIgnorePatterns = scannerIgnore.Text;
+			Properties.Settings.Default.scannerEntrySubdir = scannerEntrySubdir.IsChecked ?? false;
 			Properties.Settings.Default.Save();
 			DialogResult = true;
 			Close();
@@ -159,5 +187,32 @@ namespace SG.Checkouts_Overview
 				gitClient.Text = dlg.FileName;
 			}
 		}
+
+		private void EverythingHyperlink_Click(object sender, RoutedEventArgs e)
+		{
+			try
+			{
+				System.Diagnostics.Process.Start(
+					new System.Diagnostics.ProcessStartInfo()
+					{
+						UseShellExecute = true,
+						FileName = "https://www.voidtools.com/"
+					});
+			}
+			catch { }
+		}
+
+        private void BrowseScannerRootButton_Click(object sender, RoutedEventArgs e)
+        {
+			var dlg = new FolderPicker();
+			dlg.InputPath = scannerRoot.Text;
+			dlg.Title = "Select Filesystem Scanner Root...";
+			dlg.ForceFileSystem = true;
+			if (dlg.ShowDialog() == true)
+			{
+				scannerRoot.Text = dlg.ResultPath;
+			}
+		}
+
 	}
 }

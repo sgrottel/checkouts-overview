@@ -5,9 +5,99 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:SG.Checkouts_Overview"
 		mc:Ignorable="d"
-		Title="Checkouts Overview - Scan Disks..." Height="450" Width="800" WindowStartupLocation="CenterScreen">
-	<Grid>
-		<Grid.RowDefinitions>
+		Title="Checkouts Overview - Scan Disks..." Height="450" Width="800" WindowStartupLocation="CenterScreen"
+        Style="{StaticResource DarkWindow}" Foreground="{StaticResource Light}">
+    <Window.Resources>
+        <Style TargetType="Button" BasedOn="{StaticResource DarkToolBarButton}"/>
+        <Style TargetType="TextBox" BasedOn="{StaticResource DarkTextBox}"/>
+        <Style TargetType="CheckBox" BasedOn="{StaticResource DarkCheckBox}"/>
+        <Style TargetType="ScrollBar" BasedOn="{StaticResource DarkScrollBar}"/>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="{StaticResource Light}"/>
+        </Style>
+        <Style TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource Light}"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="4"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="{StaticResource Dark}"></GridSplitter>
+        
+        <!-- left column settings, progress, status, ... -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Background="{StaticResource Darker}">
+
+                <TextBlock Margin="2,2,2,4" Background="{StaticResource Dark}">Select Scanner</TextBlock>
+                <RadioButton Margin="12,0,0,0">
+                    <WrapPanel>
+                        <Viewbox Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Width="16" Height="16" Margin="0,0,4,0">
+                            <Image>
+                                <Image.Source>
+                                    <BitmapImage UriSource="everything.png" />
+                                </Image.Source>
+                            </Image>
+                        </Viewbox>
+                        <TextBlock Margin="0,0,12,0">Everything</TextBlock>
+                        <TextBlock Margin="0,0,4,0" TextWrapping="Wrap">Search every NTFS drive. Super fast!</TextBlock>
+                        <TextBlock TextWrapping="Wrap"><Hyperlink Click="EverythingHyperlink_Click">Everything (https://www.voidtools.com)</Hyperlink> must be installed on the system. (Recommended)</TextBlock>
+                    </WrapPanel>
+                </RadioButton>
+                <RadioButton Margin="12,0,0,0">File System</RadioButton>
+
+                <TextBlock Margin="2,8,2,4" Background="{StaticResource Dark}">Scanner Settings</TextBlock>
+                <StackPanel Margin="8,0,0,0">
+                    <TextBlock>TODO</TextBlock>
+                </StackPanel>
+
+                <TextBlock Margin="2,8,2,4" Background="{StaticResource Dark}">Scanning</TextBlock>
+                <StackPanel Orientation="Horizontal" Margin="8,0,0,0">
+                    <Button HorizontalAlignment="Left" Margin="0,0,4,0">Start</Button>
+                    <Button HorizontalAlignment="Left" IsEnabled="False">Stop</Button>
+                </StackPanel>
+                <ProgressBar Height="16" Margin="8,4"
+                             Background="{StaticResource Darker}" BorderBrush="{StaticResource Dark}" Foreground="{StaticResource Grey}"
+                             Value="30"></ProgressBar>
+                <TextBlock Margin="8,0,0,0" TextWrapping="Wrap">Not Started...</TextBlock>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- right column results view -->
+        <ListView Grid.Column="2" HorizontalAlignment="Stretch" MinWidth="50" Background="{StaticResource Darker}" BorderThickness="0">
+            <!--
+             ItemsSource="{Binding ElementName=EntriesView,Path=SelectedItems}"
+				  Grid.IsSharedSizeScope="True" SelectionMode="Single"
+				  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            -->
+        </ListView>
+
+        <!-- Bottom button bar -->
+        <Grid Grid.Row="1" Grid.ColumnSpan="3">
+            <Grid Margin="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Button IsEnabled="False" Grid.Column="1" Padding="12,2" Margin="4" >Apply</Button>
+                <Button IsEnabled="False" Grid.Column="2" Padding="8,2" Margin="4" IsDefault="True">Cancel</Button>
+            </Grid>
+        </Grid>
+
+    </Grid>
+
+<!--
+    <Grid.RowDefinitions>
 			<RowDefinition Height="auto"/>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="auto"/>
@@ -65,4 +155,6 @@
 		</Grid>
 
 	</Grid>
+    
+    -->
 </Window>

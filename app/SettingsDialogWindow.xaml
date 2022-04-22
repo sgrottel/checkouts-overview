@@ -11,6 +11,7 @@
         <Style TargetType="Button" BasedOn="{StaticResource DarkToolBarButton}"/>
         <Style TargetType="TextBox" BasedOn="{StaticResource DarkTextBox}"/>
         <Style TargetType="CheckBox" BasedOn="{StaticResource DarkCheckBox}"/>
+        <Style TargetType="ScrollBar" BasedOn="{StaticResource DarkScrollBar}"/>
     </Window.Resources>
     
 	<Grid>

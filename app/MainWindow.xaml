@@ -19,7 +19,8 @@
         <Style TargetType="Button" BasedOn="{StaticResource DarkToolBarButton}"/>
         <Style TargetType="ToggleButton" BasedOn="{StaticResource DarkToggleButton}"/>
         <Style TargetType="TextBox" BasedOn="{StaticResource DarkTextBox}"/>
-        
+        <Style TargetType="ScrollBar" BasedOn="{StaticResource DarkScrollBar}"/>
+
         <DataTemplate x:Key="Icon_Empty_x32">
 			<Canvas Width="32" Height="32">
 			</Canvas>

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,10 +22,9 @@ namespace SG.Checkouts_Overview
 	/// </summary>
 	public partial class DisksScannerDialogWindow : Window
 	{
-        //public Observable<bool>
 
-
-		//public IDisksScanner DisksScanner {get;set;} = null;
+        private IDisksScanner DisksScanner { get; set; } = null;
+        private Thread ScannerWorker = null;
 
 		public DisksScannerDialogWindow()
 		{
@@ -47,16 +47,9 @@ namespace SG.Checkouts_Overview
             scannerIgnore.Text = string.Join(Environment.NewLine, Properties.Settings.Default.scannerIgnorePatterns);
             scannerEntrySubdir.IsChecked = Properties.Settings.Default.scannerEntrySubdir;
 
-
-            //DisksScanner = null;
-
-            //string d = Assembly.GetExecutingAssembly().Location;
-            //string pd = System.IO.Path.GetDirectoryName(d);
-            //while (!string.IsNullOrEmpty(pd)) {
-            //	d = pd;
-            //	pd = System.IO.Path.GetDirectoryName(d);
-            //}
-            //SearchDir.Text = d;
+            startScanButton.IsEnabled = true;
+            stopScanButton.IsEnabled = false;
+            scanStatus.Text = "";
         }
 
         private void EverythingHyperlink_Click(object sender, RoutedEventArgs e)
@@ -85,40 +78,108 @@ namespace SG.Checkouts_Overview
             }
         }
 
-        //private void SearchWithEverythingButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //	DisksScanner = new DisksScannerEverything();
-        //	Close();
-        //}
+        private void startScanButton_Click(object sender, RoutedEventArgs e)
+        {
+            startScanButton.IsEnabled = false;
+            stopScanButton.IsEnabled = false;
+            scanStatus.Text = "Starting scan...";
 
-        //private void BrowseSearchDirButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //	var dialog = new CommonOpenFileDialog();
-        //	dialog.IsFolderPicker = true;
-        //	dialog.InitialDirectory = SearchDir.Text;
-        //	dialog.DefaultFileName = SearchDir.Text;
-        //	dialog.Title = "Checkouts Overview - Scan Disks...";
-        //	dialog.EnsurePathExists = true;
-        //	CommonFileDialogResult result = dialog.ShowDialog();
-        //	if (result == CommonFileDialogResult.Ok)
-        //	{
-        //		SearchDir.Text = dialog.FileName;
-        //	}
-        //}
+            if (DisksScanner != null)
+            {
+                startScanButton.IsEnabled = false;
+                stopScanButton.IsEnabled = true;
+                scanStatus.Text = "Scanner still running?";
+                return;
+            }
 
-        //private void SearchFileSystemButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //	if (!System.IO.Directory.Exists(SearchDir.Text))
-        //	{
-        //		MessageBox.Show("The specified search directory does not seem to exist. Please, correct your input.");
-        //		return;
-        //	}
+            IDisksScanner scanner = null;
+            if (scannerEngineEverything.IsChecked ?? false)
+            {
+                scanner = new DisksScannerEverything();
+            }
+            else if (scannerEngineFilesystem.IsChecked ?? false)
+            {
+                scanner = new DisksScannerFilesystem();
+            }
+            else
+            {
+                scanStatus.Text = "ERROR: Scanner type not configured";
+                startScanButton.IsEnabled = DisksScanner == null;
+                stopScanButton.IsEnabled = DisksScanner != null;
+                return;
+            }
+            scanner.Root = scannerRoot.Text;
+            scanner.IgnorePattern = scannerIgnore.Text.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            scanner.ScanCheckoutSubdirs = scannerEntrySubdir.IsChecked ?? false;
 
-        //	DisksScanner = new DisksScannerFilesystem()
-        //	{
-        //		Root = SearchDir.Text
-        //	};
-        //	Close();
-        //}
+            scanner.ScanMessage += Scanner_ScanMessage;
+            scanner.EntryFound += Scanner_EntryFound;
+
+            DisksScanner = scanner;
+
+            ScannerWorker = new Thread(() =>
+            {
+                Dispatcher.Invoke(() => {
+                    stopScanButton.IsEnabled = true;
+                });
+
+                scanner.Scan();
+
+                Dispatcher.Invoke(() => {
+                    DisksScanner = null;
+                    startScanButton.IsEnabled = true;
+                    stopScanButton.IsEnabled = false;
+                });
+            });
+            ScannerWorker.Start();
+        }
+
+        private bool Scanner_EntryFound(Entry arg)
+        {
+            //throw new NotImplementedException();
+            return true;
+        }
+
+        private void Scanner_ScanMessage(object sender, string e)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                scanStatus.Text = e;
+            });
+        }
+
+        private void stopScanButton_Click(object sender, RoutedEventArgs e)
+        {
+            startScanButton.IsEnabled = false;
+            stopScanButton.IsEnabled = false;
+            scanStatus.Text = "Stopping scan...";
+
+            // The following should be async
+            Thread worker = ScannerWorker;
+            ScannerWorker = new Thread(() =>
+            {
+                IDisksScanner s = DisksScanner;
+                if (s != null)
+                {
+                    s.AbortScan();
+                }
+                worker?.Join();
+
+                Dispatcher.Invoke(() => {
+                    DisksScanner = null;
+                    startScanButton.IsEnabled = true;
+                    stopScanButton.IsEnabled = false;
+                });
+            });
+            ScannerWorker.Start();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (ScannerWorker != null)
+            {
+                stopScanButton_Click(null, null);
+            }
+        }
     }
 }

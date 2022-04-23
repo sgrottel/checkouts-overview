@@ -12,9 +12,8 @@
         <Style TargetType="TextBox" BasedOn="{StaticResource DarkTextBox}"/>
         <Style TargetType="CheckBox" BasedOn="{StaticResource DarkCheckBox}"/>
         <Style TargetType="ScrollBar" BasedOn="{StaticResource DarkScrollBar}"/>
-        <Style TargetType="RadioButton">
-            <Setter Property="Foreground" Value="{StaticResource Light}"/>
-        </Style>
+        <Style TargetType="RadioButton" BasedOn="{StaticResource DarkRadioButton}"/>
+
     </Window.Resources>
     
 	<Grid>

@@ -10,7 +10,9 @@ namespace SG.Checkouts_Overview
 {
 	public class DisksScannerFilesystem : IDisksScanner
 	{
-		public string Root { get; set; }
+		public string Root { get; set; } = null;
+		public string[] IgnorePattern { get; set; } = null;
+		public bool ScanCheckoutSubdirs { get; set; } = false;
 
 		public event EventHandler<string> ScanMessage;
 		public event Func<Entry, bool> EntryFound;

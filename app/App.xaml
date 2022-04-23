@@ -217,6 +217,10 @@
             </Setter>
         </Style>
 
+        <Style x:Key="DarkRadioButton" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource Light}"/>
+        </Style>
+
     </Application.Resources>
     
 </Application>

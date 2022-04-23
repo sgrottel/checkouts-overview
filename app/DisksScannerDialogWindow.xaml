@@ -6,18 +6,13 @@
 		xmlns:local="clr-namespace:SG.Checkouts_Overview"
 		mc:Ignorable="d"
 		Title="Checkouts Overview - Scan Disks..." Height="450" Width="800" WindowStartupLocation="CenterScreen"
-        Style="{StaticResource DarkWindow}" Foreground="{StaticResource Light}">
+        Style="{StaticResource DarkWindow}" Foreground="{StaticResource Light}" Closing="Window_Closing">
     <Window.Resources>
         <Style TargetType="Button" BasedOn="{StaticResource DarkToolBarButton}"/>
         <Style TargetType="TextBox" BasedOn="{StaticResource DarkTextBox}"/>
         <Style TargetType="CheckBox" BasedOn="{StaticResource DarkCheckBox}"/>
         <Style TargetType="ScrollBar" BasedOn="{StaticResource DarkScrollBar}"/>
-        <Style TargetType="Label">
-            <Setter Property="Foreground" Value="{StaticResource Light}"/>
-        </Style>
-        <Style TargetType="RadioButton">
-            <Setter Property="Foreground" Value="{StaticResource Light}"/>
-        </Style>
+        <Style TargetType="RadioButton" BasedOn="{StaticResource DarkRadioButton}"/>
     </Window.Resources>
 
     <Grid Margin="4">
@@ -51,7 +46,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <RadioButton Grid.ColumnSpan="2" Name="scannerEngineEverything">
+                    <RadioButton Grid.ColumnSpan="2" Name="scannerEngineEverything" IsEnabled="{Binding IsEnabled, ElementName=startScanButton}">
                         <WrapPanel>
                             <Viewbox Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Width="16" Height="16" Margin="0,0,4,0">
                                 <Image>
@@ -68,33 +63,32 @@
                         </WrapPanel>
                     </RadioButton>
 
-                    <RadioButton Grid.Row="1" Grid.ColumnSpan="2" Name="scannerEngineFilesystem" Margin="0,0,0,4">File System</RadioButton>
+                    <RadioButton Grid.Row="1" Grid.ColumnSpan="2" Name="scannerEngineFilesystem" Margin="0,0,0,4" IsEnabled="{Binding IsEnabled, ElementName=startScanButton}">File System</RadioButton>
 
                     <TextBlock Grid.Row="2">Search Root</TextBlock>
                     <DockPanel Grid.Row="2" Grid.Column="1" Margin="2,0,0,2" >
-                        <Button DockPanel.Dock="Right" Margin="2,0,0,0" Padding="4,0" HorizontalAlignment="Left" Click="BrowseScannerRootButton_Click">...</Button>
-                        <TextBox Name="scannerRoot"/>
+                        <Button DockPanel.Dock="Right" Margin="2,0,0,0" Padding="4,0" HorizontalAlignment="Left" Click="BrowseScannerRootButton_Click" IsEnabled="{Binding IsEnabled, ElementName=startScanButton}">...</Button>
+                        <TextBox Name="scannerRoot" IsEnabled="{Binding IsEnabled, ElementName=startScanButton}"/>
                     </DockPanel>
 
                     <TextBlock Grid.Row="3">Ignore</TextBlock>
                     <TextBox Grid.Row="3" Grid.Column="1" Name="scannerIgnore" Margin="2,0,0,0"
-                             TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"></TextBox>
+                             TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"
+                             IsEnabled="{Binding IsEnabled, ElementName=startScanButton}"></TextBox>
 
                     <GridSplitter Grid.Row="4" Grid.ColumnSpan="2" Height="4" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,0,0,2" 
                                   Background="{StaticResource Darker}"/>
 
-                    <CheckBox Grid.Row="5" Grid.ColumnSpan="2" Name="scannerEntrySubdir" Margin="0,0,0,2">Decent into checkout sub-directories</CheckBox>
+                    <CheckBox Grid.Row="5" Grid.ColumnSpan="2" Name="scannerEntrySubdir" Margin="0,0,0,2"
+                              IsEnabled="{Binding IsEnabled, ElementName=startScanButton}">Decent into checkout sub-directories</CheckBox>
 
                 </Grid>
 
                 <StackPanel Orientation="Horizontal" Margin="4,10,0,0">
-                    <Button HorizontalAlignment="Left" Margin="0,0,4,0">Start</Button>
-                    <Button HorizontalAlignment="Left" IsEnabled="False">Stop</Button>
+                    <Button Name="startScanButton" HorizontalAlignment="Left" Margin="0,0,4,0" IsEnabled="False" Click="startScanButton_Click">Start</Button>
+                    <Button Name="stopScanButton" HorizontalAlignment="Left" IsEnabled="False" Click="stopScanButton_Click">Stop</Button>
                 </StackPanel>
-                <ProgressBar Height="16" Margin="4,4"
-                             Background="{StaticResource Darker}" BorderBrush="{StaticResource Dark}" Foreground="{StaticResource Grey}"
-                             Value="30"></ProgressBar>
-                <TextBlock Margin="8,0,0,0" TextWrapping="Wrap">Not Started...</TextBlock>
+                <TextBlock Name="scanStatus" Margin="8,0,0,0" TextWrapping="Wrap">Not Started...</TextBlock>
 
             </StackPanel>
         </ScrollViewer>

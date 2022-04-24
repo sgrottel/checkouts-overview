@@ -266,7 +266,11 @@ namespace SG.Checkouts_Overview
 		{
 			DisksScannerDialogWindow dlg = new DisksScannerDialogWindow();
 			dlg.Owner = this;
-			dlg.ShowDialog();
+			dlg.CurrentEntries = entries;
+			if (dlg.ShowDialog() ?? false)
+            {
+
+            }
 			//if (dlg.DisksScanner != null)
 			//{
 			//	dlg.DisksScanner.EntryFound += (Entry e) =>

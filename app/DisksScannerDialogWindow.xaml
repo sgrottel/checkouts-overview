@@ -5,7 +5,7 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:SG.Checkouts_Overview"
 		mc:Ignorable="d"
-		Title="Checkouts Overview - Scan Disks..." Height="450" Width="800" WindowStartupLocation="CenterScreen"
+		Title="Checkouts Overview - Scan Disks..." Height="600" Width="1000" WindowStartupLocation="CenterScreen"
         Style="{StaticResource DarkWindow}" Foreground="{StaticResource Light}" Closing="Window_Closing">
     <Window.Resources>
         <Style TargetType="Button" BasedOn="{StaticResource DarkToolBarButton}"/>
@@ -94,12 +94,16 @@
         </ScrollViewer>
 
         <!-- right column results view -->
-        <ListView Grid.Column="2" HorizontalAlignment="Stretch" MinWidth="50" Background="{StaticResource Darker}" BorderThickness="0">
-            <!--
-             ItemsSource="{Binding ElementName=EntriesView,Path=SelectedItems}"
-				  Grid.IsSharedSizeScope="True" SelectionMode="Single"
-				  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-            -->
+        <ListView Grid.Column="2" HorizontalAlignment="Stretch" MinWidth="50" Background="{StaticResource Darker}" BorderThickness="0"
+                  ItemsSource="{Binding}" Foreground="{StaticResource Light}"
+                  HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <CheckBox IsChecked="{Binding Marked,Mode=TwoWay}" HorizontalAlignment="Stretch">
+                        <TextBlock Text="{Binding Path}" TextWrapping="Wrap"/>
+                    </CheckBox>
+                </DataTemplate>
+            </ListView.ItemTemplate>
         </ListView>
 
         <!-- Bottom button bar -->
@@ -110,72 +114,11 @@
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
-                <Button IsEnabled="False" Grid.Column="1" Padding="12,2" Margin="4" >Apply</Button>
-                <Button IsEnabled="False" Grid.Column="2" Padding="8,2" Margin="4" IsDefault="True">Cancel</Button>
+                <Button IsEnabled="False" Grid.Column="1" Padding="12,2" Margin="4" Click="ApplyButton_Click">Apply</Button>
+                <Button Grid.Column="2" Padding="8,2" Margin="4" IsDefault="True" Click="CancelButton_Click">Cancel</Button>
             </Grid>
         </Grid>
 
     </Grid>
 
-<!--
-    <Grid.RowDefinitions>
-			<RowDefinition Height="auto"/>
-			<RowDefinition Height="*"/>
-			<RowDefinition Height="auto"/>
-		</Grid.RowDefinitions>
-
-		<GroupBox Header="Option 1: Search with Everything..." Margin="4">
-			<Grid Margin="4">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="auto" />
-					<ColumnDefinition Width="*" />
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="auto" />
-					<RowDefinition Height="auto" />
-					<RowDefinition Height="auto" />
-				</Grid.RowDefinitions>
-
-				<Viewbox Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Width="64" Height="64" Margin="4">
-					<Image>
-						<Image.Source>
-							<BitmapImage UriSource="everything.png" />
-						</Image.Source>
-					</Image>
-				</Viewbox>
-
-				<TextBlock Grid.Row="0" Grid.Column="1">Search all NTFS disks with Everything. This is very fast!</TextBlock>
-				<TextBlock Grid.Row="1" Grid.Column="1"><Hyperlink Click="Hyperlink_Click">Everything (https://www.voidtools.com)</Hyperlink> must be installed on the system. (Recommended)</TextBlock>
-				<Button Grid.Row="2" Grid.Column="1" Padding="16,8" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4" Click="SearchWithEverythingButton_Click">Search with Everything</Button>
-
-			</Grid>
-
-		</GroupBox>
-
-		<GroupBox Grid.Row="1" Header="Option 2: Search with Filesystem..." Margin="4,0,4,4">
-			<StackPanel Orientation="Vertical" Margin="4">
-				<TextBlock Margin="2,0">Search from a configured root directory using normal file system method. This will always work, but will be slow.</TextBlock>
-				<DockPanel Margin="2">
-					<TextBlock DockPanel.Dock="left">Root Directory:</TextBlock>
-					<Button DockPanel.Dock="Right" Padding="4,0" Click="BrowseSearchDirButton_Click">...</Button>
-					<TextBox Name="SearchDir" Margin="2,0"></TextBox>
-				</DockPanel>
-				<Button Grid.Row="2" Grid.Column="1" Padding="16,8" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="76,4,4,4" Click="SearchFileSystemButton_Click">Start Search File System</Button>
-			</StackPanel>
-
-		</GroupBox>
-
-		<Grid Grid.Row="2" Background="{StaticResource {x:Static SystemColors.ControlBrushKey}}">
-			<Grid Margin="8">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*" />
-					<ColumnDefinition Width="auto" />
-				</Grid.ColumnDefinitions>
-				<Button Grid.Column="1" Padding="8,2" Margin="4" IsCancel="true">Cancel</Button>
-			</Grid>
-		</Grid>
-
-	</Grid>
-    
-    -->
 </Window>

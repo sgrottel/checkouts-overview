@@ -193,9 +193,6 @@ namespace SG.Checkouts_Overview
                 scanner.Scan();
 
                 Dispatcher.Invoke(() => {
-
-                    FinalFilterEntries();
-
                     DisksScanner = null;
                     startScanButton.IsEnabled = true;
                     stopScanButton.IsEnabled = false;
@@ -206,16 +203,94 @@ namespace SG.Checkouts_Overview
 
         private bool Scanner_EntryFound(Entry entry)
         {
+            // scan root check -- needed for Everything
+            if (!string.IsNullOrWhiteSpace(DisksScanner.Root))
+            {
+                string r = DisksScanner.Root.ToLower();
+                if (!r.EndsWith("\\")) r += "\\";
+
+                if (!entry.Path.ToLower().StartsWith(r))
+                {
+                    return false;
+                }
+            }
+
+            // pattern check
+            foreach (string p in DisksScanner.IgnorePattern)
+            {
+                if (PatternMatch(p, entry.Path))
+                {
+                    return false;
+                }
+            }
+
+            // known entries and sub-entries check
             if (CurrentEntries != null)
             {
-                // TODO: reject entry which is already known
+                // reject entry if it is already known
+                foreach (var e in CurrentEntries)
+                {
+                    if (string.Equals(entry.Path, e.Entry.Path, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return false; // known entry
+                    }
+
+                    if (entry.Path.ToLower().StartsWith(e.Entry.Path.ToLower() + "\\"))
+                    {
+                        // entry within an entry
+                        if (DisksScanner.ScanCheckoutSubdirs == false)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            if (DisksScanner.ScanCheckoutSubdirs == false)
+            {
+                // then check already found entries
+                foreach (var e in Entries)
+                {
+                    if (entry.Path.ToLower().StartsWith(e.Entry.Path.ToLower() + "\\"))
+                    {
+                        // entry within an entry
+                        if (DisksScanner.ScanCheckoutSubdirs == false)
+                        {
+                            return false;
+                        }
+                    }
+                }
             }
 
             Dispatcher.Invoke(() =>
             {
-                Entries.Add(new MarkableEntry() { Entry = entry });
+                MarkableEntry me = new MarkableEntry() { Entry = entry, Marked = true };
+                me.PropertyChanged += MarkableEntry_PropertyChanged;
+                MarkableEntry_PropertyChanged(null, new PropertyChangedEventArgs(nameof(MarkableEntry.Marked)));
+                Entries.Add(me);
             });
             return true;
+        }
+
+        private void MarkableEntry_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == null || e.PropertyName == nameof(MarkableEntry.Marked))
+            {
+                bool hasMarked = false;
+                foreach (var entry in Entries)
+                {
+                    if (entry.Marked)
+                    {
+                        hasMarked = true;
+                        break;
+                    }
+                }
+                ApplyButton.IsEnabled = hasMarked;
+            }
+        }
+
+        private bool PatternMatch(string p, string path)
+        {
+            return path.ToLower().Contains(p.ToLower()); // for now, simple substring search
         }
 
         private void Scanner_ScanMessage(object sender, string e)
@@ -269,23 +344,45 @@ namespace SG.Checkouts_Overview
         {
             if (CurrentEntries != null)
             {
-                // TODO: Add marked entries to the current entries collection
+                foreach (var entry in Entries)
+                {
+                    if (!entry.Marked) continue;
+                    CurrentEntries.Add(
+                        new EntryView() { Entry = entry.Entry }
+                        );
+                }
             }
             DialogResult = true;
             Close();
         }
 
-        /// <summary>
-        /// Filters list of entries after detection
-        /// </summary>
-        /// <example>
-        /// Search with everything is so fast, we don't need to filter (optimize search) while running.
-        /// Instead, we filter the found items in the end, as soon as we got all of them.
-        /// </example>
-        private void FinalFilterEntries()
+        private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
-            // TODO
-            //throw new NotImplementedException();
+            Entries.Clear();
+        }
+
+        private void SelectNoneButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var en in Entries)
+            {
+                en.Marked = false;
+            }
+        }
+
+        private void SelectAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var en in Entries)
+            {
+                en.Marked = true;
+            }
+        }
+
+        private void SelectInvertButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (var en in Entries)
+            {
+                en.Marked = !en.Marked;
+            }
         }
     }
 }

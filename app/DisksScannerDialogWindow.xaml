@@ -94,17 +94,27 @@
         </ScrollViewer>
 
         <!-- right column results view -->
-        <ListView Grid.Column="2" HorizontalAlignment="Stretch" MinWidth="50" Background="{StaticResource Darker}" BorderThickness="0"
-                  ItemsSource="{Binding}" Foreground="{StaticResource Light}"
-                  HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <CheckBox IsChecked="{Binding Marked,Mode=TwoWay}" HorizontalAlignment="Stretch">
-                        <TextBlock Text="{Binding Path}" TextWrapping="Wrap"/>
-                    </CheckBox>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <DockPanel Grid.Column="2">
+            <WrapPanel DockPanel.Dock="Top" Margin="0,4">
+                <Button Margin="0" Click="ClearButton_Click">Clear</Button>
+                <Separator Margin="4,0" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}"></Separator>
+                <TextBlock Margin="0,0,3,0">Select</TextBlock>
+                <Button Margin="0,0,2,0" Click="SelectNoneButton_Click">None</Button>
+                <Button Margin="0,0,2,0" Click="SelectAllButton_Click">All</Button>
+                <Button Margin="0,0,2,0" Click="SelectInvertButton_Click">Invert</Button>
+            </WrapPanel>
+            <ListView HorizontalAlignment="Stretch" MinWidth="50" Background="{StaticResource Darker}" BorderThickness="0"
+                      ItemsSource="{Binding}" Foreground="{StaticResource Light}"
+                      HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox IsChecked="{Binding Marked,Mode=TwoWay}" HorizontalAlignment="Stretch">
+                            <TextBlock Text="{Binding Path}" TextWrapping="Wrap"/>
+                        </CheckBox>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </DockPanel>
 
         <!-- Bottom button bar -->
         <Grid Grid.Row="1" Grid.ColumnSpan="3">
@@ -114,7 +124,7 @@
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
-                <Button IsEnabled="False" Grid.Column="1" Padding="12,2" Margin="4" Click="ApplyButton_Click">Apply</Button>
+                <Button Name="ApplyButton" IsEnabled="False" Grid.Column="1" Padding="12,2" Margin="4" Click="ApplyButton_Click">Apply</Button>
                 <Button Grid.Column="2" Padding="8,2" Margin="4" IsDefault="True" Click="CancelButton_Click">Cancel</Button>
             </Grid>
         </Grid>

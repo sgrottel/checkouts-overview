@@ -61,6 +61,11 @@ namespace SG.Checkouts_Overview
 						{
 							added++;
 						}
+
+						if (!ScanCheckoutSubdirs)
+                        {
+							continue; // skip subdirs
+                        }
 					}
 
 					paths.AddRange(System.IO.Directory.GetDirectories(d));

@@ -53,6 +53,7 @@ namespace SG.Checkouts_Overview
 			scannerRoot.Text = Properties.Settings.Default.scannerRoot;
 			scannerIgnore.Text = Properties.Settings.Default.scannerIgnorePatterns;
 			scannerEntrySubdir.IsChecked = Properties.Settings.Default.scannerEntrySubdir;
+			fetchOnUpdate.IsChecked = Properties.Settings.Default.gitFetchAllOnUpdate;
 
 			getGitBinInfo();
 		}
@@ -141,6 +142,8 @@ namespace SG.Checkouts_Overview
 			Properties.Settings.Default.scannerRoot = scannerRoot.Text;
 			Properties.Settings.Default.scannerIgnorePatterns = scannerIgnore.Text;
 			Properties.Settings.Default.scannerEntrySubdir = scannerEntrySubdir.IsChecked ?? false;
+			Properties.Settings.Default.gitFetchAllOnUpdate = fetchOnUpdate.IsChecked ?? false;
+
 			Properties.Settings.Default.Save();
 			DialogResult = true;
 			Close();

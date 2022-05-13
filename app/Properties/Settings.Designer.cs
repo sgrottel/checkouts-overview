@@ -166,5 +166,17 @@ namespace SG.Checkouts_Overview.Properties {
                 this["scannerEntrySubdir"] = value;
             }
         }
+                        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool gitFetchAllOnUpdate {
+            get {
+                return ((bool)(this["gitFetchAllOnUpdate"]));
+            }
+            set {
+                this["gitFetchAllOnUpdate"] = value;
+            }
+        }
     }
 }

@@ -5,7 +5,7 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:SG.Checkouts_Overview"
 		mc:Ignorable="d"
-		Title="Checkouts Overview Settings" Height="430" Width="800" WindowStartupLocation="CenterScreen"
+		Title="Checkouts Overview Settings" Height="455" Width="800" WindowStartupLocation="CenterScreen"
 		Style="{StaticResource DarkWindow}">
     <Window.Resources>
         <Style TargetType="Button" BasedOn="{StaticResource DarkToolBarButton}"/>
@@ -45,6 +45,7 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
 				<TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Last File</TextBlock>
@@ -66,7 +67,7 @@
                 <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center">Main Brances</TextBlock>
 				<TextBox Grid.Row="6" Grid.Column="1" Name="gitMain" HorizontalAlignment="Stretch" Margin="2,0,0,2"></TextBox>
 
-				<TextBlock Grid.Row="7" Grid.Column="0" VerticalAlignment="Center">UI Client</TextBlock>
+                <TextBlock Grid.Row="7" Grid.Column="0" VerticalAlignment="Center">UI Client</TextBlock>
 				<TextBox Grid.Row="7" Grid.Column="1" Name="gitClient" HorizontalAlignment="Stretch" Margin="2,0,0,2"></TextBox>
 				<Button Grid.Row="7" Grid.Column="2" Margin="2,0,0,0" Padding="4,0" HorizontalAlignment="Left" Click="BrowseGitUIClientButton_Click">...</Button>
 
@@ -103,6 +104,14 @@
                                   Background="{StaticResource Darker}"/>
 
                 <CheckBox Grid.Row="14" Grid.ColumnSpan="2" Name="scannerEntrySubdir" Margin="0,0,0,2">Decent into checkout sub-directories</CheckBox>
+
+                <CheckBox Grid.Row="15" Grid.ColumnSpan="3" Margin="0,2" Name="fetchOnUpdate">
+                    <TextBlock>
+                        <Run>Run</Run>
+                        <Run FontFamily="Consolas" FontSize="11" Background="{StaticResource Dark}" >git fetch --all</Run>
+                        <Run>on update</Run>
+                    </TextBlock>
+                </CheckBox>
 
             </Grid>
         </ScrollViewer>

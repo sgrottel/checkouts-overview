@@ -267,30 +267,7 @@ namespace SG.Checkouts_Overview
 			DisksScannerDialogWindow dlg = new DisksScannerDialogWindow();
 			dlg.Owner = this;
 			dlg.CurrentEntries = entries;
-			if (dlg.ShowDialog() ?? false)
-            {
-
-            }
-			//if (dlg.DisksScanner != null)
-			//{
-			//	dlg.DisksScanner.EntryFound += (Entry e) =>
-			//	{
-			//		foreach (var ke in entries)
-			//		{
-			//			if (string.Equals(ke.Entry.Path, e.Path, StringComparison.CurrentCultureIgnoreCase)) return false;
-			//		}
-			//		Dispatcher.Invoke(() =>
-			//		{
-			//			entries.Add(new EntryView() { Entry = e });
-			//		});
-			//		return true;
-			//	};
-			//	DisksScannerProgressDialogWindow prgDlg = new DisksScannerProgressDialogWindow();
-			//	prgDlg.Owner = this;
-			//	prgDlg.DisksScanner = dlg.DisksScanner;
-			//	prgDlg.Start();
-			//	prgDlg.ShowDialog();
-			//}
+			dlg.ShowDialog();
 		}
 
 		private void EntryTypeButton_Click(object sender, RoutedEventArgs e)

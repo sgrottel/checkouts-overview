@@ -20,6 +20,7 @@
         <Style TargetType="ToggleButton" BasedOn="{StaticResource DarkToggleButton}"/>
         <Style TargetType="TextBox" BasedOn="{StaticResource DarkTextBox}"/>
         <Style TargetType="ScrollBar" BasedOn="{StaticResource DarkScrollBar}"/>
+        <Style TargetType="CheckBox" BasedOn="{StaticResource DarkCheckBox}"/>
 
         <DataTemplate x:Key="Icon_Empty_x32">
 			<Canvas Width="32" Height="32">
@@ -286,6 +287,7 @@
 							<RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="auto" SharedSizeGroup="Col1"></ColumnDefinition>
@@ -313,7 +315,15 @@
                         <TextBlock Grid.Row="4" Text="Main Branch" Margin="0,0,4,4" HorizontalAlignment="Stretch" />
                         <TextBox Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding Entry.MainBranch}" Margin="0,0,0,4" HorizontalAlignment="Stretch" />
 
-                        <TextBlock Grid.Row="5" Grid.ColumnSpan="4" Text="{Binding LastMessage}" HorizontalAlignment="Stretch">
+                        <CheckBox Grid.Row="5" Grid.ColumnSpan="4" IsThreeState="True" IsChecked="{Binding GitFetchOnUpdate}">
+                            <TextBlock>
+								<Run>Run</Run>
+								<Run FontFamily="Consolas" FontSize="11" Background="{StaticResource Dark}" >git fetch --all</Run>
+								<Run>on update</Run>
+                            </TextBlock>
+                        </CheckBox>
+
+                        <TextBlock Grid.Row="6" Grid.ColumnSpan="4" Text="{Binding LastMessage}" HorizontalAlignment="Stretch">
 							<TextBlock.Style>
 								<Style TargetType="TextBlock">
 									<Setter Property="Visibility" Value="Visible" />

@@ -18,6 +18,7 @@ namespace SG.Checkouts_Overview
 		private string path = string.Empty;
 		private string type = string.Empty;
 		private string mainBranch = string.Empty;
+		private Tristate gitFetchOnUpdate = Tristate.Default;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -69,22 +70,38 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
-        /// <summary>
-        /// Overrides the main branch for this repo
-        /// </summary>
+		/// <summary>
+		/// Overrides the main branch for this repo
+		/// </summary>
 		[DefaultValue("")]
-        public string MainBranch {
-            get {
+		public string MainBranch {
+			get {
 				return mainBranch;
 			}
-            set {
-                if (!string.Equals(mainBranch, value))
-                {
-                    mainBranch = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MainBranch)));
-                }
+			set {
+				if (!string.Equals(mainBranch, value))
+				{
+					mainBranch = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MainBranch)));
+				}
+			}
+		}
+
+		/// <summary>
+		/// Run "git fetch all" on update; use app-wide setting if null
+		/// </summary>
+		[DefaultValue(Tristate.Default)]
+		public Tristate GitFetchOnUpdate {
+            get {
+				return gitFetchOnUpdate;
+			}
+			set {
+				if (gitFetchOnUpdate != value) {
+					gitFetchOnUpdate = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(GitFetchOnUpdate)));
+				}
             }
-        }
+		}
 
     }
 }

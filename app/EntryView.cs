@@ -53,6 +53,10 @@ namespace SG.Checkouts_Overview
 			{
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
 			}
+			if (e == null || string.IsNullOrWhiteSpace(e.PropertyName) || e.PropertyName == nameof(Entry.GitFetchOnUpdate))
+			{
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(GitFetchOnUpdate)));
+			}
 		}
 
 		private void EntryStatus_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -240,6 +244,36 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
+		/// <summary>
+		/// Run "git fetch all" on update; use app-wide setting if null
+		/// </summary>
+		public bool? GitFetchOnUpdate
+		{
+			get
+			{
+				switch (Entry.GitFetchOnUpdate)
+				{
+					case Tristate.True: return true;
+					case Tristate.False: return false;
+				}
+				return null;
+			}
+			set
+			{
+				switch (value)
+				{
+					case true:
+						entry.GitFetchOnUpdate = Tristate.True;
+						break;
+					case false:
+						entry.GitFetchOnUpdate = Tristate.False;
+						break;
+					default:
+						entry.GitFetchOnUpdate = Tristate.Default;
+						break;
+				}
+			}
+		}
 
 	}
 

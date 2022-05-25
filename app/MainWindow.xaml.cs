@@ -579,10 +579,12 @@ namespace SG.Checkouts_Overview
 			const string knownUrl = "https://github.com/sgrottel/checkouts-overview/blob/main/doc/manual.md";
 			const string fallbackUrl = "https://go.grottel.net/checkouts-overview-manual";
 
-			System.Net.WebClient wc = new System.Net.WebClient();
+			System.Net.Http.HttpClient hc = new System.Net.Http.HttpClient();
 			try
 			{
-				string page = wc.DownloadString(knownUrl);
+				var call = hc.GetStringAsync(knownUrl);
+				call.Wait();
+				string page = call.Result;
 				if (page.Contains("Checkouts Overview - Usage Manual"))
 				{
 					try

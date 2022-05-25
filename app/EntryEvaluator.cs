@@ -57,24 +57,40 @@ namespace SG.Checkouts_Overview
 				: "git.exe";
 		}
 
-		private DateTime GetCommitDateGit(Entry entry)
-		{
+		private class RunResult
+        {
+			public string StdOut { get; set; }
+			public string StdErr { get; set; }
+			public int ExitCode { get; set; }
+        }
+
+		private RunResult runGit(string path, string[] args)
+        {
+			RunResult rr = new RunResult();
 			Process p = new Process();
 			p.StartInfo.UseShellExecute = false;
 			p.StartInfo.RedirectStandardOutput = true;
+			p.StartInfo.RedirectStandardError = true;
 			p.StartInfo.FileName = gitBin();
 			p.StartInfo.ArgumentList.Clear();
-			p.StartInfo.ArgumentList.Add("log");
-			p.StartInfo.ArgumentList.Add("-n");
-			p.StartInfo.ArgumentList.Add("1");
-			p.StartInfo.ArgumentList.Add("--format=%aI");
-			p.StartInfo.WorkingDirectory = entry.Path;
+			foreach (string a in args) {
+				p.StartInfo.ArgumentList.Add(a);
+			}
+			p.StartInfo.WorkingDirectory = path;
 			p.StartInfo.CreateNoWindow = true;
 			p.Start();
-			var result = p.StandardOutput.ReadToEnd();
+			rr.StdOut = p.StandardOutput.ReadToEnd();
+			rr.StdErr = p.StandardError.ReadToEnd();
 			p.WaitForExit();
+			rr.ExitCode = p.ExitCode;
+			return rr;
+		}
+
+		private DateTime GetCommitDateGit(Entry entry)
+		{
+			var result = runGit(entry.Path, new string[] { "log", "-n", "1", "--format=%aI" });
 			DateTime d = DateTime.MinValue;
-			DateTime.TryParse(result, out d);
+			DateTime.TryParse(result.StdOut, out d);
 			return d;
 		}
 
@@ -90,7 +106,8 @@ namespace SG.Checkouts_Overview
 			public EntryStatus Status { get; set; }	
 			public Action<string> SetLastMessage { get; set; }
 			public Action<Job> Work { get; set; }
-        };
+			public Action<Job> Next { get; set; } = null;
+		};
 
 		private object queuelock = new object();
 		private List<Job> queue = new List<Job>();
@@ -158,7 +175,9 @@ namespace SG.Checkouts_Overview
 					Entry = entry,
 					Status = new EntryStatus() { Evaluating = true },
 					SetLastMessage = setLastMessage,
-					Work = workGitUpdate
+					Work = Properties.Settings.Default.gitFetchAllOnUpdate
+						? workGitUpdateFetch
+						: workGitUpdate
 				};
 
 				queue.Add(job);
@@ -201,6 +220,7 @@ namespace SG.Checkouts_Overview
 				catch (Exception ex)
 				{
 					job.Status.FailedStatus = true;
+					job.Next = null;
 					job.SetLastMessage("Failed to evaluate: " + ex);
 				}
 
@@ -208,7 +228,16 @@ namespace SG.Checkouts_Overview
 				lock (queuelock)
 				{
 					queue.Remove(job);
-					job.Status.Evaluating = false;
+					if (job.Next != null)
+					{
+						job.Work = job.Next;
+						job.Next = null;
+						queue.Add(job);
+					}
+					else
+					{
+						job.Status.Evaluating = false;
+					}
 				}
 			}
 		}
@@ -226,21 +255,9 @@ namespace SG.Checkouts_Overview
 			}
 			job.Status.Available = true;
 
-			Process p = new Process();
-			p.StartInfo.UseShellExecute = false;
-			p.StartInfo.RedirectStandardOutput = true;
-			p.StartInfo.FileName = gitBin();
-			p.StartInfo.ArgumentList.Clear();
-			p.StartInfo.ArgumentList.Add("status");
-			p.StartInfo.ArgumentList.Add("--short");
-			p.StartInfo.ArgumentList.Add("--branch");
-			p.StartInfo.ArgumentList.Add("--porcelain=v2");
-			p.StartInfo.ArgumentList.Add("--ahead-behind");
-			p.StartInfo.WorkingDirectory = job.Entry.Path;
-			p.StartInfo.CreateNoWindow = true;
-			p.Start();
-			var result = p.StandardOutput.ReadToEnd().Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-			p.WaitForExit();
+			var result = runGit(job.Entry.Path, new string[]{
+				"status", "--short", "--branch", "--porcelain=v2", "--ahead-behind"
+			}).StdOut.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
 			string branch = result.FirstOrDefault((s) => { return s.StartsWith("# branch.head "); });
 			if (!string.IsNullOrWhiteSpace(branch))
@@ -298,6 +315,24 @@ namespace SG.Checkouts_Overview
 				job.Status.LocalChanges = changes;
 			}
 		}
+
+		private void workGitUpdateFetch(Job job)
+        {
+			workGitUpdate(job);
+			job.Next = workGitFetch;
+        }
+
+		private void workGitFetch(Job job)
+        {
+			var res = runGit(job.Entry.Path, new string[] { "fetch", "--all" });
+			if (res.ExitCode == 0)
+            {
+				if (!string.IsNullOrWhiteSpace(res.StdOut))
+                {
+					job.Next = workGitUpdate;
+				}
+			}
+        }
 
         #endregion
         #endregion

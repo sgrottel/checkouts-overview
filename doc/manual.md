@@ -23,7 +23,7 @@ The list of entries, also called the `Collection` is the main data for the appli
 
 ### Entries
 Each entry represents one repository clone.
-Each entry is defined by three fields:
+Each entry is defined by several fields:
 * `Name` is a human readable display name for the entry.
 This can be any arbitrary string.
 * `Path` is the full file system path to the local repository clone.
@@ -32,6 +32,11 @@ You can use the `[...]` button next to the text boxes to browse of a path.
 This is for future extensions.
 Currently, the only supported value is `git` for git repository clones.
 You can use the `[*]` button to auto-detect the repository type.
+* `Main Branch` is the main branch name to be used for that repository.
+If this field is empty, the application setting define this value.
+* `Run git fetch --all on update` specifies whether or not to fetch new status information from the repository origin on update.
+This is a three-state check box.
+In the neutral state `[/]`, the value is specified in the application settings.
 
 With the commands in the `Manage Entries` category, you can `[Add]` new entries to the collection and `[Remove]` the selected entries from the collection.
 When you `[Add]` a new entry, all fields will be empty.
@@ -93,6 +98,9 @@ Combinations of all indicators are possible:
 The collection of entries can be automatically loaded, if configured accordingly in the application's settings.
 Then the last file you are loading or saving, will be memorized of automatic load on application start.
 
+An Asterisk `*` next to the label `Collection` indicates that you have unsaved changes.
+You will be asked if you want to save these changes when you close the application or when you load a new collection.
+
 When you trigger `[Save]` the current collection file's directory and file name will be pre-selected in the save dialog window.
 The save dialog window will always be shown.
 You can browse to any other local, change the name of the file, or simply press `Ok` to overwrite the existing file with the updated contents.
@@ -130,22 +138,34 @@ The application is capable of automatically scanning your file system to detect 
 
 ![Scanning Dialog](screenshot-scan.png)
 
-### Everything
-Scan with [Everything](https://www.voidtools.com/) will scan all your NTFS disks with light speed fast performance.
+In the left panel you specify the search options.
+
+You can select a search provider:
+* `Everything`
+* `File System`
+
+[Everything](https://www.voidtools.com/) will scan all your NTFS disks with light-speed fast performance.
 You need to have Everything installed, and the Everything service needs to be running.
 
-Just click `[Search with Everything]` and be amazed how quick it is.
+Alternatively, iterative through your `file system` with OS-built-in functions.
+This method can be very slow.
 
-### File System Scan
-Scan with Filesystem manually iterates through your file system, starting from the specified root directory.
+You need to specify a starting root directory for your scan.
+Enter the root directory path, or browse for a path using the `...` button.
 Any existing directory path is a valid starting point.
 All subdirectories within this path will be scanned.
-This method works on all file systems and all disk types, including network drives.
-But, this method can be very slow.
+If you leave the `search root` blank and use `Everything`, then all NTFS disks will be searched.
 
-Enter the root directory path, or browse for a path using the `...` button.
-Then click `[Start Search File System]` button.
-A progress dialog will appear, summarizing the repositories found so far, and offering you an option to abort the search process.
+You can specify several ignore sub-strings.
+All potentially found paths to repository clones, which contain one of those strings (case insensitive), will not be included in the results.
+
+Finally, you can specify if you want to `decent into checkout sub-directories` of found repository clones.
+
+The right panel shows all results after a successful scan.
+You can select the paths you want to add to your collection.
+The buttons at the top help with manipulating the selction quickly.
+
+Hit `Apply` to add the found and selected paths as entries to your collection.
 
 
 ## Settings
@@ -166,6 +186,9 @@ This is a semicolon separated list of names, e.g. "`main;master`".
 If empty, the names `main` and `master` will be used.
 * Configure the `UI Client` application to be started as `Client` from the main window.<br>
 The client application will be called with the selected repositories path as first argument.
+* The `Filesystem Search Engine`, `Search Root`, `Ignore` strings, and `Decent into checkout sub-directories` settings are the default values for the Disk Scanning dialog.
+Change this setup here, e.g., if you have a typical search root directory, or ignore patterns you want to almost always specify.
+* `Run git fetch --all on update` specifies whether or not to fetch new status information from the repository origin on update.
 
 
 ## Links

@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 
 namespace SG.Checkouts_Overview
 {
-	/// <summary>
-	/// TODO: https://docs.microsoft.com/en-us/dotnet/api/system.threading.threadpool.queueuserworkitem?view=net-6.0#system-threading-threadpool-queueuserworkitem(system-threading-waitcallback-system-object)
-	/// </summary>
+
 	public class EntryEvaluator
 	{
 
@@ -111,7 +109,6 @@ namespace SG.Checkouts_Overview
 
 		private object queuelock = new object();
 		private List<Job> queue = new List<Job>();
-		private Thread worker = null;
 
 		private List<string> defaultBranches = new List<string>();
 
@@ -140,16 +137,10 @@ namespace SG.Checkouts_Overview
 
 		public void Shutdown()
 		{
-			Thread t = null;
 			lock (queuelock)
 			{
 				queue.Clear();
-				t = worker;
 			}
-			if (t != null)
-            {
-				t.Join();
-            }
 		}
 
 		public EntryStatus BeginEvaluate(Entry entry, Action<string> setLastMessage)
@@ -170,22 +161,33 @@ namespace SG.Checkouts_Overview
 					return null; // unsupported type
                 }
 
+				bool doFetch = false;
+				switch (entry.GitFetchOnUpdate)
+                {
+					case Tristate.False: doFetch = false; break;
+					case Tristate.True: doFetch = true; break;
+					case Tristate.Default:
+						doFetch = Properties.Settings.Default.gitFetchAllOnUpdate;
+						break;
+					default:
+						doFetch = false;
+						break;
+				}
+
 				Job job = new Job()
 				{
 					Entry = entry,
 					Status = new EntryStatus() { Evaluating = true },
 					SetLastMessage = setLastMessage,
-					Work = Properties.Settings.Default.gitFetchAllOnUpdate
-						? workGitUpdateFetch
-						: workGitUpdate
+					Work = doFetch ? workGitUpdateFetch : workGitUpdate
 				};
 
 				queue.Add(job);
-
-				if (worker == null)
-				{
-					worker = new Thread(work);
-					worker.Start();
+				if (!ThreadPool.QueueUserWorkItem(processJob, job, false))
+                {
+					queue.Remove(job);
+					setLastMessage("Failed to queue the update job");
+					return null; // unsupported type
 				}
 
 				return job.Status;
@@ -196,51 +198,44 @@ namespace SG.Checkouts_Overview
 
         #region private implementation
 
-        private void work()
-		{
-			while (true)
-			{
-				Job job = null;
-				lock (queuelock)
-				{
-					if (queue.Count <= 0)
-					{
-						worker = null;
+		private void processJob(Job job)
+        {
+            try
+            {
+                job.Work(job);
+
+                job.Status.FailedStatus = false;
+            }
+            catch (Exception ex)
+            {
+                job.Status.FailedStatus = true;
+                job.Next = null;
+                job.SetLastMessage("Failed to evaluate: " + ex);
+            }
+
+            // work completed
+            lock (queuelock)
+            {
+                if (job.Next != null)
+                {
+                    job.Work = job.Next;
+                    job.Next = null;
+
+					if (ThreadPool.QueueUserWorkItem(processJob, job, false))
+                    {
+						// reuse job object
 						return;
-					}
-					job = queue.First();
-				}
-
-				try
-				{
-					job.Work(job);
-
-					job.Status.FailedStatus = false;
-				}
-				catch (Exception ex)
-				{
-					job.Status.FailedStatus = true;
-					job.Next = null;
-					job.SetLastMessage("Failed to evaluate: " + ex);
-				}
-
-				// work completed
-				lock (queuelock)
-				{
-					queue.Remove(job);
-					if (job.Next != null)
-					{
-						job.Work = job.Next;
-						job.Next = null;
-						queue.Add(job);
-					}
+                    }
 					else
 					{
-						job.Status.Evaluating = false;
+						job.SetLastMessage("Failed to queue the update job");
 					}
 				}
-			}
-		}
+
+				queue.Remove(job);
+				job.Status.Evaluating = false;
+            }
+        }
 
 		private void workGitUpdate(Job job)
         {

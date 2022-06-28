@@ -18,11 +18,11 @@ using System.Windows.Shapes;
 
 namespace SG.Checkouts_Overview
 {
-	/// <summary>
-	/// Interaction logic for DisksScannerDialogWindow.xaml
-	/// </summary>
-	public partial class DisksScannerDialogWindow : Window
-	{
+    /// <summary>
+    /// Interaction logic for DisksScannerDialogWindow.xaml
+    /// </summary>
+    public partial class DisksScannerDialogWindow : Window
+    {
 
         public class MarkableEntry: INotifyPropertyChanged
         {
@@ -92,8 +92,8 @@ namespace SG.Checkouts_Overview
         internal EntryViewsCollection CurrentEntries { get; set; } = null;
 
         public DisksScannerDialogWindow()
-		{
-			InitializeComponent();
+        {
+            InitializeComponent();
             DataContext = Entries;
 
             string se = Properties.Settings.Default.scannerEngine?.ToLowerInvariant() ?? "";
@@ -265,8 +265,8 @@ namespace SG.Checkouts_Overview
             {
                 MarkableEntry me = new MarkableEntry() { Entry = entry, Marked = true };
                 me.PropertyChanged += MarkableEntry_PropertyChanged;
-                MarkableEntry_PropertyChanged(null, new PropertyChangedEventArgs(nameof(MarkableEntry.Marked)));
                 Entries.Add(me);
+                MarkableEntry_PropertyChanged(null, new PropertyChangedEventArgs(nameof(MarkableEntry.Marked)));
             });
             return true;
         }
@@ -359,6 +359,7 @@ namespace SG.Checkouts_Overview
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             Entries.Clear();
+            MarkableEntry_PropertyChanged(null, new PropertyChangedEventArgs(nameof(MarkableEntry.Marked)));
         }
 
         private void SelectNoneButton_Click(object sender, RoutedEventArgs e)

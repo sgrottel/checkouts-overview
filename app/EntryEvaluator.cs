@@ -13,9 +13,9 @@ namespace SG.Checkouts_Overview
 	public class EntryEvaluator
 	{
 
-        #region public Utility
+		#region public Utility
 
-        public void CheckType(Entry entry, Action<string> setLastMessage)
+		public void CheckType(Entry entry, Action<string> setLastMessage)
 		{
 			if (!System.IO.Directory.Exists(entry.Path))
 			{
@@ -56,14 +56,14 @@ namespace SG.Checkouts_Overview
 		}
 
 		private class RunResult
-        {
+		{
 			public string StdOut { get; set; }
 			public string StdErr { get; set; }
 			public int ExitCode { get; set; }
-        }
+		}
 
 		private RunResult runGit(string path, string[] args)
-        {
+		{
 			RunResult rr = new RunResult();
 			Process p = new Process();
 			p.StartInfo.UseShellExecute = false;
@@ -99,7 +99,7 @@ namespace SG.Checkouts_Overview
 		#region private state
 
 		private class Job
-        {
+		{
 			public Entry Entry { get; set; }
 			public EntryStatus Status { get; set; }	
 			public Action<string> SetLastMessage { get; set; }
@@ -112,11 +112,11 @@ namespace SG.Checkouts_Overview
 
 		private List<string> defaultBranches = new List<string>();
 
-        #endregion
+		#endregion
 
-        #region public api
+		#region public api
 
-        public void Start()
+		public void Start()
 		{
 			defaultBranches.Clear();
 			string db = Properties.Settings.Default.gitDefaultBranches;
@@ -156,14 +156,14 @@ namespace SG.Checkouts_Overview
 				}
 
 				if (entry.Type.ToLowerInvariant() != "git")
-                {
+				{
 					setLastMessage("Updating this type of entry is not implemented.");
 					return null; // unsupported type
-                }
+				}
 
 				bool doFetch = false;
 				switch (entry.GitFetchOnUpdate)
-                {
+				{
 					case Tristate.False: doFetch = false; break;
 					case Tristate.True: doFetch = true; break;
 					case Tristate.Default:
@@ -184,7 +184,7 @@ namespace SG.Checkouts_Overview
 
 				queue.Add(job);
 				if (!ThreadPool.QueueUserWorkItem(processJob, job, false))
-                {
+				{
 					queue.Remove(job);
 					setLastMessage("Failed to queue the update job");
 					return null; // unsupported type
@@ -194,38 +194,38 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
-        #endregion
+		#endregion
 
-        #region private implementation
+		#region private implementation
 
 		private void processJob(Job job)
-        {
-            try
-            {
-                job.Work(job);
+		{
+			try
+			{
+				job.Work(job);
 
-                job.Status.FailedStatus = false;
-            }
-            catch (Exception ex)
-            {
-                job.Status.FailedStatus = true;
-                job.Next = null;
-                job.SetLastMessage("Failed to evaluate: " + ex);
-            }
+				job.Status.FailedStatus = false;
+			}
+			catch (Exception ex)
+			{
+				job.Status.FailedStatus = true;
+				job.Next = null;
+				job.SetLastMessage("Failed to evaluate: " + ex);
+			}
 
-            // work completed
-            lock (queuelock)
-            {
-                if (job.Next != null)
-                {
-                    job.Work = job.Next;
-                    job.Next = null;
+			// work completed
+			lock (queuelock)
+			{
+				if (job.Next != null)
+				{
+					job.Work = job.Next;
+					job.Next = null;
 
 					if (ThreadPool.QueueUserWorkItem(processJob, job, false))
-                    {
+					{
 						// reuse job object
 						return;
-                    }
+					}
 					else
 					{
 						job.SetLastMessage("Failed to queue the update job");
@@ -234,11 +234,11 @@ namespace SG.Checkouts_Overview
 
 				queue.Remove(job);
 				job.Status.Evaluating = false;
-            }
-        }
+			}
+		}
 
 		private void workGitUpdate(Job job)
-        {
+		{
 			if (!System.IO.Directory.Exists(job.Entry.Path))
 			{
 				job.Status.Available = false;
@@ -263,9 +263,9 @@ namespace SG.Checkouts_Overview
 					job.Status.OnBranch = (defaultBranches.Contains(job.Status.BranchName) == false);
 				}
 				else
-                {
+				{
 					job.Status.OnBranch = (job.Entry.MainBranch.Equals(job.Status.BranchName) == false);
-                }
+				}
 
 			}
 			else
@@ -312,25 +312,26 @@ namespace SG.Checkouts_Overview
 		}
 
 		private void workGitUpdateFetch(Job job)
-        {
+		{
 			workGitUpdate(job);
 			job.Next = workGitFetch;
-        }
+		}
 
 		private void workGitFetch(Job job)
-        {
+		{
 			var res = runGit(job.Entry.Path, new string[] { "fetch", "--all" });
 			if (res.ExitCode == 0)
-            {
-				if (!string.IsNullOrWhiteSpace(res.StdOut))
-                {
+			{
+				if (!string.IsNullOrWhiteSpace(res.StdOut)
+					|| !string.IsNullOrWhiteSpace(res.StdErr))
+				{
 					job.Next = workGitUpdate;
 				}
 			}
-        }
+		}
 
-        #endregion
-        #endregion
-    }
+		#endregion
+		#endregion
+	}
 
 }

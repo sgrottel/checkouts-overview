@@ -10,54 +10,86 @@ using System.Threading.Tasks;
 namespace SG.Checkouts_Overview
 {
 
-    /// <summary>
-    /// Observable collection of EntryView objects, and providing a dirty flag
-    /// </summary>
-    internal class EntryViewsCollection: ObservableCollection<EntryView>
-    {
-        private bool isDirty = false;
+	/// <summary>
+	/// Observable collection of EntryView objects, and providing a dirty flag
+	/// </summary>
+	internal class EntryViewsCollection : ObservableCollection<EntryView>
+	{
+		private bool isDirty = false;
 
-        /// <summary>
-        /// Flag set to true, when the collection is changed.
-        /// This does only include properties for the `Entry`s in the view, not the properties of `EntryStatus`
-        /// </summary>
-        public bool IsDirty {
-            get { return isDirty; }
-            set
-            {
-                if (value != isDirty)
-                {
-                    isDirty = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDirty)));
-                }
-            }
-        }
+		/// <summary>
+		/// Flag set to true, when the collection is changed.
+		/// This does only include properties for the `Entry`s in the view, not the properties of `EntryStatus`
+		/// </summary>
+		public bool IsDirty
+		{
+			get { return isDirty; }
+			set
+			{
+				if (value != isDirty)
+				{
+					isDirty = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDirty)));
+				}
+			}
+		}
 
-        protected override event PropertyChangedEventHandler PropertyChanged;
+		protected override event PropertyChangedEventHandler PropertyChanged;
 
-        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-        {
-            base.OnCollectionChanged(e);
-            if (e.OldItems != null)
-                foreach (var item in e.OldItems)
-                {
-                    EntryView ev = item as EntryView;
-                    if (ev == null) continue;
-                    ev.Entry.PropertyChanged -= Entry_PropertyChanged;
-                }
-            if (e.NewItems != null)
-                foreach (var item in e.NewItems)
-                {
-                    EntryView ev = item as EntryView;
-                    if (ev == null) continue;
-                    ev.Entry.PropertyChanged += Entry_PropertyChanged;
-                }
-            IsDirty = true;
-        }
+		protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+		{
+			base.OnCollectionChanged(e);
+			if (e.OldItems != null)
+				foreach (var item in e.OldItems)
+				{
+					EntryView ev = item as EntryView;
+					if (ev == null) continue;
+					ev.Entry.PropertyChanged -= Entry_PropertyChanged;
+				}
+			if (e.NewItems != null)
+				foreach (var item in e.NewItems)
+				{
+					EntryView ev = item as EntryView;
+					if (ev == null) continue;
+					ev.Entry.PropertyChanged += Entry_PropertyChanged;
+				}
+			IsDirty = true;
+		}
 
-        private void Entry_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            IsDirty = true;
-        }
-    }
+		private void Entry_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			IsDirty = true;
+		}
+
+		private float iconSize = 32;
+
+		public float IconSize
+		{
+			get { return iconSize; }
+			set
+			{
+				if (iconSize != value)
+				{
+					iconSize = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IconSize)));
+				}
+			}
+		}
+
+		private float iconMargin = 4;
+
+		public float IconMargin
+		{
+			get { return iconMargin; }
+			set
+			{
+				if (iconMargin != value)
+				{
+					iconMargin = value;
+					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IconMargin)));
+				}
+			}
+		}
+
+	}
 }

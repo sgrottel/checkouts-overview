@@ -202,27 +202,27 @@ namespace SG.Checkouts_Overview
 		/// Yes, if the user wants to continue.
 		/// </returns>
 		private MessageBoxResult AssertChangesSaved()
-        {
+		{
 			if (entries.IsDirty)
-            {
+			{
 				SaveConfirmDialogWindow dlg = new SaveConfirmDialogWindow();
 				dlg.ShowDialog();
 				if (dlg.Result == MessageBoxResult.Yes)
-                {
+				{
 					SaveButton_Click(this, null);
 					if (entries.IsDirty)
-                    {
+					{
 						// still dirty? Then, no save happend (error or cancel)
 						return MessageBoxResult.Cancel;
 					}
 				} else if (dlg.Result == MessageBoxResult.Cancel)
-                {
+				{
 					return MessageBoxResult.Cancel;
-                }
-            }
+				}
+			}
 
 			return MessageBoxResult.Yes;
-        }
+		}
 
 		private void LoadButton_Click(object sender, RoutedEventArgs e)
 		{

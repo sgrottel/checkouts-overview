@@ -215,7 +215,7 @@
 				<Button Margin="0,0,2,0" IsEnabled="{Binding ElementName=EntriesView,Path=SelectedItems.Count}" Click="SortMoveDownButton_Click">Down</Button>
 				<Button IsEnabled="{Binding ElementName=EntriesView,Path=SelectedItems.Count}" Click="SortMoveBottomButton_Click">Bottom</Button>
 			</WrapPanel>
-			
+
 			<!-- Center ListView showing states -->
 			<!-- https://www.wpf-tutorial.com/listview-control/listview-sorting/ -->
 			<ListView ItemsSource="{Binding}" Name="EntriesView" HorizontalAlignment="Stretch" MinWidth="50" MouseDown="EntriesView_MouseDown"
@@ -236,8 +236,8 @@
 				</ListView.ItemsPanel>
 				<ListView.ItemTemplate>
 					<DataTemplate>
-						<StackPanel Margin="4" MinWidth="64" MaxWidth="128" VerticalAlignment="Top">
-							<Viewbox Width="32" Height="32">
+						<StackPanel Margin="{Binding DataContext.IconMargin,ElementName=EntriesView}" MinWidth="64" VerticalAlignment="Top">
+							<Viewbox Width="{Binding DataContext.IconSize,ElementName=EntriesView}" Height="{Binding DataContext.IconSize,ElementName=EntriesView}">
 								<Canvas Width="32" Height="32">
 
 									<ContentControl Width="32" Height="32" ContentTemplate="{StaticResource Icon_Unknown_x32}"

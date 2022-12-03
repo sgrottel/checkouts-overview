@@ -65,6 +65,15 @@ namespace SG.Checkouts_Overview
 		private RunResult runGit(string path, string[] args)
 		{
 			RunResult rr = new RunResult();
+
+			if (!System.IO.Directory.Exists(path))
+			{
+				rr.StdOut = string.Empty;
+				rr.StdErr = "Path does not exist";
+				rr.ExitCode = -1;
+				return rr;
+			}
+
 			Process p = new Process();
 			p.StartInfo.UseShellExecute = false;
 			p.StartInfo.RedirectStandardOutput = true;

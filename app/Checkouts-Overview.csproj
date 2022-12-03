@@ -10,7 +10,7 @@
     <Product>Checkouts Overview</Product>
     <Description>Visual overview of local repository checkouts</Description>
     <Copyright>Copyright 2021-2022, by SGrottel</Copyright>
-    <Version>1.1.2</Version>
+    <Version>1.1.3</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,7 +32,7 @@
   <ItemGroup>
     <ContentWithTargetPath Include="..\es\es.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		<TargetPath>es.exe</TargetPath>
+      <TargetPath>es.exe</TargetPath>
     </ContentWithTargetPath>
   </ItemGroup>
 

@@ -7,22 +7,22 @@
 		mc:Ignorable="d"
 		Title="Checkouts Overview" Height="720" Width="1280" Closing="Window_Closing"
 		AllowDrop="True" PreviewDragOver="Window_PreviewDragOver" Drop="Window_Drop"
-        Style="{StaticResource DarkWindow}">
+		Style="{StaticResource DarkWindow}">
 	<Window.Resources>
 
 		<Style TargetType="ListView">
-            <Setter Property="Foreground" Value="{StaticResource Light}" />
+			<Setter Property="Foreground" Value="{StaticResource Light}" />
 			<Setter Property="Background" Value="{StaticResource Darker}" />
 			<Setter Property="BorderThickness" Value="0" />
 		</Style>
 
-        <Style TargetType="Button" BasedOn="{StaticResource DarkToolBarButton}"/>
-        <Style TargetType="ToggleButton" BasedOn="{StaticResource DarkToggleButton}"/>
-        <Style TargetType="TextBox" BasedOn="{StaticResource DarkTextBox}"/>
-        <Style TargetType="ScrollBar" BasedOn="{StaticResource DarkScrollBar}"/>
-        <Style TargetType="CheckBox" BasedOn="{StaticResource DarkCheckBox}"/>
+		<Style TargetType="Button" BasedOn="{StaticResource DarkToolBarButton}"/>
+		<Style TargetType="ToggleButton" BasedOn="{StaticResource DarkToggleButton}"/>
+		<Style TargetType="TextBox" BasedOn="{StaticResource DarkTextBox}"/>
+		<Style TargetType="ScrollBar" BasedOn="{StaticResource DarkScrollBar}"/>
+		<Style TargetType="CheckBox" BasedOn="{StaticResource DarkCheckBox}"/>
 
-        <DataTemplate x:Key="Icon_Empty_x32">
+		<DataTemplate x:Key="Icon_Empty_x32">
 			<Canvas Width="32" Height="32">
 			</Canvas>
 		</DataTemplate>
@@ -107,18 +107,18 @@
 		<!-- Top tool bar -->
 		<WrapPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="0 0 0 4">
 			<StackPanel Orientation="Vertical">
-                <TextBlock Margin="0,0,0,4" HorizontalAlignment="Center">
-                    <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Text" Value="Collection"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Path=IsDirty}" Value="True">
-                                    <Setter Property="Text" Value="Collection *"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
+				<TextBlock Margin="0,0,0,4" HorizontalAlignment="Center">
+					<TextBlock.Style>
+						<Style TargetType="{x:Type TextBlock}">
+							<Setter Property="Text" Value="Collection"/>
+							<Style.Triggers>
+								<DataTrigger Binding="{Binding Path=IsDirty}" Value="True">
+									<Setter Property="Text" Value="Collection *"/>
+								</DataTrigger>
+							</Style.Triggers>
+						</Style>
+					</TextBlock.Style>
+				</TextBlock>
 				<StackPanel Orientation="Horizontal">
 					<Button Margin="0,0,2,0" Click="LoadButton_Click">Load</Button>
 					<Button Click="SaveButton_Click">Save</Button>
@@ -220,8 +220,8 @@
 			<!-- https://www.wpf-tutorial.com/listview-control/listview-sorting/ -->
 			<ListView ItemsSource="{Binding}" Name="EntriesView" HorizontalAlignment="Stretch" MinWidth="50" MouseDown="EntriesView_MouseDown"
 				ScrollViewer.HorizontalScrollBarVisibility="Disabled" MouseDoubleClick="EntriesView_MouseDoubleClick"
-                      Background="#222">
-                <!-- explicit background color, to match the icon design -->
+					  Background="#222">
+				<!-- explicit background color, to match the icon design -->
 				<ListBox.ItemContainerStyle>
 					<Style TargetType="ListViewItem">
 						<Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
@@ -285,10 +285,10 @@
 							<RowDefinition></RowDefinition>
 							<RowDefinition></RowDefinition>
 							<RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                            <RowDefinition></RowDefinition>
-                        </Grid.RowDefinitions>
+							<RowDefinition></RowDefinition>
+							<RowDefinition></RowDefinition>
+							<RowDefinition></RowDefinition>
+						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="auto" SharedSizeGroup="Col1"></ColumnDefinition>
 							<ColumnDefinition Width="auto"></ColumnDefinition>
@@ -312,18 +312,18 @@
 						<TextBox Grid.Row="3" Grid.Column="2" Text="{Binding Entry.Type}" HorizontalAlignment="Stretch" Margin="0,0,0,4" />
 						<Button Grid.Row="3" Grid.Column="3" Margin="4,0,0,4" HorizontalAlignment="Stretch" Click="EntryTypeButton_Click">*</Button>
 
-                        <TextBlock Grid.Row="4" Text="Main Branch" Margin="0,0,4,4" HorizontalAlignment="Stretch" />
-                        <TextBox Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding Entry.MainBranch}" Margin="0,0,0,4" HorizontalAlignment="Stretch" />
+						<TextBlock Grid.Row="4" Text="Main Branch" Margin="0,0,4,4" HorizontalAlignment="Stretch" />
+						<TextBox Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Text="{Binding Entry.MainBranch}" Margin="0,0,0,4" HorizontalAlignment="Stretch" />
 
-                        <CheckBox Grid.Row="5" Grid.ColumnSpan="4" IsThreeState="True" IsChecked="{Binding GitFetchOnUpdate}">
-                            <TextBlock>
+						<CheckBox Grid.Row="5" Grid.ColumnSpan="4" IsThreeState="True" IsChecked="{Binding GitFetchOnUpdate}">
+							<TextBlock>
 								<Run>Run</Run>
 								<Run FontFamily="Consolas" FontSize="11" Background="{StaticResource Dark}" >git fetch --all</Run>
 								<Run>on update</Run>
-                            </TextBlock>
-                        </CheckBox>
+							</TextBlock>
+						</CheckBox>
 
-                        <TextBlock Grid.Row="6" Grid.ColumnSpan="4" Text="{Binding LastMessage}" HorizontalAlignment="Stretch">
+						<TextBlock Grid.Row="6" Grid.ColumnSpan="4" Text="{Binding LastMessage}" HorizontalAlignment="Stretch">
 							<TextBlock.Style>
 								<Style TargetType="TextBlock">
 									<Setter Property="Visibility" Value="Visible" />

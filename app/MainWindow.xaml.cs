@@ -43,6 +43,14 @@ namespace SG.Checkouts_Overview
 			evaluator = new EntryEvaluator();
 			evaluator.Start();
 
+			if (Properties.Settings.Default.iconSize > 0)
+			{
+				entries.IconSize = Properties.Settings.Default.iconSize;
+			}
+			if (Properties.Settings.Default.iconMargin > 0)
+			{
+				entries.IconMargin = Properties.Settings.Default.iconMargin;
+			}
 			DataContext = entries;
 
 			if (Properties.Settings.Default.loadOnStart)
@@ -139,7 +147,26 @@ namespace SG.Checkouts_Overview
 		{
 			SettingsDialogWindow dlg = new SettingsDialogWindow();
 			dlg.Owner = this;
-			dlg.ShowDialog();
+			bool? r = dlg.ShowDialog();
+			if (r.HasValue && r.Value == true)
+			{
+				if (Properties.Settings.Default.iconSize > 0)
+				{
+					entries.IconSize = Properties.Settings.Default.iconSize;
+				}
+				else
+				{
+					entries.IconSize = new EntryViewsCollection().IconSize;
+				}
+				if (Properties.Settings.Default.iconMargin > 0)
+				{
+					entries.IconMargin = Properties.Settings.Default.iconMargin;
+				}
+				else
+				{
+					entries.IconMargin = new EntryViewsCollection().IconMargin;
+				}
+			}
 		}
 
 		private void AboutButton_Click(object sender, RoutedEventArgs e)

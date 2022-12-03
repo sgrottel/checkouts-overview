@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -41,19 +42,26 @@ namespace SG.Checkouts_Overview
 			gitMain.Text = Properties.Settings.Default.gitDefaultBranches;
 			string se = Properties.Settings.Default.scannerEngine?.ToLowerInvariant() ?? "";
 			if (se == "filesystem")
-            {
+			{
 				scannerEngineFilesystem.IsChecked = true;
-            } else if (se == "everything")
-            {
+			} else if (se == "everything")
+			{
 				scannerEngineEverything.IsChecked = true;
-            } else
-            {
+			} else
+			{
 				scannerEngineEverything.IsChecked = true;
-            }
+			}
 			scannerRoot.Text = Properties.Settings.Default.scannerRoot;
 			scannerIgnore.Text = Properties.Settings.Default.scannerIgnorePatterns;
 			scannerEntrySubdir.IsChecked = Properties.Settings.Default.scannerEntrySubdir;
 			fetchOnUpdate.IsChecked = Properties.Settings.Default.gitFetchAllOnUpdate;
+
+			int i = Properties.Settings.Default.iconSize;
+			if (i <= 0) i = (int)new EntryViewsCollection().IconSize;
+			iconSize.Text = i.ToString();
+			i = Properties.Settings.Default.iconMargin;
+			if (i <= 0) i = (int)new EntryViewsCollection().IconMargin;
+			iconMargin.Text = i.ToString();
 
 			getGitBinInfo();
 		}
@@ -130,19 +138,34 @@ namespace SG.Checkouts_Overview
 			Properties.Settings.Default.gitBin = gitBin.Text;
 			Properties.Settings.Default.gitDefaultBranches = gitMain.Text;
 			if (scannerEngineEverything.IsChecked??false)
-            {
+			{
 				Properties.Settings.Default.scannerEngine = "everything";
 			} else if (scannerEngineFilesystem.IsChecked??false)
-            {
+			{
 				Properties.Settings.Default.scannerEngine = "filesystem";
 			} else
-            {
+			{
 				Properties.Settings.Default.scannerEngine = null;
 			}
 			Properties.Settings.Default.scannerRoot = scannerRoot.Text;
 			Properties.Settings.Default.scannerIgnorePatterns = scannerIgnore.Text;
 			Properties.Settings.Default.scannerEntrySubdir = scannerEntrySubdir.IsChecked ?? false;
 			Properties.Settings.Default.gitFetchAllOnUpdate = fetchOnUpdate.IsChecked ?? false;
+
+			int defI = (int)new EntryViewsCollection().IconSize;
+			if (int.TryParse(iconSize.Text, out int i))
+			{
+				if (i < 0) i = 0;
+				if (i == defI) i = 0;
+				Properties.Settings.Default.iconSize = i;
+			}
+			defI = (int)new EntryViewsCollection().IconMargin;
+			if (int.TryParse(iconMargin.Text, out i))
+			{
+				if (i < 0) i = 0;
+				if (i == defI) i = 0;
+				Properties.Settings.Default.iconMargin = i;
+			}
 
 			Properties.Settings.Default.Save();
 			DialogResult = true;
@@ -205,8 +228,8 @@ namespace SG.Checkouts_Overview
 			catch { }
 		}
 
-        private void BrowseScannerRootButton_Click(object sender, RoutedEventArgs e)
-        {
+		private void BrowseScannerRootButton_Click(object sender, RoutedEventArgs e)
+		{
 			var dlg = new FolderPicker();
 			dlg.InputPath = scannerRoot.Text;
 			dlg.Title = "Select Filesystem Scanner Root...";
@@ -217,5 +240,9 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
+		private void PreviewTextInputNumberOnly(object sender, TextCompositionEventArgs e)
+		{
+			e.Handled = new Regex("[^0-9]+").IsMatch(e.Text);
+		}
 	}
 }

@@ -27,53 +27,31 @@ namespace SG.Checkouts_Overview
 		{
 			ScanMessage?.Invoke(this, "Scan started...");
 
-			string everythingSearch =
-				System.IO.Path.Combine(
-					System.IO.Path.GetDirectoryName(
-						System.Reflection.Assembly.GetExecutingAssembly().Location),
-					"es.exe");
-			if (!System.IO.File.Exists(everythingSearch))
+			if (!EverythingSearchClient.SearchClient.IsEverythingAvailable())
 			{
-				throw new InvalidOperationException("Unable to find `es.exe` search utility.");
+				// everything is likely not installed.
+				return;
 			}
 
-			string tempFile = System.IO.Path.GetTempFileName();
-
-			Process p = new Process();
-
-			p.StartInfo.UseShellExecute = false;
-			p.StartInfo.CreateNoWindow = true;
-			p.StartInfo.FileName = everythingSearch;
-			p.StartInfo.ArgumentList.Clear();
-			// -r "^.git$" -ww /ad
-			p.StartInfo.ArgumentList.Add("-r");
-			p.StartInfo.ArgumentList.Add("^.git$");
-			p.StartInfo.ArgumentList.Add("-ww");
-			p.StartInfo.ArgumentList.Add("/ad");
-			p.StartInfo.ArgumentList.Add("-export-m3u8");
-			p.StartInfo.ArgumentList.Add(tempFile);
-
-			p.Start();
-			p.WaitForExit();
-
-			var result = System.IO.File.ReadAllLines(tempFile, Encoding.UTF8);
-			System.IO.File.Delete(tempFile);
-
-			if (result == null || result.Length <= 0) return;
+			EverythingSearchClient.SearchClient everything = new();
+			EverythingSearchClient.Result res = everything.Search("^\\.git$", EverythingSearchClient.SearchClient.SearchFlags.RegEx | EverythingSearchClient.SearchClient.SearchFlags.MatchWholeWord);
 
 			int added = 0;
-			foreach (string dgit in result)
+			foreach (EverythingSearchClient.Result.Item dgit in res.Items)
 			{
-				if (dgit.Contains("\\$RECYCLE.BIN\\", StringComparison.CurrentCultureIgnoreCase))
+				if (!dgit.Flags.HasFlag(EverythingSearchClient.Result.ItemFlags.Folder))
+				{
+					continue;
+				}
+				if (dgit.Path.Contains("\\$RECYCLE.BIN\\", StringComparison.CurrentCultureIgnoreCase))
 				{
 					continue; // skip entries already recycled
 				}
 
-				string d = System.IO.Path.GetDirectoryName(dgit);
 				if (EntryFound?.Invoke(new Entry()
 					{
-						Name = System.IO.Path.GetFileName(d),
-						Path = d,
+						Name = System.IO.Path.GetFileName(dgit.Path),
+						Path = dgit.Path,
 						Type = "git"
 					}) ?? false)
 				{

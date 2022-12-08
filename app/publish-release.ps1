@@ -10,4 +10,5 @@ rm "${PSScriptRoot}\bin\Release\Checkouts-Overview" -recurse -force -ErrorAction
 mkdir "${PSScriptRoot}\bin\Release\Checkouts-Overview"
 $src = ( gci "app\bin\Release\*\publish" | select -expand fullname )
 copy "${src}\*" "${PSScriptRoot}\bin\Release\Checkouts-Overview" -recurse -force
+copy "${PSScriptRoot}\bin\Release\ComponentSource.json" "${PSScriptRoot}\bin\Release\Checkouts-Overview" -force
 Compress-Archive -Path "${PSScriptRoot}\bin\Release\Checkouts-Overview" -DestinationPath ("${PSScriptRoot}\bin\Release\Checkouts-Overview-" + $version + ".zip") -force

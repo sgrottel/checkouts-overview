@@ -53,6 +53,23 @@ jobs:
     - name: Run tests
       run: dotnet test --configuration ${{ matrix.configuration }} --no-restore --verbosity normal
 
+    - name: Create ComponentSource Manifest
+      shell: pwsh
+      run: |
+        @{
+        "_type" = "ComponentSourceManifest";
+        "_version" = 1;
+        "components" = @( @{
+            "name" = "Checkouts Overview";
+            "source" = @( @{
+                "type" = "git";
+                "url" = "https://github.com/sgrottel/checkouts-overview.git";
+                "hash" = "${{github.sha}}";
+                "version" = "${{env.FULL_VERSION_NUMBER}}";
+                "subset" = "github releases"
+            } )
+        } ) } | ConvertTo-Json -Depth 10 > "app/bin/${{matrix.configuration}}/ComponentSource.json"
+
     # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions
     - name: Package release
       if: ${{ matrix.configuration == 'Release' }}

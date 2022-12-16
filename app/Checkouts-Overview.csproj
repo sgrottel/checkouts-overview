@@ -10,7 +10,7 @@
     <Product>Checkouts Overview</Product>
     <Description>Visual overview of local repository checkouts</Description>
     <Copyright>Copyright 2021-2022, by SGrottel</Copyright>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EverythingSearchClient" Version="0.1.1.18" />
+    <PackageReference Include="EverythingSearchClient" Version="0.2.0.25" />
   </ItemGroup>
 
   <ItemGroup>

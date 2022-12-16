@@ -1,10 +1,12 @@
 # Checkouts Overview
 Overview dashboard app for source code repository checkouts.
 
+<!--- START STRIP -->
 ![Screenshot of Checkouts Overview UI](doc/screenshot.png)
 
 [![Github Actions build status](https://github.com/sgrottel/checkouts-overview/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/sgrottel/checkouts-overview/actions/workflows/dotnet-desktop.yml)
 
+<!--- END STRIP -->
 
 ## Why this App?
 In my private setup, I have a lot of smaller repos checked out (almost all git), and work on them occasionally.
@@ -25,6 +27,7 @@ I don't, so I need help by a tool.
 
 And, that's why I decided to write this app.
 
+<!--- START STRIP -->
 
 ## Documentation
 [User documentation (manual.md)](doc/manual.md) is available online.
@@ -36,6 +39,7 @@ The [list of issues](https://github.com/sgrottel/checkouts-overview/issues) is a
 
 You can check for [new releases](https://github.com/sgrottel/checkouts-overview/releases) online.
 
+<!--- END STRIP -->
 More information may be available on the project's webpages:
 * https://github.com/sgrottel/checkouts-overview - Github project webpage
 * https://www.sgrottel.de - Developer's blog

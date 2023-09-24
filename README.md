@@ -4,6 +4,8 @@ Overview dashboard app for source code repository checkouts.
 <!--- START STRIP -->
 ![Screenshot of Checkouts Overview UI](doc/screenshot.png)
 
+[![GitHub Release](https://img.shields.io/github/v/release/sgrottel/checkouts-overview)](https://github.com/sgrottel/checkouts-overview/releases/latest)
+[![License](https://img.shields.io/github/license/sgrottel/checkouts-overview)](./LICENSE)
 [![Github Actions build status](https://github.com/sgrottel/checkouts-overview/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/sgrottel/checkouts-overview/actions/workflows/dotnet-desktop.yml)
 
 <!--- END STRIP -->

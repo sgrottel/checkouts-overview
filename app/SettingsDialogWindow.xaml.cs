@@ -80,6 +80,7 @@ namespace SG.Checkouts_Overview
 			Process p;
 			string result;
 			string path = gitBin.Text.Trim();
+			bool includePathInInfo = false;
 			if (string.IsNullOrEmpty(path))
 			{
 				p = new Process();
@@ -95,6 +96,7 @@ namespace SG.Checkouts_Overview
 				if (System.IO.File.Exists(result))
 				{
 					path = result;
+					includePathInInfo = true;
 				}
 				if (string.IsNullOrEmpty(path))
 				{
@@ -119,6 +121,11 @@ namespace SG.Checkouts_Overview
 			p.Start();
 			result = p.StandardOutput.ReadToEnd().Trim();
 			p.WaitForExit();
+
+			if (includePathInInfo)
+			{
+				result = $"{path}\n{result}";
+			}
 
 			gitBinInfo.Text = result;
 

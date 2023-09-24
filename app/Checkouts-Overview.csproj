@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EverythingSearchClient" Version="0.2.0.25" />
+    <PackageReference Include="EverythingSearchClient" Version="0.6.0.41" />
   </ItemGroup>
 
   <ItemGroup>

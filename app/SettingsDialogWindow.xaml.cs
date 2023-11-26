@@ -73,7 +73,7 @@ namespace SG.Checkouts_Overview
 			Util.DwmHelper.UseImmersiveDarkMode((PresentationSource.FromVisual(this) as HwndSource)?.Handle ?? IntPtr.Zero, true);
 		}
 
-		private void GitInfoUpdateTimer_Tick(object sender, EventArgs e)
+		private void GitInfoUpdateTimer_Tick(object? sender, EventArgs e)
 		{
 			gitInfoUpdateTimer.Stop();
 

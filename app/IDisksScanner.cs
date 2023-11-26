@@ -22,15 +22,15 @@ namespace SG.Checkouts_Overview
 		/// </summary>
 		void AbortScan();
 
-		string Root { get; set; }
+		string? Root { get; set; }
 
-		string[] IgnorePattern { get; set; }
+		string[]? IgnorePattern { get; set; }
 
 		bool ScanCheckoutSubdirs { get; set; }
 
-		event Func<Entry, bool> EntryFound;
+		event Func<Entry, bool>? EntryFound;
 
-		event EventHandler<string> ScanMessage;
+		event EventHandler<string>? ScanMessage;
 
 	}
 

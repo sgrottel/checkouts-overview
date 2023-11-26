@@ -75,7 +75,7 @@ namespace SG.Checkouts_Overview
 						}
 						Dispatcher.Invoke(() =>
 						{
-							EntryView ev = new EntryView() { Entry = e };
+							EntryView ev = new(e);
 							entries.Add(ev);
 							if (Properties.Settings.Default.updateOnStart)
 							{
@@ -137,7 +137,7 @@ namespace SG.Checkouts_Overview
 			{
 				Name = "New Entry"
 			};
-			entries.Add(new EntryView() { Entry = entry });
+			entries.Add(new EntryView(entry));
 			EntriesView.SelectedItem = entry;
 		}
 
@@ -183,7 +183,7 @@ namespace SG.Checkouts_Overview
 			dlg.ShowDialog();
 		}
 
-		private void SaveButton_Click(object sender, RoutedEventArgs e)
+		private void SaveButton_Click(object? sender, RoutedEventArgs? e)
 		{
 			SaveFileDialog dlg = new SaveFileDialog();
 			dlg.Filter = "Xml files|*.xml|All files|*.*";
@@ -283,13 +283,13 @@ namespace SG.Checkouts_Overview
 			using (TextReader rdr = new StreamReader(filename))
 			{
 				XmlSerializer ser = new XmlSerializer(typeof(Entry[]));
-				Entry[] es = ser.Deserialize(rdr) as Entry[];
+				Entry[]? es = ser.Deserialize(rdr) as Entry[];
 				if (es != null && es.Length > 0)
 				{
 					entries.Clear();
 					foreach (Entry e in es)
 					{
-						entries.Add(new EntryView() { Entry = e });
+						entries.Add(new EntryView(e));
 					}
 					entries.IsDirty = false;
 				}
@@ -306,15 +306,15 @@ namespace SG.Checkouts_Overview
 
 		private void EntryTypeButton_Click(object sender, RoutedEventArgs e)
 		{
-			EntryView entry = (sender as Button)?.DataContext as EntryView;
+			EntryView? entry = (sender as Button)?.DataContext as EntryView;
 			if (entry == null) return;
 			evaluator.CheckType(entry.Entry, (string s) => { entry.LastMessage = s; });
 		}
 
 		private void EntryBrowsePathButton_Click(object sender, RoutedEventArgs e)
 		{
-			EntryView entry = (sender as Button)?.DataContext as EntryView;
-			if (entry == null || entry.Entry == null) return;
+			EntryView? entry = (sender as Button)?.DataContext as EntryView;
+			if (entry == null) return;
 
 			var dlg = new FolderPicker();
 			dlg.InputPath = entry.Entry.Path;
@@ -322,7 +322,7 @@ namespace SG.Checkouts_Overview
 			dlg.ForceFileSystem = true;
 			if (dlg.ShowDialog() == true)
 			{
-				entry.Entry.Path = dlg.ResultPath;
+				entry.Entry.Path = dlg.ResultPath ?? string.Empty;
 			}
 		}
 
@@ -347,21 +347,21 @@ namespace SG.Checkouts_Overview
 			}
 			foreach (EntryView entry in sel)
 			{
-				EntryStatus es = evaluator.BeginEvaluate(entry.Entry, (string s) => { entry.LastMessage = s; });
+				EntryStatus? es = evaluator.BeginEvaluate(entry.Entry, (string s) => { entry.LastMessage = s; });
 				if (es != null) entry.Status = es;
 			}
 		}
 
-		private void ExploreButton_Click(object sender, RoutedEventArgs e)
+		private void ExploreButton_Click(object? sender, RoutedEventArgs e)
 		{
 			foreach (EntryView entry in EntriesView.SelectedItems.Cast<EntryView>())
 			{
-				if (entry == null || entry.Entry == null) continue;
+				if (entry == null) continue;
 				Process.Start("explorer.exe", entry.Entry.Path);
 			}
 		}
 
-		private void OpenClientButton_Click(object sender, RoutedEventArgs e)
+		private void OpenClientButton_Click(object? sender, RoutedEventArgs? e)
 		{
 			string gc = Properties.Settings.Default.gitClient;
 			if (!System.IO.File.Exists(gc))
@@ -373,7 +373,7 @@ namespace SG.Checkouts_Overview
 
 			foreach (EntryView entry in EntriesView.SelectedItems.Cast<EntryView>())
 			{
-				if (entry == null || entry.Entry == null) continue;
+				if (entry == null) continue;
 				Process p = new Process();
 				p.StartInfo.FileName = gc;
 				p.StartInfo.ArgumentList.Clear();
@@ -548,7 +548,7 @@ namespace SG.Checkouts_Overview
 
 		private void Window_PreviewDragOver(object sender, DragEventArgs e)
 		{
-			string[] fdo = (e.Data.GetData(DataFormats.FileDrop) as string[]).Where((string p) => { return System.IO.Directory.Exists(p); }).ToArray();
+			string[]? fdo = (e.Data.GetData(DataFormats.FileDrop) as string[])?.Where((string p) => { return System.IO.Directory.Exists(p); }).ToArray();
 			if (fdo == null || fdo.Length <= 0)
 			{
 				e.Effects = DragDropEffects.None;
@@ -561,7 +561,7 @@ namespace SG.Checkouts_Overview
 
 		private void Window_Drop(object sender, DragEventArgs e)
 		{
-			string[] fdo = (e.Data.GetData(DataFormats.FileDrop) as string[]).Where((string p) => { return System.IO.Directory.Exists(p); }).ToArray();
+			string[]? fdo = (e.Data.GetData(DataFormats.FileDrop) as string[])?.Where((string p) => { return System.IO.Directory.Exists(p); }).ToArray();
 			if (fdo == null || fdo.Length <= 0)
 			{
 				e.Handled = true;
@@ -582,14 +582,11 @@ namespace SG.Checkouts_Overview
 				}
 				if (!found)
 				{
-					EntryView ne = new EntryView()
+					EntryView ne = new EntryView(new Entry()
 					{
-						Entry = new Entry()
-						{
-							Name = System.IO.Path.GetFileName(p),
-							Path = p
-						}
-					};
+						Name = System.IO.Path.GetFileName(p),
+						Path = p
+					});
 					evaluator.CheckType(ne.Entry, (string s) => { ne.LastMessage = s; });
 					toSelect.Add(ne);
 					entries.Add(ne);

@@ -36,7 +36,7 @@ namespace SG.Checkouts_Overview
 		public string Version {
 			get {
 				var ea = System.Reflection.Assembly.GetExecutingAssembly();
-				return ea.GetName().Version.ToString();
+				return ea.GetName().Version?.ToString() ?? string.Empty;
 			}
 		}
 		public string Copyright {

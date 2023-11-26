@@ -57,8 +57,8 @@ namespace SG.Checkouts_Overview
 
 		private class RunResult
 		{
-			public string StdOut { get; set; }
-			public string StdErr { get; set; }
+			public string StdOut { get; set; } = string.Empty;
+			public string StdErr { get; set; } = string.Empty;
 			public int ExitCode { get; set; }
 		}
 
@@ -109,11 +109,24 @@ namespace SG.Checkouts_Overview
 
 		private class Job
 		{
-			public Entry Entry { get; set; }
-			public EntryStatus Status { get; set; }	
-			public Action<string> SetLastMessage { get; set; }
-			public Action<Job> Work { get; set; }
-			public Action<Job> Next { get; set; } = null;
+			public Entry Entry { get; private set; }
+			public EntryStatus Status { get; private set; } = new EntryStatus() { Evaluating = true };
+			public Action<string>? SetLastMessage { get; set; }
+			public Action<Job> Work { get; private set; }
+			public Action<Job>? Next { get; set; } = null;
+
+			public Job(Entry entry, Action<Job> work)
+			{
+				Entry = entry;
+				Work = work;
+			}
+
+			public void MoveToNext()
+			{
+				if (Next == null) throw new InvalidOperationException();
+				Work = Next;
+				Next = null;
+			}
 		};
 
 		private object queuelock = new object();
@@ -152,7 +165,7 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
-		public EntryStatus BeginEvaluate(Entry entry, Action<string> setLastMessage)
+		public EntryStatus? BeginEvaluate(Entry entry, Action<string> setLastMessage)
 		{
 			lock (queuelock)
 			{
@@ -183,12 +196,9 @@ namespace SG.Checkouts_Overview
 						break;
 				}
 
-				Job job = new Job()
+				Job job = new Job(entry: entry, work: doFetch ? workGitUpdateFetch : workGitUpdate)
 				{
-					Entry = entry,
-					Status = new EntryStatus() { Evaluating = true },
-					SetLastMessage = setLastMessage,
-					Work = doFetch ? workGitUpdateFetch : workGitUpdate
+					SetLastMessage = setLastMessage
 				};
 
 				queue.Add(job);
@@ -219,7 +229,7 @@ namespace SG.Checkouts_Overview
 			{
 				job.Status.FailedStatus = true;
 				job.Next = null;
-				job.SetLastMessage("Failed to evaluate: " + ex);
+				job.SetLastMessage?.Invoke("Failed to evaluate: " + ex);
 			}
 
 			// work completed
@@ -227,8 +237,7 @@ namespace SG.Checkouts_Overview
 			{
 				if (job.Next != null)
 				{
-					job.Work = job.Next;
-					job.Next = null;
+					job.MoveToNext();
 
 					if (ThreadPool.QueueUserWorkItem(processJob, job, false))
 					{
@@ -237,7 +246,7 @@ namespace SG.Checkouts_Overview
 					}
 					else
 					{
-						job.SetLastMessage("Failed to queue the update job");
+						job.SetLastMessage?.Invoke("Failed to queue the update job");
 					}
 				}
 
@@ -263,7 +272,7 @@ namespace SG.Checkouts_Overview
 				"status", "--short", "--branch", "--porcelain=v2", "--ahead-behind"
 			}).StdOut.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
 
-			string branch = result.FirstOrDefault((s) => { return s.StartsWith("# branch.head "); });
+			string? branch = result.FirstOrDefault((s) => { return s.StartsWith("# branch.head "); });
 			if (!string.IsNullOrWhiteSpace(branch))
 			{
 				job.Status.BranchName = branch.Substring(13).Trim().ToLower();
@@ -283,10 +292,10 @@ namespace SG.Checkouts_Overview
 				job.Status.BranchName = null;
 			}
 
-			string upstream = result.FirstOrDefault((s) => { return s.StartsWith("# branch.upstream "); });
+			string? upstream = result.FirstOrDefault((s) => { return s.StartsWith("# branch.upstream "); });
 			job.Status.RemoteTracked = upstream?.Length > 18;
 
-			string ab = result.FirstOrDefault((s) => { return s.StartsWith("# branch.ab "); });
+			string? ab = result.FirstOrDefault((s) => { return s.StartsWith("# branch.ab "); });
 			if (!string.IsNullOrWhiteSpace(ab))
 			{
 				var abm = Regex.Match(ab, @"^\#\s+branch\.ab\s+\+(\d+)\s+-(\d+)");

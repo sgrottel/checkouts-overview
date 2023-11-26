@@ -20,7 +20,7 @@ namespace SG.Checkouts_Overview
 		private string mainBranch = string.Empty;
 		private Tristate gitFetchOnUpdate = Tristate.Default;
 
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
 		/// <summary>
 		/// Display name of the checkout

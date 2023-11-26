@@ -83,7 +83,6 @@ namespace SG.Checkouts_Overview.Util
 			int fg = focussed ? ColorLight : ColorGrey;
 			int bg = focussed ? ColorDark : ColorDarker;
 
-			DwmSetWindowAttribute(hWnd, DWMWA_BORDER_COLOR, ref bg, sizeof(int));
 			DwmSetWindowAttribute(hWnd, DWMWA_CAPTION_COLOR, ref bg, sizeof(int));
 			DwmSetWindowAttribute(hWnd, DWMWA_TEXT_COLOR, ref fg, sizeof(int));
 		}
@@ -97,6 +96,9 @@ namespace SG.Checkouts_Overview.Util
 			bool suc = UseImmersiveDarkMode(hWnd, enabled);
 			if (suc && enabled)
 			{
+				int dark = ColorDark;
+				DwmSetWindowAttribute(hWnd, DWMWA_BORDER_COLOR, ref dark, sizeof(int));
+
 				SetCaptionColor(hWnd, true);
 				wnd.Activated += (object? _, EventArgs __) => SetCaptionColor(hWnd, true);
 				wnd.Deactivated += (object? _, EventArgs __) => SetCaptionColor(hWnd, false);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SG.Checkouts_Overview.Util;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -47,50 +48,22 @@ namespace SG.Checkouts_Overview
 
 		#region private utility
 
-		private string gitBin()
-		{
-			return
-				System.IO.File.Exists(Properties.Settings.Default.gitBin)
-				? Properties.Settings.Default.gitBin
-				: "git.exe";
-		}
+		private Git git = new Git();
 
-		private class RunResult
+		private Git.RunResult runGit(string path, string[] args)
 		{
-			public string StdOut { get; set; } = string.Empty;
-			public string StdErr { get; set; } = string.Empty;
-			public int ExitCode { get; set; }
-		}
-
-		private RunResult runGit(string path, string[] args)
-		{
-			RunResult rr = new RunResult();
-
 			if (!System.IO.Directory.Exists(path))
 			{
-				rr.StdOut = string.Empty;
-				rr.StdErr = "Path does not exist";
-				rr.ExitCode = -1;
+				Git.RunResult rr = new()
+				{
+					StdOut = string.Empty,
+					StdErr = "Path does not exist",
+					ExitCode = -1
+				};
 				return rr;
 			}
 
-			Process p = new Process();
-			p.StartInfo.UseShellExecute = false;
-			p.StartInfo.RedirectStandardOutput = true;
-			p.StartInfo.RedirectStandardError = true;
-			p.StartInfo.FileName = gitBin();
-			p.StartInfo.ArgumentList.Clear();
-			foreach (string a in args) {
-				p.StartInfo.ArgumentList.Add(a);
-			}
-			p.StartInfo.WorkingDirectory = path;
-			p.StartInfo.CreateNoWindow = true;
-			p.Start();
-			rr.StdOut = p.StandardOutput.ReadToEnd();
-			rr.StdErr = p.StandardError.ReadToEnd();
-			p.WaitForExit();
-			rr.ExitCode = p.ExitCode;
-			return rr;
+			return git.Invoke(args: args, workingDir: path);
 		}
 
 		private DateTime GetCommitDateGit(Entry entry)

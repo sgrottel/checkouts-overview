@@ -1,0 +1,17 @@
+{
+	"_type": "ComponentSourceManifest",
+	"_version": 1,
+	"components": [
+		{
+			"name": "SGrottel FindExecutable",
+			"source": [
+				{
+					"type": "git",
+					"url": "https://www.github.com/sgrottel/tiny-tools-collection",
+					"hash": "58b8c34022b43ff207a3ddfe80f2edcbf0c494bc",
+					"path": "FindExecutable/FindExecutable"
+				}
+			]
+		}
+	]
+}

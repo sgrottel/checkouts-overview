@@ -61,7 +61,7 @@ namespace SG.Checkouts_Overview
 		protected override void OnSourceInitialized(EventArgs e)
 		{
 			base.OnSourceInitialized(e);
-			Util.DwmHelper.UseImmersiveDarkMode((PresentationSource.FromVisual(this) as HwndSource)?.Handle ?? IntPtr.Zero, true);
+			Util.DwmHelper.UseDarkWindowDecorations(this, true);
 		}
 
 		private void Hyperlink_Click(object sender, RoutedEventArgs e)

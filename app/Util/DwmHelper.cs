@@ -4,6 +4,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Interop;
+using System.Windows;
+using System.Windows.Media;
 
 namespace SG.Checkouts_Overview.Util
 {
@@ -27,7 +30,7 @@ namespace SG.Checkouts_Overview.Util
 		/// <param name="hWnd">Handle to the Window</param>
 		/// <param name="enabled">True for Dark, False for Standard</param>
 		/// <returns></returns>
-		internal static bool UseImmersiveDarkMode(IntPtr hWnd, bool enabled)
+		private static bool UseImmersiveDarkMode(IntPtr hWnd, bool enabled)
 		{
 			if (hWnd == IntPtr.Zero) return false;
 
@@ -47,5 +50,60 @@ namespace SG.Checkouts_Overview.Util
 		}
 
 		#endregion
+
+		#region DWMWA Colors
+		private const int DWMWA_BORDER_COLOR = 34;
+		private const int DWMWA_CAPTION_COLOR = 35;
+		private const int DWMWA_TEXT_COLOR = 36;
+
+		private static readonly int ColorLight = initStyleColor("Light");
+		private static readonly int ColorGrey = initStyleColor("Grey");
+		private static readonly int ColorDark = initStyleColor("Dark");
+		private static readonly int ColorDarker = initStyleColor("Darker");
+
+		private static int initStyleColor(string name)
+		{
+			object? o = Application.Current.FindResource(name);
+			if (o is SolidColorBrush brush)
+			{
+				return System.Drawing.ColorTranslator.ToWin32(
+					System.Drawing.Color.FromArgb(
+						brush.Color.R,
+						brush.Color.G,
+						brush.Color.B));
+			}
+
+			return 0;
+		}
+
+		private static void SetCaptionColor(IntPtr hWnd, bool focussed)
+		{
+			if (hWnd == IntPtr.Zero) return;
+
+			int fg = focussed ? ColorLight : ColorGrey;
+			int bg = focussed ? ColorDark : ColorDarker;
+
+			DwmSetWindowAttribute(hWnd, DWMWA_BORDER_COLOR, ref bg, sizeof(int));
+			DwmSetWindowAttribute(hWnd, DWMWA_CAPTION_COLOR, ref bg, sizeof(int));
+			DwmSetWindowAttribute(hWnd, DWMWA_TEXT_COLOR, ref fg, sizeof(int));
+		}
+		#endregion
+
+		internal static bool UseDarkWindowDecorations(System.Windows.Window wnd, bool enabled)
+		{
+			IntPtr hWnd = (PresentationSource.FromVisual(wnd) as HwndSource)?.Handle ?? IntPtr.Zero;
+			if (hWnd == IntPtr.Zero) return false;
+
+			bool suc = UseImmersiveDarkMode(hWnd, enabled);
+			if (suc && enabled)
+			{
+				SetCaptionColor(hWnd, true);
+				wnd.Activated += (object? _, EventArgs __) => SetCaptionColor(hWnd, true);
+				wnd.Deactivated += (object? _, EventArgs __) => SetCaptionColor(hWnd, false);
+			}
+
+			return suc;
+		}
+
 	}
 }

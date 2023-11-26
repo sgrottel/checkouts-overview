@@ -12,28 +12,38 @@ namespace SG.Checkouts_Overview
 
 	public class EntryView : INotifyPropertyChanged
 	{
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
-		private Entry entry = null;
-		private EntryStatus status = null;
+		private Entry entry;
+		private EntryStatus? status = null;
 		private bool isSelected = false;
-		private string lastMessage = null;
+		private string? lastMessage = null;
+
+		public EntryView(Entry entry)
+		{
+			if (entry == null) throw new ArgumentNullException("entry");
+			this.entry = entry;
+			this.entry.PropertyChanged += Entry_PropertyChanged;
+		}
 
 		public Entry Entry {
 			get { return entry; }
 			set {
 				if (entry != value)
 				{
-					if (entry != null) { entry.PropertyChanged -= Entry_PropertyChanged; }
+					if (value == null) throw new ArgumentNullException("value");
+
+					entry.PropertyChanged -= Entry_PropertyChanged;
 					entry = value;
-					if (entry != null) { entry.PropertyChanged += Entry_PropertyChanged; }
+					entry.PropertyChanged += Entry_PropertyChanged;
+
 					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Entry)));
 					Entry_PropertyChanged(entry, null);
 				}
 			}
 		}
 
-		public EntryStatus Status {
+		public EntryStatus? Status {
 			get { return status; }
 			set {
 				if (status != value)
@@ -47,7 +57,7 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
-		private void Entry_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		private void Entry_PropertyChanged(object? sender, PropertyChangedEventArgs? e)
 		{
 			if (e == null || string.IsNullOrWhiteSpace(e.PropertyName) || e.PropertyName == nameof(Entry.Name))
 			{
@@ -59,7 +69,7 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
-		private void EntryStatus_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		private void EntryStatus_PropertyChanged(object? sender, PropertyChangedEventArgs? e)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StatusText)));
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IconUnknownVisibility)));
@@ -136,11 +146,12 @@ namespace SG.Checkouts_Overview
 			get {
 				if (status == null) return Brushes.Transparent;
 				return
-					Application.Current.MainWindow.FindResource(
+					(Application.Current.MainWindow.FindResource(
 						status.LocalChanges
 						? "StatusX"
 						: "StatusOk"
-					) as Brush;
+					) as Brush)
+					?? Brushes.Red;
 			}
 		}
 		public Visibility SubIconUntrackedVisibility {
@@ -188,7 +199,7 @@ namespace SG.Checkouts_Overview
 		}
 
 		public string Name {
-			get { return entry?.Name; }
+			get { return entry.Name; }
 		}
 
 		/// <summary>
@@ -196,7 +207,7 @@ namespace SG.Checkouts_Overview
 		/// </summary>
 		public string LastMessage {
 			get {
-				return lastMessage;
+				return lastMessage ?? string.Empty;
 			}
 			set {
 				if (!string.Equals(lastMessage, value))

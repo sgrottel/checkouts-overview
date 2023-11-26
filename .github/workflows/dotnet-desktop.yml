@@ -32,16 +32,7 @@ jobs:
 
     - name: Inject build number
       shell: pwsh
-      run: |
-        $csproj = New-Object System.XML.XMLDocument
-        $csprojPath = Resolve-Path ".\app\Checkouts-Overview.csproj"
-        $csproj.Load($csprojPath)
-        $version = New-Object System.Version $csproj.Project.PropertyGroup.Version
-        $version = New-Object System.Version @( $version.Major, $version.Minor, ([System.Math]::Max(0, $version.Build)), $env:GITHUB_RUN_NUMBER )
-        Write-Host "Version number: $version"
-        $csproj.Project.PropertyGroup.Version = $version.ToString()
-        $csproj.Save($csprojPath)
-        Write-Output "FULL_VERSION_NUMBER=$version" >> $env:GITHUB_ENV
+      run: .\app\InjectVersionNumber.ps1 "${{ github.run_number }}" "${{ github.sha }}"
 
     - name: Build application
       run: dotnet build --configuration ${{ matrix.configuration }} --no-restore
@@ -53,37 +44,16 @@ jobs:
     - name: Run tests
       run: dotnet test --configuration ${{ matrix.configuration }} --no-restore --verbosity normal
 
-    - name: Create ComponentSource Manifest
-      shell: pwsh
-      run: |
-        @{
-        "_type" = "ComponentSourceManifest";
-        "_version" = 1;
-        "components" = @( @{
-            "name" = "Checkouts Overview";
-            "source" = @( @{
-                "type" = "git";
-                "url" = "https://github.com/sgrottel/checkouts-overview.git";
-                "hash" = "${{github.sha}}";
-                "version" = "${{env.FULL_VERSION_NUMBER}}";
-                "subset" = "github releases"
-            } )
-        } ) } | ConvertTo-Json -Depth 10 > "app/bin/${{matrix.configuration}}/ComponentSource.json"
-
     # https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions
     - name: Package release
       if: ${{ matrix.configuration == 'Release' }}
-      shell: pwsh
-      run: |
-        .\app\publish-release.ps1 -version $env:FULL_VERSION_NUMBER
-        gci *.zip -recurse
+      run: dotnet publish .\app\Checkouts-Overview.csproj -c Release --no-build --no-restore -p:PublishProfile=FolderProfile -p:DebugType=None -p:DebugSymbols=false
 
-    - name: Upload test results
+    - name: Upload artifacts
       if: ${{ matrix.configuration == 'Release' }}
       uses: actions/upload-artifact@v3
       with:
         name: Checkouts-Overview-${{ env.FULL_VERSION_NUMBER }}
         path: |
-          app/bin/Release/Checkouts-Overview*
-          !app/bin/Release/Checkouts-Overview*.zip
+          app/bin/publish/**
         if-no-files-found: error

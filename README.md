@@ -9,7 +9,6 @@ Overview dashboard app for source code repository checkouts.
 [![Github Actions build status](https://github.com/sgrottel/checkouts-overview/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/sgrottel/checkouts-overview/actions/workflows/dotnet-desktop.yml)
 
 <!--- END STRIP -->
-
 ## Why this App?
 In my private setup, I have a lot of smaller repos checked out (almost all git), and work on them occasionally.
 In addition I got several repos to collect the history of some text documents and files.
@@ -50,7 +49,7 @@ More information may be available on the project's webpages:
 ## License
 This project is freely available under the terms of the [Apache License v.2.0](./LICENSE):
 
-> Copyright 2021-2022 SGrottel
+> Copyright 2021-2023 SGrottel
 >
 > Licensed under the Apache License, Version 2.0 (the "License");
 > you may not use this file except in compliance with the License.

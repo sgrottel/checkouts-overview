@@ -1,0 +1,18 @@
+{
+  "_type": "ComponentSourceManifest",
+  "components": [
+    {
+      "source": [
+        {
+          "subset": "github releases",
+          "version": "???",
+          "hash": "???",
+          "url": "https://github.com/sgrottel/checkouts-overview.git",
+          "type": "git"
+        }
+      ],
+      "name": "Checkouts Overview"
+    }
+  ],
+  "_version": 1
+}

@@ -27,10 +27,16 @@ namespace SG.Checkouts_Overview
 
 		public class MarkableEntry: INotifyPropertyChanged
 		{
-			private Entry entry = null;
+			private Entry entry;
 			private bool marked = true;
 
-			public event PropertyChangedEventHandler PropertyChanged;
+			public event PropertyChangedEventHandler? PropertyChanged;
+
+			public MarkableEntry(Entry entry)
+			{
+				this.entry = entry;
+				entry.PropertyChanged += Entry_PropertyChanged;
+			}
 
 			public Entry Entry
 			{
@@ -39,22 +45,17 @@ namespace SG.Checkouts_Overview
 				{
 					if (entry != value)
 					{
-						if (entry != null)
-						{
-							entry.PropertyChanged -= Entry_PropertyChanged;
-						}
+						if (value == null) throw new ArgumentNullException("value");
+						entry.PropertyChanged -= Entry_PropertyChanged;
 						entry = value;
-						if (entry != null)
-						{
-							entry.PropertyChanged += Entry_PropertyChanged;
-						}
+						entry.PropertyChanged += Entry_PropertyChanged;
 						PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Entry)));
 						PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Path)));
 					}
 				}
 			}
 
-			private void Entry_PropertyChanged(object sender, PropertyChangedEventArgs e)
+			private void Entry_PropertyChanged(object? sender, PropertyChangedEventArgs e)
 			{
 				if (e == null || string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == nameof(Path))
 				{
@@ -82,15 +83,15 @@ namespace SG.Checkouts_Overview
 
 		}
 
-		private IDisksScanner DisksScanner { get; set; } = null;
-		private Thread ScannerWorker = null;
+		private IDisksScanner? DisksScanner { get; set; } = null;
+		private Thread? ScannerWorker = null;
 
 		public ObservableCollection<MarkableEntry> Entries { get; set; } = new ObservableCollection<MarkableEntry>();
 
 		/// <summary>
 		/// Entries currently stored in the main window
 		/// </summary>
-		internal EntryViewsCollection CurrentEntries { get; set; } = null;
+		internal EntryViewsCollection? CurrentEntries { get; set; } = null;
 
 		public DisksScannerDialogWindow()
 		{
@@ -122,7 +123,7 @@ namespace SG.Checkouts_Overview
 		protected override void OnSourceInitialized(EventArgs e)
 		{
 			base.OnSourceInitialized(e);
-			Util.DwmHelper.UseImmersiveDarkMode((PresentationSource.FromVisual(this) as HwndSource)?.Handle ?? IntPtr.Zero, true);
+			Util.DwmHelper.UseDarkWindowDecorations(this, true);
 		}
 
 		private void EverythingHyperlink_Click(object sender, RoutedEventArgs e)
@@ -165,7 +166,7 @@ namespace SG.Checkouts_Overview
 				return;
 			}
 
-			IDisksScanner scanner = null;
+			IDisksScanner scanner;
 			if (scannerEngineEverything.IsChecked ?? false)
 			{
 				scanner = new DisksScannerEverything();
@@ -210,6 +211,8 @@ namespace SG.Checkouts_Overview
 
 		private bool Scanner_EntryFound(Entry entry)
 		{
+			if (DisksScanner == null) return false;
+
 			// scan root check -- needed for Everything
 			if (!string.IsNullOrWhiteSpace(DisksScanner.Root))
 			{
@@ -223,11 +226,14 @@ namespace SG.Checkouts_Overview
 			}
 
 			// pattern check
-			foreach (string p in DisksScanner.IgnorePattern)
+			if (DisksScanner.IgnorePattern != null)
 			{
-				if (PatternMatch(p, entry.Path))
+				foreach (string p in DisksScanner.IgnorePattern)
 				{
-					return false;
+					if (PatternMatch(p, entry.Path))
+					{
+						return false;
+					}
 				}
 			}
 
@@ -237,6 +243,7 @@ namespace SG.Checkouts_Overview
 				// reject entry if it is already known
 				foreach (var e in CurrentEntries)
 				{
+					if (e.Entry == null) continue;
 					if (string.Equals(entry.Path, e.Entry.Path, StringComparison.InvariantCultureIgnoreCase))
 					{
 						return false; // known entry
@@ -270,7 +277,7 @@ namespace SG.Checkouts_Overview
 
 			Dispatcher.Invoke(() =>
 			{
-				MarkableEntry me = new MarkableEntry() { Entry = entry, Marked = true };
+				MarkableEntry me = new MarkableEntry(entry) { Marked = true };
 				me.PropertyChanged += MarkableEntry_PropertyChanged;
 				Entries.Add(me);
 				MarkableEntry_PropertyChanged(null, new PropertyChangedEventArgs(nameof(MarkableEntry.Marked)));
@@ -278,7 +285,7 @@ namespace SG.Checkouts_Overview
 			return true;
 		}
 
-		private void MarkableEntry_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		private void MarkableEntry_PropertyChanged(object? sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == null || e.PropertyName == nameof(MarkableEntry.Marked))
 			{
@@ -295,12 +302,12 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
-		private bool PatternMatch(string p, string path)
+		static private bool PatternMatch(string p, string path)
 		{
 			return path.ToLower().Contains(p.ToLower()); // for now, simple substring search
 		}
 
-		private void Scanner_ScanMessage(object sender, string e)
+		private void Scanner_ScanMessage(object? sender, string e)
 		{
 			Dispatcher.Invoke(() =>
 			{
@@ -308,16 +315,16 @@ namespace SG.Checkouts_Overview
 			});
 		}
 
-		private void stopScanButton_Click(object sender, RoutedEventArgs e)
+		private void stopScanButton_Click(object? sender, RoutedEventArgs? e)
 		{
 			startScanButton.IsEnabled = false;
 			stopScanButton.IsEnabled = false;
 			scanStatus.Text = "Stopping scan...";
 
-			Thread worker = ScannerWorker;
+			Thread? worker = ScannerWorker;
 			ScannerWorker = new Thread(() =>
 			{
-				IDisksScanner s = DisksScanner;
+				IDisksScanner? s = DisksScanner;
 				if (s != null)
 				{
 					s.AbortScan();
@@ -353,10 +360,11 @@ namespace SG.Checkouts_Overview
 			{
 				foreach (var entry in Entries)
 				{
+					if (entry == null) continue;
 					if (!entry.Marked) continue;
-					CurrentEntries.Add(
-						new EntryView() { Entry = entry.Entry }
-						);
+					if (entry.Entry == null) continue;
+
+					CurrentEntries.Add(new EntryView(entry.Entry));
 				}
 			}
 			DialogResult = true;

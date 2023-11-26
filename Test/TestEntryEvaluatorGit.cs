@@ -16,7 +16,7 @@ namespace SG.Checkouts_Overview.Test
 
 		private Entry createTestEntry()
 		{
-			return new Entry() { Name = "Test", Path = Utility.FindMyGit(), Type = "git" };
+			return new Entry() { Name = "Test", Path = Utility.FindMyGitCloneDir(), Type = "git" };
 		}
 
 		[TestMethod]
@@ -50,7 +50,7 @@ namespace SG.Checkouts_Overview.Test
 		public void EvaluateTestData()
 		{
 			List<Entry> entries = new List<Entry>();
-			string tdp = System.IO.Path.Combine(Utility.FindMyGit(), "TestData");
+			string tdp = System.IO.Path.Combine(Utility.FindMyGitCloneDir(), "TestData");
 			EntryEvaluator ee = new EntryEvaluator();
 			ee.Start();
 			Dictionary<Entry, EntryStatus> es = new Dictionary<Entry, EntryStatus>();

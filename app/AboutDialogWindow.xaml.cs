@@ -36,7 +36,7 @@ namespace SG.Checkouts_Overview
 		public string Version {
 			get {
 				var ea = System.Reflection.Assembly.GetExecutingAssembly();
-				return ea.GetName().Version.ToString();
+				return ea.GetName().Version?.ToString() ?? string.Empty;
 			}
 		}
 		public string Copyright {
@@ -61,7 +61,7 @@ namespace SG.Checkouts_Overview
 		protected override void OnSourceInitialized(EventArgs e)
 		{
 			base.OnSourceInitialized(e);
-			Util.DwmHelper.UseImmersiveDarkMode((PresentationSource.FromVisual(this) as HwndSource)?.Handle ?? IntPtr.Zero, true);
+			Util.DwmHelper.UseDarkWindowDecorations(this, true);
 		}
 
 		private void Hyperlink_Click(object sender, RoutedEventArgs e)

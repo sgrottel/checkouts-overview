@@ -11,12 +11,12 @@ namespace SG.Checkouts_Overview
 {
 	public class DisksScannerEverything : IDisksScanner
 	{
-		public string Root { get; set; } = null;
-		public string[] IgnorePattern { get; set; } = null;
+		public string? Root { get; set; } = null;
+		public string[]? IgnorePattern { get; set; } = null;
 		public bool ScanCheckoutSubdirs { get; set; } = false;
 
-        public event EventHandler<string> ScanMessage;
-		public event Func<Entry, bool> EntryFound;
+        public event EventHandler<string>? ScanMessage;
+		public event Func<Entry, bool>? EntryFound;
 
 		public void AbortScan()
 		{

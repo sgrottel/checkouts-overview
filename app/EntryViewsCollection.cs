@@ -34,7 +34,7 @@ namespace SG.Checkouts_Overview
 			}
 		}
 
-		protected override event PropertyChangedEventHandler PropertyChanged;
+		protected override event PropertyChangedEventHandler? PropertyChanged;
 
 		protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
 		{
@@ -42,21 +42,21 @@ namespace SG.Checkouts_Overview
 			if (e.OldItems != null)
 				foreach (var item in e.OldItems)
 				{
-					EntryView ev = item as EntryView;
+					EntryView? ev = item as EntryView;
 					if (ev == null) continue;
 					ev.Entry.PropertyChanged -= Entry_PropertyChanged;
 				}
 			if (e.NewItems != null)
 				foreach (var item in e.NewItems)
 				{
-					EntryView ev = item as EntryView;
+					EntryView? ev = item as EntryView;
 					if (ev == null) continue;
 					ev.Entry.PropertyChanged += Entry_PropertyChanged;
 				}
 			IsDirty = true;
 		}
 
-		private void Entry_PropertyChanged(object sender, PropertyChangedEventArgs e)
+		private void Entry_PropertyChanged(object? sender, PropertyChangedEventArgs e)
 		{
 			IsDirty = true;
 		}

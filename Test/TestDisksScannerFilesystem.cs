@@ -15,7 +15,7 @@ namespace SG.Checkouts_Overview.Test
 		[TestMethod]
 		public void Invoke()
 		{
-			string tdp = System.IO.Path.Combine(Utility.FindMyGit(), "TestData");
+			string tdp = System.IO.Path.Combine(Utility.FindMyGitCloneDir(), "TestData");
 
 			List<Entry> es = new List<Entry>();
 			DisksScannerFilesystem dsfs = new DisksScannerFilesystem()
@@ -51,7 +51,7 @@ namespace SG.Checkouts_Overview.Test
 
 				Assert.IsTrue(System.IO.Directory.Exists(
 					System.IO.Path.Combine(
-						Utility.FindMyGit(),
+						Utility.FindMyGitCloneDir(),
 						"TestData",
 						n,
 						".git")

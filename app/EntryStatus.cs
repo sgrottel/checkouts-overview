@@ -9,7 +9,7 @@ namespace SG.Checkouts_Overview
 {
 	public class EntryStatus : INotifyPropertyChanged
 	{
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
 		private bool available = true;
 		private bool evaluating = true;
@@ -18,7 +18,7 @@ namespace SG.Checkouts_Overview
 		private bool incomingChanges = false;
 		private bool outgoingChanges = false;
 		private bool onBranch = false;
-		private string branchName = null;
+		private string? branchName = null;
 		private bool remoteTracked = false;
 
 		/// <summary>
@@ -137,7 +137,7 @@ namespace SG.Checkouts_Overview
 		/// <summary>
 		/// True indicates that the checkout is on a non-main branch
 		/// </summary>
-		public string BranchName {
+		public string? BranchName {
 			get {
 				return branchName;
 			}

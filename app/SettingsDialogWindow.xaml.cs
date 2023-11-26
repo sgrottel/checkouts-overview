@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using SG.Checkouts_Overview.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -70,61 +71,20 @@ namespace SG.Checkouts_Overview
 		protected override void OnSourceInitialized(EventArgs e)
 		{
 			base.OnSourceInitialized(e);
-			Util.DwmHelper.UseImmersiveDarkMode((PresentationSource.FromVisual(this) as HwndSource)?.Handle ?? IntPtr.Zero, true);
+			Util.DwmHelper.UseDarkWindowDecorations(this, true);
 		}
 
-		private void GitInfoUpdateTimer_Tick(object sender, EventArgs e)
+		private void GitInfoUpdateTimer_Tick(object? sender, EventArgs e)
 		{
 			gitInfoUpdateTimer.Stop();
 
-			Process p;
-			string result;
 			string path = gitBin.Text.Trim();
-			bool includePathInInfo = false;
-			if (string.IsNullOrEmpty(path))
-			{
-				p = new Process();
-				p.StartInfo.UseShellExecute = false;
-				p.StartInfo.RedirectStandardOutput = true;
-				p.StartInfo.FileName = "where.exe";
-				p.StartInfo.ArgumentList.Clear();
-				p.StartInfo.ArgumentList.Add("git.exe");
-				p.StartInfo.CreateNoWindow = true;
-				p.Start();
-				result = p.StandardOutput.ReadToEnd().Trim();
-				p.WaitForExit();
-				if (System.IO.File.Exists(result))
-				{
-					path = result;
-					includePathInInfo = true;
-				}
-				if (string.IsNullOrEmpty(path))
-				{
-					gitBinInfo.Text = "ERROR: Git not found.";
-					return;
-				}
-			}
+			Git git = new(path);
+			string result = git.Invoke(new[] { "--version" }).StdOut;
 
-			if (!System.IO.File.Exists(path))
+			if (!string.Equals(path, git.Path))
 			{
-				gitBinInfo.Text = "ERROR: File does not exist.";
-				return;
-			}
-
-			p = new Process();
-			p.StartInfo.UseShellExecute = false;
-			p.StartInfo.RedirectStandardOutput = true;
-			p.StartInfo.FileName = path;
-			p.StartInfo.ArgumentList.Clear();
-			p.StartInfo.ArgumentList.Add("--version");
-			p.StartInfo.CreateNoWindow = true;
-			p.Start();
-			result = p.StandardOutput.ReadToEnd().Trim();
-			p.WaitForExit();
-
-			if (includePathInInfo)
-			{
-				result = $"{path}\n{result}";
+				result = $"{git.Path}\n{result}";
 			}
 
 			gitBinInfo.Text = result;

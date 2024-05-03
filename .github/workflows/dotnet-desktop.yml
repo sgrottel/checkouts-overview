@@ -51,7 +51,7 @@ jobs:
 
     - name: Upload artifacts
       if: ${{ matrix.configuration == 'Release' }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Checkouts-Overview-${{ env.FULL_VERSION_NUMBER }}
         path: |

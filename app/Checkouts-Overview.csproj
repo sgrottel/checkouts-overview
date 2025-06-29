@@ -38,8 +38,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EverythingSearchClient" Version="0.8.0.51" />
-    <PackageReference Include="SGrottel.FindExecutable" Version="0.4.0.5" />
+    <PackageReference Include="EverythingSearchClient" Version="0.9.0.148" />
+    <PackageReference Include="SGrottel.FindExecutable" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

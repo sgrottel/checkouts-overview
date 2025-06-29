@@ -9,8 +9,8 @@
     <Authors>SGrottel</Authors>
     <Product>Checkouts Overview</Product>
     <Description>Visual overview of local repository checkouts</Description>
-    <Copyright>Copyright 2021-2024, by SGrottel</Copyright>
-    <Version>1.3.6</Version>
+    <Copyright>Copyright 2021-2025, by SGrottel</Copyright>
+    <Version>1.3.7</Version>
     <Nullable>enable</Nullable>
     <CsWinRTAotOptimizerEnabled>false</CsWinRTAotOptimizerEnabled>
   </PropertyGroup>
@@ -38,8 +38,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EverythingSearchClient" Version="0.8.0.51" />
-    <PackageReference Include="SGrottel.FindExecutable" Version="0.4.0.5" />
+    <PackageReference Include="EverythingSearchClient" Version="0.9.0.148" />
+    <PackageReference Include="SGrottel.FindExecutable" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
